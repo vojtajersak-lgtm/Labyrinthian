@@ -22,4 +22,8 @@ public class Map {
     public int getWidth(){
         return map[0].length;
     }
+
+    public boolean isInbounds(int cordx, int cordy){
+        return cordx >= 0 && cordx < map[0].length && cordy >= 0 && cordy < map.length;
+    }
 }

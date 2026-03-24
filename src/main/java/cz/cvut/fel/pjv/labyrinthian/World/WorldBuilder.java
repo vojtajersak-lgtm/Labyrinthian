@@ -6,7 +6,7 @@ public class WorldBuilder {
 
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
-                if(i == 0 || i == mapSize - 1 || j == 0 || j == mapSize -1){
+                if(i == 0 || i == mapSize - 1 || j == 0 || j == mapSize -1 || i == mapSize / 2){
                     tiles[i][j] =  new Tile(TileType.HEDGE);
                 }else {
                     tiles[i][j] = new Tile(TileType.PATH);

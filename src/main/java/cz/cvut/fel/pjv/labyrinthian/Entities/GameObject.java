@@ -7,4 +7,12 @@ public abstract class GameObject {
         this.cordY = cordY;
         this.cordX = cordX;
     }
+
+    public int getCordY() {
+        return cordY;
+    }
+
+    public int getCordX() {
+        return cordX;
+    }
 }
