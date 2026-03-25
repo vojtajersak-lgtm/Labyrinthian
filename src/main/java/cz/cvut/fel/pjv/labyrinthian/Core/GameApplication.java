@@ -20,10 +20,8 @@ public class GameApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Map map = new WorldBuilder().buildMap(32);
-        Player mainCharacter = new Player(1,1);
         InputManager inputManager = new InputManager();
-        GameManager gameManager = new GameManager(mainCharacter,map, inputManager);
+        GameManager gameManager = new GameManager(inputManager);
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -40,7 +38,8 @@ public class GameApplication extends Application {
             @Override
             public void handle(long now) {
                 gameManager.update();
-                renderer.render(gc,map, mainCharacter);
+                renderer.render(gc,gameManager.getMap(),
+                        gameManager.getMainCharacter(), gameManager.getEnemyList());
             }
         };
 
