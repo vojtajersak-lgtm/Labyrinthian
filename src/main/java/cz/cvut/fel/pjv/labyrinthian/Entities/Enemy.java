@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
+import cz.cvut.fel.pjv.labyrinthian.World.Map;
+
 public class Enemy extends Entity{
     private int baseDamage;
     private int attackSpeed;
@@ -11,4 +13,22 @@ public class Enemy extends Entity{
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
     }
+
+    public int getBaseDamage() {
+        return baseDamage;
+    }
+
+    public int getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public int getAttackRange() {
+        return attackRange;
+    }
+
+    public void attack(Entity target){}
+
+    public void takeTurn(Player player, Map map){}
+
+
 }
