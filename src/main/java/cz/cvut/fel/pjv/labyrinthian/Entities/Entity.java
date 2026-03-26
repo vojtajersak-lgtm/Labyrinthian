@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
 public abstract class Entity extends GameObject {
@@ -16,18 +17,16 @@ public abstract class Entity extends GameObject {
         return currHealth;
     }
 
-    public void takeDamage(int Damage){
+    public void takeDamage(int Damage, GameManager gameManager){
         currHealth = Math.max(currHealth - Damage, 0);
-        if(currHealth == 0) onDeath();
+        if(currHealth == 0) onDeath(gameManager);
     }
 
     public boolean isDead(){
         return currHealth == 0;
     }
 
-    public void onDeath(){
-
-    }
+    public abstract void onDeath(GameManager gameManager);
 
     public void move(int dx, int dy, Map map){
         int newCordx = cordX + dx;

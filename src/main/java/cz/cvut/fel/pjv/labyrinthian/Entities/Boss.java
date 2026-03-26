@@ -1,6 +1,9 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
-public class Boss extends Enemy{
+import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
+
+public class Boss extends Enemy implements Interactable {
     private  AttackTypes attackTypes;
     private boolean isTransformed;
 
@@ -29,5 +32,13 @@ public class Boss extends Enemy{
         super.attack(target);
     }
 
+    @Override
+    public void onDeath(GameManager gameManager) {
+        super.onDeath(gameManager);
+    }
 
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+
+    }
 }

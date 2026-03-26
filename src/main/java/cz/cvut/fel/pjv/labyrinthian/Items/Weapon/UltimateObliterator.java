@@ -18,4 +18,9 @@ public class UltimateObliterator extends Weapon {
     public void use(Player player, GameManager gameManager) {
 
     }
+
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+
+    }
 }

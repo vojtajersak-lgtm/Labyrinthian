@@ -18,4 +18,9 @@ public class Sword extends Weapon{
     public void attack(Entity entity) {
 
     }
+
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+
+    }
 }

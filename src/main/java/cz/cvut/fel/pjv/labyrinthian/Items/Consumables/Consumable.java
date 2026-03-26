@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Consumables;
 
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
+import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
 public abstract class Consumable extends Item {
@@ -16,5 +18,10 @@ public abstract class Consumable extends Item {
 
     public boolean usedUp(){
         return (numberOfUses == 0);
+    }
+
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+        gameManager.addToInventory(player, this);
     }
 }

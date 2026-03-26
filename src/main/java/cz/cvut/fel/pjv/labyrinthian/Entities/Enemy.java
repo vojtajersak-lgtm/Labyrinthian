@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
 public class Enemy extends Entity{
@@ -12,6 +13,11 @@ public class Enemy extends Entity{
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
+    }
+
+    @Override
+    public void onDeath(GameManager gameManager) {
+
     }
 
     public int getBaseDamage() {
