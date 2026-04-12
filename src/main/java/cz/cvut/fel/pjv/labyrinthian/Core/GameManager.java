@@ -10,6 +10,7 @@ import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
+import java.util.Set;
 
 public class GameManager {
 
@@ -45,13 +46,12 @@ public class GameManager {
     }
 
     public void update() {
-        KeyCode key = inputManager.getLastCode();
-        if (key == KeyCode.W) mainCharacter.move(0, -1, map);
-        if (key == KeyCode.S) mainCharacter.move(0, 1, map);
-        if (key == KeyCode.A) mainCharacter.move(-1, 0, map);
-        if (key == KeyCode.D) mainCharacter.move(1, 0, map);
+        Set keyCodeSet = inputManager.getLastCode();
+        if (keyCodeSet.contains(KeyCode.W)) mainCharacter.move(0, -1, map);
+        if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 1, map);
+        if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-1, 0, map);
+        if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(1, 0, map);
 
-        inputManager.setLastCode(null);
 
     }
 

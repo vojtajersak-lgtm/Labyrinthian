@@ -29,6 +29,7 @@ public class GameApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Labyrinthian");
         scene.setOnKeyPressed(e -> inputManager.setLastCode(e.getCode()));
+        scene.setOnKeyReleased(e -> inputManager.removeLastCode(e.getCode()));
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
