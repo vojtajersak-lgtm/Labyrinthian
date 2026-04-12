@@ -22,6 +22,7 @@ public class Renderer {
 
 
         if(mapMode){
+            int tileSize = Math.min(1024 / map.getWidth(), 576 / map.getHeight());
             for (int i = 0; i < map.getHeight(); i++) {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTile(j, i).isWalkable()){
@@ -29,17 +30,17 @@ public class Renderer {
                     }else{
                         gc.setFill(Color.GREEN);
                     }
-                    gc.fillRect(j *18, i * 18, 18, 18);
+                    gc.fillRect(j *tileSize, i * tileSize, tileSize, tileSize);
                 }
 
             }
 
             gc.setFill(Color.AQUA);
-            gc.fillOval(player.getCordX() * 18, player.getCordY() *18,16, 16 );
+            gc.fillOval(player.getCordX() * tileSize, player.getCordY() *tileSize,tileSize /2, tileSize /2 );
 
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
-                gc.fillOval(e.getCordX() * 18, e.getCordY() *18, 18, 18);
+                gc.fillOval(e.getCordX() * tileSize, e.getCordY() *tileSize, tileSize, tileSize);
             }
 
         }else{
@@ -56,7 +57,7 @@ public class Renderer {
             }
 
             gc.setFill(Color.AQUA);
-            gc.fillOval(player.getCordX() * 64 - offsetX, player.getCordY() *64 - offsetY,48, 48 );
+            gc.fillOval(player.getCordX() * 64 - offsetX, player.getCordY() *64 - offsetY,32, 32);
 
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
