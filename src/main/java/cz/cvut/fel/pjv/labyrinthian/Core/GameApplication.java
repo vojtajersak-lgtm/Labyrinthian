@@ -28,7 +28,8 @@ public class GameApplication extends Application {
         Scene scene = new Scene(root, 1024, 576);
         stage.setScene(scene);
         stage.setTitle("Labyrinthian");
-        scene.setOnKeyPressed(e -> inputManager.setLastCode(e.getCode()));
+        scene.setOnKeyPressed(e -> {inputManager.setLastCode(e.getCode());
+                                            inputManager.setLastPressed(e.getCode());});
         scene.setOnKeyReleased(e -> inputManager.removeLastCode(e.getCode()));
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -45,7 +46,7 @@ public class GameApplication extends Application {
                 lastUpdate = now;
                 gameManager.update();
                 renderer.render(gc,gameManager.getMap(),
-                        gameManager.getMainCharacter(), gameManager.getEnemyList());
+                        gameManager.getMainCharacter(), gameManager.getEnemyList(), gameManager.isMapMode());
             }
         };
 

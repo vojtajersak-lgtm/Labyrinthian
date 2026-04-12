@@ -7,6 +7,15 @@ import java.util.Set;
 
 public class InputManager {
     private Set<KeyCode> lastCode = new HashSet<>();
+    private KeyCode LastPressed;
+
+    public KeyCode getLastPressed() {
+        return LastPressed;
+    }
+
+    public void setLastPressed(KeyCode lastPressed) {
+        LastPressed = lastPressed;
+    }
 
     public Set<KeyCode> getLastCode() {
         return lastCode;

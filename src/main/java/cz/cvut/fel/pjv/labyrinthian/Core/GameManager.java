@@ -20,10 +20,11 @@ public class GameManager {
     private WorldBuilder worldBuilder = new WorldBuilder();
     private List<Enemy> enemyList;
     private GameState currentState;
+    private boolean mapMode = false;
 
     public GameManager(InputManager inputManager) {
         this.mainCharacter = new Player(1, 1);
-        this.map = worldBuilder.buildMap(128);
+        this.map = worldBuilder.buildMap(32);
         this.inputManager = inputManager;
         this.enemyList = worldBuilder.buildEnemies(5, map);
         this.currentState = GameState.MAIN_MENU;
@@ -45,12 +46,24 @@ public class GameManager {
         return currentState;
     }
 
+    public boolean isMapMode() {
+        return mapMode;
+    }
+
     public void update() {
         Set keyCodeSet = inputManager.getLastCode();
+        KeyCode lastPressed =inputManager.getLastPressed();
+
         if (keyCodeSet.contains(KeyCode.W)) mainCharacter.move(0, -1, map);
         if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 1, map);
         if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-1, 0, map);
         if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(1, 0, map);
+        if(lastPressed == KeyCode.M) {
+            mapMode = !mapMode;
+            inputManager.setLastPressed(null);
+        }
+
+
 
 
     }
