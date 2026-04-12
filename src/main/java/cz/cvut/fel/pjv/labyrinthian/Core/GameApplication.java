@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class GameApplication extends Application {
 
-    private final Canvas canvas = new Canvas(640, 640);
+    private final Canvas canvas = new Canvas(1024, 576);
 
 
     @Override
@@ -25,7 +25,7 @@ public class GameApplication extends Application {
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
-        Scene scene = new Scene(root, 640, 640);
+        Scene scene = new Scene(root, 1024, 576);
         stage.setScene(scene);
         stage.setTitle("Labyrinthian");
         scene.setOnKeyPressed(e -> inputManager.setLastCode(e.getCode()));
@@ -36,8 +36,13 @@ public class GameApplication extends Application {
         Renderer renderer = new Renderer();
 
         AnimationTimer timer = new AnimationTimer() {
+            private long lastUpdate = 0;
+
             @Override
             public void handle(long now) {
+
+                if( now - lastUpdate < 150_000_000) return;
+                lastUpdate = now;
                 gameManager.update();
                 renderer.render(gc,gameManager.getMap(),
                         gameManager.getMainCharacter(), gameManager.getEnemyList());
