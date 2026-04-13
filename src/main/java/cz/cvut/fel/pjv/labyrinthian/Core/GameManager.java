@@ -24,7 +24,7 @@ public class GameManager {
 
     public GameManager(InputManager inputManager) {
         this.mainCharacter = new Player(1, 1);
-        this.map = worldBuilder.buildMap(64);
+        this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.enemyList = worldBuilder.buildEnemies(5, map);
         this.currentState = GameState.MAIN_MENU;

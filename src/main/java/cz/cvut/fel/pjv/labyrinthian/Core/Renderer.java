@@ -27,8 +27,10 @@ public class Renderer {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTile(j, i).isWalkable()){
                         gc.setFill(Color.YELLOW);
-                    }else{
+                    }else if(map.getTile(j, i).getTile() == TileType.HEDGE){
                         gc.setFill(Color.GREEN);
+                    }else{
+                        gc.setFill(Color.PURPLE);
                     }
                     gc.fillRect(j *tileSize, i * tileSize, tileSize, tileSize);
                 }
@@ -48,8 +50,10 @@ public class Renderer {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTile(j, i).isWalkable()){
                         gc.setFill(Color.YELLOW);
-                    }else{
+                    }else if(map.getTile(j, i).getTile() == TileType.HEDGE){
                         gc.setFill(Color.GREEN);
+                    }else {
+                        gc.setFill(Color.PURPLE);
                     }
                     gc.fillRect(j *64 - offsetX, i * 64 - offsetY, 64, 64);
                 }

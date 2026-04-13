@@ -15,4 +15,7 @@ public class Tile {
         return tile == TileType.PATH;
     }
 
+    public TileType getTile() {
+        return tile;
+    }
 }
