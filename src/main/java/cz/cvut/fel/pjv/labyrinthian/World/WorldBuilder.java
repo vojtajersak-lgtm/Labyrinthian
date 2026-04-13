@@ -60,6 +60,11 @@ public class WorldBuilder {
 
     }
 
+
+    private void connectPath(Tile[][] tiles, int mapize,int[] source  ,int[] neighbour){
+
+    }
+
     private void addBossArena(Tile[][] tiles, int mapSize) {
        final int radius = 10;
        final int centerX = mapSize / 2;
