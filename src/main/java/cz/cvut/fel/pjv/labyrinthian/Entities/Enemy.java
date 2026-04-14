@@ -7,12 +7,17 @@ public class Enemy extends Entity{
     private int baseDamage;
     private int attackSpeed;
     private int attackRange;
+    private EnemyState state;
+    private double startX, startY;       // starting position of the enemy
 
     public Enemy(double cordY, double cordX,double width, double height ,int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
         super(cordY, cordX,width,height,maxHealth);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
+        this.state = EnemyState.IDLE;
+        this.startX = cordX;
+        this.startY = cordY;
     }
 
     @Override
@@ -34,7 +39,10 @@ public class Enemy extends Entity{
 
     public void attack(Entity target){}
 
-    public void takeTurn(Player player, Map map){}
+    public void takeTurn(Player player, Map map){
+
+
+    }
 
 
 }
