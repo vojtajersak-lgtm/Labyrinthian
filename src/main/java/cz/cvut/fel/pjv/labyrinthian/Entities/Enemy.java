@@ -8,8 +8,8 @@ public class Enemy extends Entity{
     private int attackSpeed;
     private int attackRange;
 
-    public Enemy(int cordY, int cordX, int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
-        super(cordY, cordX, maxHealth);
+    public Enemy(double cordY, double cordX,double width, double height ,int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
+        super(cordY, cordX,width,height,maxHealth);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;

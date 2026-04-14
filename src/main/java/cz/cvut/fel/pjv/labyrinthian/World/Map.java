@@ -11,8 +11,13 @@ public class Map {
         return map;
     }
 
-    public Tile getTile(int xcord, int ycord){
-        return map[xcord][ycord];
+    public Tile getTile(double xcord, double ycord){
+        return map[(int)(xcord/64)][(int)(ycord/64)];
+    }
+
+    public Tile getTileByIndex(int x, int y){
+        return map[x][y];
+
     }
 
     public int getHeight() {
@@ -23,7 +28,7 @@ public class Map {
         return map[0].length;
     }
 
-    public boolean isInbounds(int cordx, int cordy){
-        return cordx >= 0 && cordx < map[0].length && cordy >= 0 && cordy < map.length;
+    public boolean isInbounds(double cordx, double cordy){
+        return cordx >= 0 && cordx < map[0].length * 64 && cordy >= 0 && cordy < map.length *64;
     }
 }

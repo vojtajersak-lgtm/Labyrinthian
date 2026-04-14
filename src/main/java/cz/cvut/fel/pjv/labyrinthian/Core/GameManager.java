@@ -23,7 +23,7 @@ public class GameManager {
     private boolean mapMode = false;
 
     public GameManager(InputManager inputManager) {
-        this.mainCharacter = new Player(1, 1);
+        this.mainCharacter = new Player(1*64, 1*64, 32, 32);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.enemyList = worldBuilder.buildEnemies(5, map);
@@ -54,10 +54,10 @@ public class GameManager {
         Set keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed =inputManager.getLastPressed();
 
-        if (keyCodeSet.contains(KeyCode.W)) mainCharacter.move(0, -1, map);
-        if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 1, map);
-        if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-1, 0, map);
-        if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(1, 0, map);
+        if (keyCodeSet.contains(KeyCode.W)) mainCharacter.move(0, -7, map);
+        if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 7, map);
+        if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-7, 0, map);
+        if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(7, 0, map);
         if(lastPressed == KeyCode.M) {
             mapMode = !mapMode;
             inputManager.setLastPressed(null);
@@ -68,7 +68,7 @@ public class GameManager {
 
     }
 
-    public void spawnItem(Item item, int cordX, int cordY) {
+    public void spawnItem(Item item, double cordX, double cordY) {
     }
 
     public void spawnEntity(Entity entity, int cordX, int cordY) {

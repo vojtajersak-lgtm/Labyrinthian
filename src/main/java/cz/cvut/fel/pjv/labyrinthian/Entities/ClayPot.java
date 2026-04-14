@@ -5,8 +5,8 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
 public class ClayPot extends Entity{
     private final Item item;
-    public ClayPot(int cordY, int cordX, Item item) {
-        super(cordY, cordX, 3);
+    public ClayPot(double cordY, double cordX,double width, double height ,Item item) {
+        super(cordY, cordX,width,height ,3);
         this.item =item;
     }
 

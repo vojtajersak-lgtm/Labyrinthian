@@ -42,7 +42,7 @@ public class GameApplication extends Application {
             @Override
             public void handle(long now) {
 
-                if( now - lastUpdate < 75_000_000) return;
+                if( now - lastUpdate < 13_333_333) return;
                 lastUpdate = now;
                 gameManager.update();
                 renderer.render(gc,gameManager.getMap(),

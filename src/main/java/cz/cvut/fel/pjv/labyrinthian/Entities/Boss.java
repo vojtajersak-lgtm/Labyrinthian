@@ -7,8 +7,8 @@ public class Boss extends Enemy implements Interactable {
     private  AttackTypes attackTypes;
     private boolean isTransformed;
 
-    public Boss(int cordY, int cordX, int maxHealth, int baseDamage, int attackSpeed, int attackRange, AttackTypes attackTypes, boolean isTransformed) {
-        super(cordY, cordX, maxHealth, baseDamage, attackSpeed, attackRange);
+    public Boss(double cordY, double cordX,double height, double width ,int maxHealth, int baseDamage, int attackSpeed, int attackRange, AttackTypes attackTypes, boolean isTransformed) {
+        super(cordY, cordX,width, height ,maxHealth, baseDamage, attackSpeed, attackRange);
         this.attackTypes = attackTypes;
         this.isTransformed = false;
     }

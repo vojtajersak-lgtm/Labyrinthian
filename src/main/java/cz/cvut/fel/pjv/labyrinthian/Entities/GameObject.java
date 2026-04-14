@@ -1,18 +1,34 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 public abstract class GameObject {
-    protected int cordY, cordX;
+    protected double cordY, cordX;
+    protected double width, height;
 
-    public GameObject(int cordY, int cordX) {
+    public GameObject(double cordY, double cordX) {
         this.cordY = cordY;
         this.cordX = cordX;
     }
 
-    public int getCordY() {
+    public GameObject(double cordY, double cordX, double width, double height) {
+        this.cordY = cordY;
+        this.cordX = cordX;
+        this.width = width;
+        this.height = height;
+    }
+
+    public double getCordY() {
         return cordY;
     }
 
-    public int getCordX() {
+    public double getCordX() {
         return cordX;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }

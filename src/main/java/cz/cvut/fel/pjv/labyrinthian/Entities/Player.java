@@ -9,8 +9,8 @@ public class Player extends Entity{
     private Inventory inventory;
     private Weapon activeweapon;
 
-    public Player(int cordY, int cordX) {
-        super(cordY, cordX, 6);
+    public Player(double cordY, double cordX, double width, double height) {
+        super(cordY, cordX,width, height ,6);
         this.inventory = new Inventory();
         this.activeweapon = new Sword();
     }
