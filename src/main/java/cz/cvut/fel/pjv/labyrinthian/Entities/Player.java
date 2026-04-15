@@ -19,4 +19,6 @@ public class Player extends Entity{
     public void onDeath(GameManager gameManager) {
 
     }
+
+
 }

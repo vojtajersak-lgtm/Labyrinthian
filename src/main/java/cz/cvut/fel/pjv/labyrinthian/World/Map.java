@@ -28,7 +28,11 @@ public class Map {
         return map[0].length;
     }
 
-    public boolean isInbounds(double cordx, double cordy){
-        return cordx >= 0 && cordx < map[0].length * 64 && cordy >= 0 && cordy < map.length *64;
+    public boolean isInbounds(double cordX, double cordY){
+        return cordX >= 0 && cordX < map[0].length * 64 && cordY >= 0 && cordY < map.length *64;
+    }
+
+    public boolean isInboundsByIndex(int cordX, int cordY){
+        return cordX >= 0 && cordX < map[0].length && cordY >= 0 && cordY < map.length ;
     }
 }
