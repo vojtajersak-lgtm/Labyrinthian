@@ -3,10 +3,7 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Enemy extends Entity {
     private int baseDamage;
@@ -129,9 +126,13 @@ public class Enemy extends Entity {
 
     private int[] seekTarget(double dx, double dy, Map map) { //helper method that returns the first step towards a target, used to find path to player or a path back to starting pos
         int[][][] parent = new int[map.getWidth()][map.getHeight()][2];
-        boolean[][] visited = new boolean[map.getWidth()][map.getHeight()];
-        Queue<int[]> tilesToCheck = new LinkedList<>();
+        PriorityQueue<int[]> tilesToCheck = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
         int[] enemyStart = {(int) this.cordX / 64, (int) this.cordY / 64};
+
+        int[][] gScore = new int[map.getWidth()][map.getHeight()];
+        for(int[] row : gScore) Arrays.fill(row, 99999);
+        gScore[enemyStart[0]][enemyStart[1]] = 0;
+
         int[] targetPos = {(int) (dx / 64), (int) (dy / 64)};
         int steps = 0;
 
@@ -139,17 +140,19 @@ public class Enemy extends Entity {
         int[] nextStep = null;
         int[] currentStep = new int[]{targetPos[0], targetPos[1]};
 
-        while (!tilesToCheck.isEmpty() && steps < 200) {
+        while (!tilesToCheck.isEmpty() && steps < 400) {
             steps++;
             int[] actual = tilesToCheck.poll();
             if (actual[0] == targetPos[0] && actual[1] == targetPos[1]) {
                 break;
             } else {
-                List<int[]> neighbors = getUnvisitedNeighbors(actual[0], actual[1], visited, map); //gets valid neighbors in all 4 directions
+                List<int[]> neighbors = getUnvisitedNeighbors(actual[0], actual[1], map); //gets valid neighbors in all 4 directions
                 for (int[] n : neighbors) {
-                    tilesToCheck.add(n);
-                    visited[n[0]][n[1]] = true;
-                    parent[n[0]][n[1]] = actual;    // parent of neighbor n is position actual
+                    if(gScore[actual[0]][actual[1]] + 1 < gScore[n[0]][n[1]]) {
+                        gScore[n[0]][n[1]] = gScore[actual[0]][actual[1]] + 1;
+                        parent[n[0]][n[1]] = actual; // parent of neighbor n is position actual
+                        tilesToCheck.add(new int[]{n[0], n[1], gScore[n[0]][n[1]] + heuristic(n[0], n[1], targetPos)});
+                    };
                 }
             }
         }
@@ -165,7 +168,11 @@ public class Enemy extends Entity {
         return nextStep;
     }
 
-    private List<int[]> getUnvisitedNeighbors(int x, int y, boolean[][] visited, Map map) { //helper method, returns list valid neigbors in all four directions
+    private int heuristic(int x, int y, int[] target) { //helper method that returns the distance from tile to target
+        return Math.abs(x - target[0]) + Math.abs(y - target[1]);
+    }
+
+    private List<int[]> getUnvisitedNeighbors(int x, int y, Map map) { //helper method, returns list valid neigbors in all four directions
         List<int[]> neighboursList = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         for (int[] direction : directions) {
@@ -174,8 +181,7 @@ public class Enemy extends Entity {
 
             if (map.isInboundsByIndex(newCordX, newCordY)) {
 
-                if (!visited[newCordX][newCordY] &&
-                        (map.getTileByIndex(newCordX, newCordY).isWalkable())) { // takes tile on xy coordinates and checks if walkable
+                if (map.getTileByIndex(newCordX, newCordY).isWalkable()) { // takes tile on xy coordinates and checks if walkable
                     neighboursList.add(new int[]{newCordX, newCordY});
                 }
             }

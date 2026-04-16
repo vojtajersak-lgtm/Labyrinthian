@@ -22,13 +22,15 @@ public class GameManager {
     private GameState currentState;
     private boolean mapMode = false;
     private Enemy enemy; //FOR TESTING ONLY,REMOVE!!!
+    private Enemy enemy1; //FOR TESTING ONLY,REMOVE!!!
 
     public GameManager(InputManager inputManager) {
         this.mainCharacter = new Player(1600, 2304, 32, 32);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.enemy = new Enemy(2304, 2304, 24, 24, 6,6,6,1);
-        this.enemyList = worldBuilder.buildTestingEnemies(enemy);
+        this.enemy1 = new Enemy(2304 + 3*64, 2304, 24, 24, 6,6,6,1);
+        this.enemyList = worldBuilder.buildTestingEnemies(enemy,enemy1);
         this.currentState = GameState.MAIN_MENU;
     }
 
