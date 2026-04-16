@@ -147,7 +147,7 @@ public class WorldBuilder {
                     break;
                 }
             }
-            if(map.getTile(xPos, yPos).isWalkable() && !isOccupied){
+            if(map.getTileByIndex(xPos, yPos).isWalkable() && !isOccupied){
                 positionXY[0] = xPos;
                 positionXY[1] = yPos;
                 foundValid = true;
@@ -160,7 +160,7 @@ public class WorldBuilder {
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int[] enemyCords = getRandomPosition(map, enemyList);
-            Enemy enemy = new Enemy(enemyCords[0], enemyCords[1], 48,48,6, 1, 1, 1);
+            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6, 1, 1, 1);
             enemyList.add(enemy);
         }
         return enemyList;
@@ -170,12 +170,5 @@ public class WorldBuilder {
         return(x >= 0 && x < mapsize && y >= 0 && y < mapsize);
     }
 
-    public List<Enemy> buildTestingEnemies(Enemy enemy,Enemy enemy1){//FOR TESTING ONLY,REMOVE!!!
-        List<Enemy> enemyList = new ArrayList<>();
-        enemyList.add(enemy);
-        enemyList.add(enemy1);
-
-        return  enemyList;
-    }
 }
 

@@ -15,7 +15,7 @@ public class Enemy extends Entity {
     private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
     private double lastKnownY = 0;
 
-    public Enemy(double cordY, double cordX, double width, double height, int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
+    public Enemy(double cordX, double cordY, double width, double height, int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
         super(cordY, cordX, width, height, maxHealth);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
@@ -46,7 +46,6 @@ public class Enemy extends Entity {
 
     public void takeTurn(Player player, Map map) {
 
-
         int distanceToPlayer = (int) ((Math.abs((player.getCordX()) - (this.cordX)) +
                 Math.abs((player.getCordY()) - (this.cordY))) / 64); // apparently something called Manhattan distance
         //gives real distance with turns instead of "flight" distance
@@ -59,7 +58,6 @@ public class Enemy extends Entity {
 
         int chaseThreshold = state == EnemyState.CHASING ? 15 : 5; //5 tiles to start chasing, 15 when already chasing before player escapes
 
-        System.out.println("State: " + state + " distanceToPlayer: " + distanceToPlayer + " hasLoS: " + hasLoS + " distanceToOrigin " + distanceToOrigin + " chaseTreshold " + chaseThreshold);
         switch (state) {
             case IDLE -> {
                 state = (distanceToPlayer <= chaseThreshold) && hasLoS  ? EnemyState.CHASING : EnemyState.IDLE;
@@ -68,9 +66,9 @@ public class Enemy extends Entity {
             }
 
             case CHASING -> { // starts chasing, return if player escapes
-                if(distanceToOrigin >= 20) state = EnemyState.RETURN;
-                if(Math.abs(player.getCordX() - cordX) < (attackRange * 64)
-                        && Math.abs(player.getCordY() - cordY) < (attackRange * 64)){
+                if(distanceToOrigin >= 40) state = EnemyState.RETURN;
+                if(Math.abs(player.getCordX() - cordX) < (80)
+                        && Math.abs(player.getCordY() - cordY) < (80)){
                     state = EnemyState.ATTACKING; //if distance is less than 32 pixels
                 }
 
@@ -80,12 +78,10 @@ public class Enemy extends Entity {
                     lastKnownY = player.getCordY();
                     if(!moveTo(player.getCordX(), player.getCordY(), map)) {
                         state = EnemyState.RETURN;
-                        System.out.println("Couldnt find enemy, returning! Distance to enemy was:" +distanceToPlayer + " ----------------------------------------------------------------------------");
                     }
 
                 }else{
                     if(!hasLoS && --chaseTimer == 0){
-                        System.out.println("Timer ran out!----------------------------------------------------------------------------");
                         state = EnemyState.RETURN;
                     }else{
                         moveTo(lastKnownX,lastKnownY,map);
@@ -100,7 +96,7 @@ public class Enemy extends Entity {
                 }
             }
             case ATTACKING -> {
-                if(distanceToPlayer > attackRange) state = EnemyState.CHASING;
+                if(distanceToPlayer > attackRange || !hasLoS) state = EnemyState.CHASING;
             }
         }
 
@@ -118,8 +114,8 @@ public class Enemy extends Entity {
         double dirY = destTileY - cordY;
         double stepX = Math.abs(dirX) < 3 ? dirX : Math.signum(dirX) * 3; //if the difference is less than three pixels, finish the walk, prevents overshoot
         double stepY = Math.abs(dirY) < 3 ? dirY : Math.signum(dirY) * 3;
-        move(stepX, stepY, map);
-        System.out.println("destTile: " + (destTile != null ? destTile[0] + "," + destTile[1] : "null"));
+        move(stepX, 0, map);
+        move(0, stepY, map);
         return true;
     }
 
@@ -164,7 +160,6 @@ public class Enemy extends Entity {
                 return null;
             }
         }
-        System.out.println("nextStep: " + (nextStep != null ? nextStep[0] + "," + nextStep[1] : "null"));
         return nextStep;
     }
 

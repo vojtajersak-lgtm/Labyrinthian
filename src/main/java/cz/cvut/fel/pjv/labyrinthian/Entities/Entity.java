@@ -7,7 +7,7 @@ public abstract class Entity extends GameObject {
     protected int maxHealth;
     protected int currHealth;
 
-    public Entity(double cordY, double cordX,double width, double height, int maxHealth) {
+    public Entity(double cordX, double cordY,double width, double height, int maxHealth) {
         super(cordY, cordX, width, height);
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
