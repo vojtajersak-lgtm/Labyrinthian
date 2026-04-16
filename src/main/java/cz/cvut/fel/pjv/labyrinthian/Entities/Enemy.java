@@ -2,27 +2,27 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
-import cz.cvut.fel.pjv.labyrinthian.World.Tile;
-import cz.cvut.fel.pjv.labyrinthian.World.TileType;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class Enemy extends Entity{
+public class Enemy extends Entity {
     private int baseDamage;
     private int attackSpeed;
     private int attackRange;
-    private EnemyState state;
+    private EnemyState state = EnemyState.IDLE;
     private double startX, startY;       // starting position of the enemy
+    int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
+    private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
+    private double lastKnownY = 0;
 
-    public Enemy(double cordY, double cordX,double width, double height ,int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
-        super(cordY, cordX,width,height,maxHealth);
+    public Enemy(double cordY, double cordX, double width, double height, int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
+        super(cordY, cordX, width, height, maxHealth);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
-        this.state = EnemyState.IDLE;
         this.startX = cordX;
         this.startY = cordY;
     }
@@ -44,63 +44,128 @@ public class Enemy extends Entity{
         return attackRange;
     }
 
-    public void attack(Entity target){}
+    public void attack(Entity target) {
+    }
 
-    public void takeTurn(Player player, Map map){
-        int distanceToPlayer = (int) ((Math.abs((player.getCordX()) - (this.cordX )) +
-                        Math.abs((player.getCordY()) - (this.cordY ))) / 64); // apparently something called Manhattan distance
-                                                                                //gives real distance with turns instead of "flight" distance
-        state = distanceToPlayer > 5 ? EnemyState.IDLE : EnemyState.CHASING;
+    public void takeTurn(Player player, Map map) {
 
-        switch (state){
-            case IDLE ->{ // does nothing
 
+        int distanceToPlayer = (int) ((Math.abs((player.getCordX()) - (this.cordX)) +
+                Math.abs((player.getCordY()) - (this.cordY))) / 64); // apparently something called Manhattan distance
+        //gives real distance with turns instead of "flight" distance
+
+        int distanceToOrigin = (int) ((Math.abs((startX) - (this.cordX)) +
+                Math.abs((startY) - (this.cordY))) / 64);
+
+        boolean hasLoS = hasLineOfSight(player,map);
+
+
+        int chaseThreshold = state == EnemyState.CHASING ? 15 : 5; //5 tiles to start chasing, 15 when already chasing before player escapes
+
+        System.out.println("State: " + state + " distanceToPlayer: " + distanceToPlayer + " hasLoS: " + hasLoS + " distanceToOrigin " + distanceToOrigin + " chaseTreshold " + chaseThreshold);
+        switch (state) {
+            case IDLE -> {
+                state = (distanceToPlayer <= chaseThreshold) && hasLoS  ? EnemyState.CHASING : EnemyState.IDLE;
+                if(distanceToOrigin >= 10) state = EnemyState.RETURN;
+                if(distanceToOrigin > 1) state = EnemyState.RETURN;
             }
-            case CHASING -> { // starts chasing, return if player escapes
 
+            case CHASING -> { // starts chasing, return if player escapes
+                if(distanceToOrigin >= 20) state = EnemyState.RETURN;
+                if(Math.abs(player.getCordX() - cordX) < (attackRange * 64)
+                        && Math.abs(player.getCordY() - cordY) < (attackRange * 64)){
+                    state = EnemyState.ATTACKING; //if distance is less than 32 pixels
+                }
+
+                if(hasLoS){
+                    chaseTimer = 120;
+                    lastKnownX = player.getCordX();
+                    lastKnownY = player.getCordY();
+                    if(!moveTo(player.getCordX(), player.getCordY(), map)) {
+                        state = EnemyState.RETURN;
+                        System.out.println("Couldnt find enemy, returning! Distance to enemy was:" +distanceToPlayer + " ----------------------------------------------------------------------------");
+                    }
+
+                }else{
+                    if(!hasLoS && --chaseTimer == 0){
+                        System.out.println("Timer ran out!----------------------------------------------------------------------------");
+                        state = EnemyState.RETURN;
+                    }else{
+                        moveTo(lastKnownX,lastKnownY,map);
+                    }
+                }
 
             }
             case RETURN -> {
-
+                if(distanceToOrigin <= 1) state = EnemyState.IDLE;
+                else {
+                    moveTo(startX, startY, map);
+                }
+            }
+            case ATTACKING -> {
+                if(distanceToPlayer > attackRange) state = EnemyState.CHASING;
             }
         }
 
 
     }
 
-    private int[] seekPlayer(Player player, Map map){
+
+
+    private boolean moveTo(double dx, double dy, Map map){
+        int[] destTile = seekTarget(dx, dy, map);
+        if(destTile == null) return false;
+        double destTileX = (double) destTile[0] * 64 + 32;
+        double destTileY = (double) destTile[1] * 64 + 32;
+        double dirX = destTileX - cordX;
+        double dirY = destTileY - cordY;
+        double stepX = Math.abs(dirX) < 3 ? dirX : Math.signum(dirX) * 3; //if the difference is less than three pixels, finish the walk, prevents overshoot
+        double stepY = Math.abs(dirY) < 3 ? dirY : Math.signum(dirY) * 3;
+        move(stepX, stepY, map);
+        System.out.println("destTile: " + (destTile != null ? destTile[0] + "," + destTile[1] : "null"));
+        return true;
+    }
+
+
+    private int[] seekTarget(double dx, double dy, Map map) { //helper method that returns the first step towards a target, used to find path to player or a path back to starting pos
         int[][][] parent = new int[map.getWidth()][map.getHeight()][2];
         boolean[][] visited = new boolean[map.getWidth()][map.getHeight()];
         Queue<int[]> tilesToCheck = new LinkedList<>();
-        int[] enemyStart = {(int) this.cordX/64,(int) this.cordY /64};
-        int[] playerPos = {(int) player.getCordX() /64,(int) player.getCordY() /64};
+        int[] enemyStart = {(int) this.cordX / 64, (int) this.cordY / 64};
+        int[] targetPos = {(int) (dx / 64), (int) (dy / 64)};
+        int steps = 0;
 
         tilesToCheck.add(enemyStart);
         int[] nextStep = null;
-        int[] currentStep = new int[]{playerPos[0],playerPos[1]};
+        int[] currentStep = new int[]{targetPos[0], targetPos[1]};
 
-        while(!tilesToCheck.isEmpty()){
+        while (!tilesToCheck.isEmpty() && steps < 200) {
+            steps++;
             int[] actual = tilesToCheck.poll();
-            if (actual[0] == playerPos[0] && actual[1] == playerPos[1]){
+            if (actual[0] == targetPos[0] && actual[1] == targetPos[1]) {
                 break;
-            } else{
-                List<int[]> neighbors = getUnvisitedNeighbors(actual[0],actual[1],visited,map); //gets valid neighbors in all 4 directions
-                for(int[] n : neighbors){
+            } else {
+                List<int[]> neighbors = getUnvisitedNeighbors(actual[0], actual[1], visited, map); //gets valid neighbors in all 4 directions
+                for (int[] n : neighbors) {
                     tilesToCheck.add(n);
                     visited[n[0]][n[1]] = true;
                     parent[n[0]][n[1]] = actual;    // parent of neighbor n is position actual
                 }
             }
         }
-        while(!(currentStep[0] == enemyStart[0] && currentStep[1] == enemyStart[1])){
+        while (!(currentStep[0] == enemyStart[0] && currentStep[1] == enemyStart[1])) {
             nextStep = currentStep;
             currentStep = parent[currentStep[0]][currentStep[1]];
+            if(currentStep[0] == 0 && currentStep[1] == 0 &&  //prevents infinite loop if enemy not found which caused game to freeze
+                    !(enemyStart[0] == 0 && enemyStart[1] == 0)) {
+                return null;
+            }
         }
-
+        System.out.println("nextStep: " + (nextStep != null ? nextStep[0] + "," + nextStep[1] : "null"));
         return nextStep;
     }
 
-    private List<int[]> getUnvisitedNeighbors(int x, int y, boolean[][] visited, Map map) {
+    private List<int[]> getUnvisitedNeighbors(int x, int y, boolean[][] visited, Map map) { //helper method, returns list valid neigbors in all four directions
         List<int[]> neighboursList = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         for (int[] direction : directions) {
@@ -118,5 +183,42 @@ public class Enemy extends Entity{
         return neighboursList;
     }
 
+    private boolean hasLineOfSight(Player player, Map map) { //uses something called Bresenham line algorithm to figure if player is standing behind a wall
+        boolean LoS = true;
+        double error = 0;
+        int dx = (int) ((player.getCordX() / 64) - (cordX / 64));
+        int dy = (int) ((player.getCordY() / 64) - (cordY / 64));
+        int currentX = (int)(cordX / 64);
+        int currentY = (int)(cordY / 64);
 
+        if (dx == 0 && dy == 0) return true;
+
+        while (!((currentX == (int) player.getCordX() / 64) && (currentY == (int) player.getCordY() / 64))) {
+            if (!map.getTileByIndex(currentX, currentY).isWalkable()) {
+                LoS = false;
+                break;
+            }
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                currentX += (int) Math.signum(dx);
+                error += (Math.abs(dx) == 0) ? 0 : (double) Math.abs(dy) / Math.abs(dx);
+
+                if (error >= 0.5) {
+                    currentY += (int) Math.signum(dy);
+                    error -= 1.0;
+                }
+            } else {
+                currentY += (int) Math.signum(dy);;
+                error += (Math.abs(dy) == 0) ? 0 : (double) Math.abs(dx) / Math.abs(dy);
+
+                if (error >= 0.5) {
+                    currentX += (int) Math.signum(dx);
+                    error -= 1.0;
+                }
+            }
+
+        }
+        return LoS;
+    }
 }
+

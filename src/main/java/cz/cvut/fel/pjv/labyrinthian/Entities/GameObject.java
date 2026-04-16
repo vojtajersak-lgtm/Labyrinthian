@@ -9,7 +9,7 @@ public abstract class GameObject {
         this.cordX = cordX;
     }
 
-    public GameObject(double cordY, double cordX, double width, double height) {
+    public GameObject(double cordX, double cordY, double width, double height) {
         this.cordY = cordY;
         this.cordX = cordX;
         this.width = width;

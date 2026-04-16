@@ -21,17 +21,23 @@ public class GameManager {
     private List<Enemy> enemyList;
     private GameState currentState;
     private boolean mapMode = false;
+    private Enemy enemy; //FOR TESTING ONLY,REMOVE!!!
 
     public GameManager(InputManager inputManager) {
-        this.mainCharacter = new Player(1*64, 1*64, 32, 32);
+        this.mainCharacter = new Player(1600, 2304, 32, 32);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
-        this.enemyList = worldBuilder.buildEnemies(5, map);
+        this.enemy = new Enemy(2304, 2304, 24, 24, 6,6,6,1);
+        this.enemyList = worldBuilder.buildTestingEnemies(enemy);
         this.currentState = GameState.MAIN_MENU;
     }
 
     public Player getMainCharacter() {
         return mainCharacter;
+    }
+
+    public Enemy getEnemy(){
+        return enemy;
     }
 
     public Map getMap() {
@@ -63,6 +69,9 @@ public class GameManager {
             inputManager.setLastPressed(null);
         }
 
+        for(Enemy e : enemyList){
+            e.takeTurn(mainCharacter, map);
+        }
 
 
 

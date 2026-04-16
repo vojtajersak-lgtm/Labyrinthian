@@ -42,7 +42,7 @@ public class Renderer {
 
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
-                gc.fillOval(e.getCordX() * tileSize, e.getCordY() *tileSize, tileSize, tileSize);
+                gc.fillOval(e.getCordX() * 32, e.getCordY() *32, tileSize, tileSize);
             }
 
         }else{
@@ -65,7 +65,7 @@ public class Renderer {
 
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
-                gc.fillOval(e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
+                gc.fillOval(e.getCordX() - offsetX, e.getCordY() - offsetY, 32, 32);
             }
         }
 

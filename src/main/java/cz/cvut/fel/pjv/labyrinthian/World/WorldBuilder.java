@@ -169,4 +169,11 @@ public class WorldBuilder {
     public boolean isInbounds(int x, int y, int mapsize){
         return(x >= 0 && x < mapsize && y >= 0 && y < mapsize);
     }
+
+    public List<Enemy> buildTestingEnemies(Enemy enemy){//FOR TESTING ONLY,REMOVE!!!
+        List<Enemy> enemyList = new ArrayList<>();
+        enemyList.add(enemy);
+        return  enemyList;
+    }
 }
+
