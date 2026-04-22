@@ -6,11 +6,15 @@ import cz.cvut.fel.pjv.labyrinthian.World.Map;
 public abstract class Entity extends GameObject {
     protected int maxHealth;
     protected int currHealth;
+    protected Directions direction;
+    protected double attackRange;
 
-    public Entity(double cordX, double cordY,double width, double height, int maxHealth) {
-        super(cordY, cordX, width, height);
+    public Entity(double cordX, double cordY,double height, double width, int maxHealth,double attackRange) {
+        super(cordX, cordY, height, width);
+        this.attackRange = attackRange;
         this.maxHealth = maxHealth;
         this.currHealth = maxHealth;
+        this.direction = Directions.EAST;
     }
 
     public int getCurrHealth() {
@@ -38,6 +42,11 @@ public abstract class Entity extends GameObject {
 
             cordX = newCordx;
             cordY = newCordy;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                direction = dx > 0 ? Directions.EAST : Directions.WEST;
+            } else {
+                direction = dy> 0 ? Directions.SOUTH : Directions.NORTH;
+            }
         }
 
     }
@@ -46,4 +55,6 @@ public abstract class Entity extends GameObject {
         return map.isInbounds(newX, newY) && map.getTile(newX, newY).isWalkable();
 
     }
+
+
 }

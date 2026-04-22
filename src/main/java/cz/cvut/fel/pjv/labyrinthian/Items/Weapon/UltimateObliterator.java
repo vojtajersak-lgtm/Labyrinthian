@@ -10,11 +10,6 @@ public class UltimateObliterator extends Weapon {
     }
 
     @Override
-    public void attack(Entity entity) {
-
-    }
-
-    @Override
     public void use(Player player, GameManager gameManager) {
 
     }

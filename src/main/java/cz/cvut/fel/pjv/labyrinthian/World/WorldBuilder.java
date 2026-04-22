@@ -160,7 +160,7 @@ public class WorldBuilder {
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int[] enemyCords = getRandomPosition(map, enemyList);
-            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6, 1, 1, 1);
+            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6, 1,2,48);
             enemyList.add(enemy);
         }
         return enemyList;

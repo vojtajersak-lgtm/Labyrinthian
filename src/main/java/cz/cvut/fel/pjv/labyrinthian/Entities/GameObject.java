@@ -4,12 +4,12 @@ public abstract class GameObject {
     protected double cordY, cordX;
     protected double width, height;
 
-    public GameObject(double cordY, double cordX) {
+    public GameObject(double cordX, double cordY) {
         this.cordY = cordY;
         this.cordX = cordX;
     }
 
-    public GameObject(double cordX, double cordY, double width, double height) {
+    public GameObject(double cordX, double cordY, double height, double width) {
         this.cordY = cordY;
         this.cordX = cordX;
         this.width = width;

@@ -8,20 +8,20 @@ import java.util.*;
 public class Enemy extends Entity {
     private int baseDamage;
     private int attackSpeed;
-    private int attackRange;
     private EnemyState state = EnemyState.IDLE;
     private double startX, startY;       // starting position of the enemy
     int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
+    int attackCooldown;
     private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
     private double lastKnownY = 0;
 
-    public Enemy(double cordX, double cordY, double width, double height, int maxHealth, int baseDamage, int attackSpeed, int attackRange) {
-        super(cordY, cordX, width, height, maxHealth);
+    public Enemy(double cordX, double cordY, double height, double width, int maxHealth, int baseDamage,int attackSpeed ,double attackRange) {
+        super(cordX, cordY, height, width, maxHealth, attackRange);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
-        this.attackRange = attackRange;
         this.startX = cordX;
         this.startY = cordY;
+        this.attackCooldown = 0;
     }
 
     @Override
@@ -37,14 +37,15 @@ public class Enemy extends Entity {
         return attackSpeed;
     }
 
-    public int getAttackRange() {
+    public double getAttackRange() {
         return attackRange;
     }
 
     public void attack(Entity target) {
     }
 
-    public void takeTurn(Player player, Map map) {
+    public void takeTurn(Player player, Map map, GameManager gameManager) {
+        attackCooldown--;
 
         int distanceToPlayer = (int) ((Math.abs((player.getCordX()) - (this.cordX)) +
                 Math.abs((player.getCordY()) - (this.cordY))) / 64); // apparently something called Manhattan distance
@@ -97,6 +98,13 @@ public class Enemy extends Entity {
             }
             case ATTACKING -> {
                 if(distanceToPlayer > attackRange || !hasLoS) state = EnemyState.CHASING;
+                else{
+                    if(attackCooldown <= 0 && distanceToPlayer <= attackRange){
+                        player.takeDamage(baseDamage,gameManager);
+                        System.out.println("Attacked player!");
+                        attackCooldown = attackSpeed * 60;
+                    }
+                }
             }
         }
 

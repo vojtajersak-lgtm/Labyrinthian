@@ -23,7 +23,7 @@ public class GameManager {
     private boolean mapMode = false;
 
     public GameManager(InputManager inputManager) {
-        this.mainCharacter = new Player(64, 64, 32, 32);
+        this.mainCharacter = new Player(64, 64, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.enemyList = worldBuilder.buildEnemies(5,map);
@@ -62,9 +62,18 @@ public class GameManager {
             mapMode = !mapMode;
             inputManager.setLastPressed(null);
         }
+        if(lastPressed == KeyCode.SPACE) {
+            mainCharacter.attack(enemyList, this);
+            inputManager.setLastPressed(null);
+        }
+
+        if(lastPressed == KeyCode.P) {
+            System.out.println("_________________________________________________________________________________________________");
+            inputManager.setLastPressed(null);
+        }
 
         for(Enemy e : enemyList){
-            e.takeTurn(mainCharacter, map);
+            e.takeTurn(mainCharacter, map, this);
         }
 
 
