@@ -11,6 +11,9 @@ import javafx.scene.input.KeyCode;
 
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class GameManager {
 
@@ -21,8 +24,10 @@ public class GameManager {
     private List<Enemy> enemyList;
     private GameState currentState;
     private boolean mapMode = false;
+    private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
 
     public GameManager(InputManager inputManager) {
+        LOG.info("GameManager initialized");
         this.mainCharacter = new Player(64, 64, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
