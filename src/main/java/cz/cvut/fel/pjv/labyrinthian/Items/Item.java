@@ -12,5 +12,17 @@ public abstract class Item implements Interactable {
         this.description = description;
     }
 
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+        player.getInventory().addItem(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
     public abstract void use(Player player, GameManager gameManager);
 }

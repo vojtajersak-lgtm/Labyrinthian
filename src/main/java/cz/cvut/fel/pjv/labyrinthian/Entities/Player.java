@@ -2,9 +2,11 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.Inventory;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
+import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Entity{
@@ -18,27 +20,53 @@ public class Player extends Entity{
 
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setActiveweapon(Weapon activeweapon) {
+        this.activeweapon = activeweapon;
+    }
+
     @Override
     public void onDeath(GameManager gameManager) {
 
     }
 
-    public void attack(List<Enemy> enemyList,GameManager gameManager){
+    public void attack(List<Enemy> enemyList,List<ClayPot> Pots,GameManager gameManager){
         double attackX = cordX + (direction.dx > 0 ? width : direction.dx < 0 ? -attackRange : 0);
         double attackY = cordY + (direction.dy > 0 ? height : direction.dy < 0 ? -attackRange : 0);
         double attackW = direction.dx != 0 ? attackRange : width;
         double attackH = direction.dy != 0 ? attackRange : height;
 
+        List<Enemy> toRemove = new ArrayList<>();
         for(Enemy e : enemyList){
+
             if(attackX < e.getCordX() + e.getWidth() &&
                     attackX + attackW > e.getCordX() &&
                     attackY < e.getCordY() + e.getHeight() &&
                     attackY + attackH > e.getCordY()){
                 e.takeDamage(this.activeweapon.getDamage(), gameManager);
+                if(e.isDead()) toRemove.add(e);
                 System.out.println("Attacked!");
             }
         }
+        enemyList.removeAll(toRemove);
+
+        List<ClayPot> toRemovePots = new ArrayList<>();
+        for(ClayPot c : Pots){
+            if(attackX < c.getCordX() + c.getWidth() &&
+                    attackX + attackW > c.getCordX() &&
+                    attackY < c.getCordY() + c.getHeight() &&
+                    attackY + attackH > c.getCordY()){
+                c.takeDamage(this.activeweapon.getDamage(), gameManager);
+                if(c.isDead()) toRemovePots.add(c);
+                System.out.println("Attacked!");
+            }
+        }
+        Pots.removeAll(toRemovePots);
     }
+
 
 
 }

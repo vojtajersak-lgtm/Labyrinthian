@@ -1,6 +1,8 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Weapon;
 
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
+import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
 public abstract class Weapon extends Item {
@@ -39,4 +41,8 @@ public abstract class Weapon extends Item {
         this.range = range;
     }
 
+    @Override
+    public void use(Player player, GameManager gameManager) {
+        player.setActiveweapon(this);
+    }
 }

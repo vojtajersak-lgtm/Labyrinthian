@@ -1,7 +1,11 @@
 package cz.cvut.fel.pjv.labyrinthian.World;
 
+import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
+import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.*;
+import cz.cvut.fel.pjv.labyrinthian.Items.Item;
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
 
 import java.util.*;
 import org.slf4j.Logger;
@@ -63,6 +67,47 @@ public class WorldBuilder {
         }
     }
 
+
+
+    private void addBossArena(Tile[][] tiles, int mapSize) {
+        final int radius = 10;
+        final int centerX = mapSize / 2;
+        final int centerY = mapSize / 2;
+
+        for (int x = 0; x < mapSize; x++) {
+            for (int y = 0; y < mapSize; y++) {
+                if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius + 1) {
+                    tiles[x][y] = new Tile(TileType.ARENA_WALL);
+                }
+            }
+        }
+        for (int x = 0; x < mapSize; x++) {
+            for (int y = 0; y < mapSize; y++) {
+                if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius) {
+                    tiles[x][y] = new Tile(TileType.PATH);
+                }
+            }
+        }
+        // Entrance on the left side of the arena
+        tiles[centerX - radius - 1][centerY] = new Tile(TileType.PATH);
+    }
+
+
+
+    public List<ClayPot> buildClaypots(int count, Map map){
+        List<ClayPot> clayPots = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            int[] potCords = getRandomPosition(map, clayPots);
+            ClayPot clayPot = new ClayPot(potCords[0] * 64, potCords[1] * 64, 48,48,getRandomItem());
+            clayPots.add(clayPot);
+        }
+        return clayPots;
+    }
+
+
+
+
+    //helper methods
     private List<int[]> getConnectingPath(Tile[][] tiles, int mapSize, int[] source, int[] neighbour){
         // source and neighbour are {x, y}
         int stepsX = Math.abs(neighbour[0] - source[0]);
@@ -93,29 +138,6 @@ public class WorldBuilder {
             }
         }
         return connectingTiles;
-    }
-
-    private void addBossArena(Tile[][] tiles, int mapSize) {
-        final int radius = 10;
-        final int centerX = mapSize / 2;
-        final int centerY = mapSize / 2;
-
-        for (int x = 0; x < mapSize; x++) {
-            for (int y = 0; y < mapSize; y++) {
-                if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius + 1) {
-                    tiles[x][y] = new Tile(TileType.ARENA_WALL);
-                }
-            }
-        }
-        for (int x = 0; x < mapSize; x++) {
-            for (int y = 0; y < mapSize; y++) {
-                if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius) {
-                    tiles[x][y] = new Tile(TileType.PATH);
-                }
-            }
-        }
-        // Entrance on the left side of the arena
-        tiles[centerX - radius - 1][centerY] = new Tile(TileType.PATH);
     }
 
     private List<int[]> getUnvisitedNeighbors(Tile[][] tiles, int x, int y, boolean[][] visited, int mapSize){
@@ -162,6 +184,26 @@ public class WorldBuilder {
         return positionXY;
     }
 
+
+    public Item getRandomItem(){
+        List<Item> items = List.of(new YarnBall(), new CO2Shears(), new CO2Laser(),
+                new BlindingStew(), new SnickersBar(), new RustyPogoStick(), new UltimateObliterator());
+        List<Integer> weights = List.of(30, 25, 15, 15, 8, 5, 2);
+        Random random = new Random();
+
+        int randomInt = random.nextInt(1,101);
+        int i = 0;
+        while(randomInt > 0){
+            randomInt = randomInt - weights.get(i);
+            if(randomInt <= 0){
+                break;
+            }
+            i++;
+        }
+
+        return items.get(i);
+    }
+
     public List<Enemy> buildEnemies(int count, Map map){
         LOG.info("Spawning {} enemies", count);
         List<Enemy> enemyList = new ArrayList<>();
@@ -174,8 +216,10 @@ public class WorldBuilder {
         return enemyList;
     }
 
+
     public boolean isInbounds(int x, int y, int mapsize){
         return(x >= 0 && x < mapsize && y >= 0 && y < mapsize);
     }
 
 }
+
