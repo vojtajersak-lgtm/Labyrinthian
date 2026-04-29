@@ -36,3 +36,4 @@ public class Map {
         return cordX >= 0 && cordX < map[0].length && cordY >= 0 && cordY < map.length ;
     }
 }
+ 

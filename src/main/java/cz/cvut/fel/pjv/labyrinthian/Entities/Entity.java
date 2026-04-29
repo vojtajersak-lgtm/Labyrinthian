@@ -2,12 +2,16 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Entity extends GameObject {
     protected int maxHealth;
     protected int currHealth;
     protected Directions direction;
     protected double attackRange;
+    // Logger for entity health and movement events
+    private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
 
     public Entity(double cordX, double cordY,double height, double width, int maxHealth,double attackRange) {
         super(cordX, cordY, height, width);
@@ -17,13 +21,22 @@ public abstract class Entity extends GameObject {
         this.direction = Directions.EAST;
     }
 
+    public Directions getDirection() {
+        return direction;
+    }
+
     public int getCurrHealth() {
         return currHealth;
     }
 
     public void takeDamage(int Damage, GameManager gameManager){
         currHealth = Math.max(currHealth - Damage, 0);
-        if(currHealth == 0) onDeath(gameManager);
+        // Log damage taken and remaining health
+        LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), Damage, currHealth, maxHealth);
+        if(currHealth == 0) {
+            LOG.info("{} died", this.getClass().getSimpleName());
+            onDeath(gameManager);
+        }
     }
 
     public boolean isDead(){

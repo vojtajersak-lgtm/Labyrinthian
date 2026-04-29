@@ -11,15 +11,27 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameApplication extends Application {
 
+
+
+
+    private static final Logger LOG = LoggerFactory.getLogger(GameApplication.class);
     private final Canvas canvas = new Canvas(1024, 576);
 
 
     @Override
     public void start(Stage stage) throws Exception {
+        String level = System.getProperty("logLevel", "INFO");
+        ch.qos.logback.classic.Logger rootLogger =
+                (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        rootLogger.setLevel(ch.qos.logback.classic.Level.valueOf(level));
+        LOG.info("Log level set to: {}", level);
 
+        LOG.info("Application starting");
         InputManager inputManager = new InputManager();
         GameManager gameManager = new GameManager(inputManager);
 
@@ -29,7 +41,7 @@ public class GameApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Labyrinthian");
         scene.setOnKeyPressed(e -> {inputManager.setLastCode(e.getCode());
-                                            inputManager.setLastPressed(e.getCode());});
+            inputManager.setLastPressed(e.getCode());});
         scene.setOnKeyReleased(e -> inputManager.removeLastCode(e.getCode()));
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -51,6 +63,7 @@ public class GameApplication extends Application {
         };
 
         timer.start();
+        LOG.info("Game loop started");
         stage.show();
     }
 }

@@ -4,11 +4,16 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
 
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldBuilder {
     // Tile array convention: tiles[X][Y]
+    // Logger for map generation events
+    private static final Logger LOG = LoggerFactory.getLogger(WorldBuilder.class);
 
     public Map buildMap(int mapSize){
+        LOG.info("Starting map generation, size: {}x{}", mapSize, mapSize);
         Tile[][] tiles = new Tile[mapSize][mapSize];
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
@@ -30,6 +35,7 @@ public class WorldBuilder {
     }
 
     private void generateMaze(Tile[][] tiles, int mapSize) {
+        LOG.debug("Generating maze with recursive backtracker algorithm");
         Deque<int[]> stack = new ArrayDeque<>();
         boolean[][] visited = new boolean[mapSize][mapSize];
         tiles[1][1] = new Tile(TileType.PATH);
@@ -157,10 +163,12 @@ public class WorldBuilder {
     }
 
     public List<Enemy> buildEnemies(int count, Map map){
+        LOG.info("Spawning {} enemies", count);
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int[] enemyCords = getRandomPosition(map, enemyList);
             Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6, 1,2,48);
+            LOG.debug("Enemy {} spawned at ({}, {})", i+1, enemyCords[0], enemyCords[1]);
             enemyList.add(enemy);
         }
         return enemyList;
@@ -171,4 +179,3 @@ public class WorldBuilder {
     }
 
 }
-

@@ -65,9 +65,11 @@ public class GameManager {
         if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(7, 0, map);
         if(lastPressed == KeyCode.M) {
             mapMode = !mapMode;
+            LOG.debug("Map mode toggled: {}", mapMode);
             inputManager.setLastPressed(null);
         }
         if(lastPressed == KeyCode.SPACE) {
+            LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
             mainCharacter.attack(enemyList, this);
             inputManager.setLastPressed(null);
         }

@@ -4,6 +4,8 @@ import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Enemy extends Entity {
     private int baseDamage;
@@ -14,6 +16,8 @@ public class Enemy extends Entity {
     int attackCooldown;
     private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
     private double lastKnownY = 0;
+    // Logger for enemy AI state changes and combat events
+    private static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
 
     public Enemy(double cordX, double cordY, double height, double width, int maxHealth, int baseDamage,int attackSpeed ,double attackRange) {
         super(cordX, cordY, height, width, maxHealth, attackRange);
@@ -61,16 +65,22 @@ public class Enemy extends Entity {
 
         switch (state) {
             case IDLE -> {
+                EnemyState prev = state;
                 state = (distanceToPlayer <= chaseThreshold) && hasLoS  ? EnemyState.CHASING : EnemyState.IDLE;
                 if(distanceToOrigin >= 10) state = EnemyState.RETURN;
                 if(distanceToOrigin > 1) state = EnemyState.RETURN;
+                if(state != prev) LOG.info("Enemy transitioned from IDLE to {}", state); //for debugging only, delete before final
             }
 
             case CHASING -> { // starts chasing, return if player escapes
-                if(distanceToOrigin >= 40) state = EnemyState.RETURN;
+                if(distanceToOrigin >= 40) {
+                    LOG.info("Enemy exceeded max chase distance, returning to origin");
+                    state = EnemyState.RETURN;
+                }
                 if(Math.abs(player.getCordX() - cordX) < (80)
                         && Math.abs(player.getCordY() - cordY) < (80)){
-                    state = EnemyState.ATTACKING; //if distance is less than 32 pixels
+                    LOG.info("Enemy in attack range, switching to ATTACKING");
+                    state = EnemyState.ATTACKING;
                 }
 
                 if(hasLoS){
@@ -78,11 +88,13 @@ public class Enemy extends Entity {
                     lastKnownX = player.getCordX();
                     lastKnownY = player.getCordY();
                     if(!moveTo(player.getCordX(), player.getCordY(), map)) {
+                        LOG.warn("Enemy pathfinding failed while chasing, returning to origin");
                         state = EnemyState.RETURN;
                     }
 
                 }else{
                     if(!hasLoS && --chaseTimer == 0){
+                        LOG.info("Enemy lost sight of player, chase timer expired, returning");
                         state = EnemyState.RETURN;
                     }else{
                         moveTo(lastKnownX,lastKnownY,map);
@@ -91,17 +103,25 @@ public class Enemy extends Entity {
 
             }
             case RETURN -> {
-                if(distanceToOrigin <= 1) state = EnemyState.IDLE;
+                if(distanceToOrigin <= 1) {
+                    LOG.debug("Enemy reached origin, switching to IDLE");
+                    state = EnemyState.IDLE;
+                }
                 else {
-                    moveTo(startX, startY, map);
+                    if(!moveTo(startX, startY, map)){
+                        LOG.warn("Enemy pathfinding failed while returning to origin");
+                    }
                 }
             }
             case ATTACKING -> {
-                if(distanceToPlayer > attackRange || !hasLoS) state = EnemyState.CHASING;
+                if(distanceToPlayer > attackRange || !hasLoS) {
+                    LOG.debug("Player out of attack range or LoS lost, switching to CHASING");
+                    state = EnemyState.CHASING;
+                }
                 else{
                     if(attackCooldown <= 0 && distanceToPlayer <= attackRange){
+                        LOG.info("Enemy attacked player for {} damage", baseDamage);
                         player.takeDamage(baseDamage,gameManager);
-                        System.out.println("Attacked player!");
                         attackCooldown = attackSpeed * 60;
                     }
                 }
@@ -115,7 +135,11 @@ public class Enemy extends Entity {
 
     private boolean moveTo(double dx, double dy, Map map){
         int[] destTile = seekTarget(dx, dy, map);
-        if(destTile == null) return false;
+        if(destTile == null) {
+            // A* pathfinding returned null, couldn't find target within step limit
+            LOG.warn("seekTarget returned null, target unreachable at ({}, {})", (int)(dx/64), (int)(dy/64));
+            return false;
+        }
         double destTileX = (double) destTile[0] * 64 + 32;
         double destTileY = (double) destTile[1] * 64 + 32;
         double dirX = destTileX - cordX;
@@ -230,4 +254,3 @@ public class Enemy extends Entity {
         return LoS;
     }
 }
-
