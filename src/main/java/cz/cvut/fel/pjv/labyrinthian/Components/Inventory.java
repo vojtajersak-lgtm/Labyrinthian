@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private final List<Consumable> inventoryList;
+    private final List<Item> inventoryList;
     private final int inventorySize;
     private Consumable activeItem;
 
@@ -18,7 +18,7 @@ public class Inventory {
     }
 
     public void addItem(Item item){
-
+        inventoryList.add(item);
     }
 
     public void removeItem(Item item){
@@ -31,6 +31,10 @@ public class Inventory {
 
     public Consumable getActiveItem() {
         return activeItem;
+    }
+
+    public List<Item> getInventoryList() {
+        return inventoryList;
     }
 
     public void setActiveItem(Consumable activeItem) {

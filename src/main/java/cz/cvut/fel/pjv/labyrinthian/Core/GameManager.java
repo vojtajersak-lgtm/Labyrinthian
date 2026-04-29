@@ -1,14 +1,17 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
+import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
 import javafx.scene.input.KeyCode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -22,6 +25,8 @@ public class GameManager {
     private InputManager inputManager;
     private WorldBuilder worldBuilder = new WorldBuilder();
     private List<Enemy> enemyList;
+    private List<ClayPot> clayPots;
+    private List<LooseItem> looseItemList;
     private GameState currentState;
     private boolean mapMode = false;
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
@@ -32,6 +37,8 @@ public class GameManager {
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.enemyList = worldBuilder.buildEnemies(5,map);
+        this.clayPots = worldBuilder.buildClaypots(5,map);
+        this.looseItemList = new ArrayList<LooseItem>();
         this.currentState = GameState.MAIN_MENU;
     }
 
@@ -45,6 +52,14 @@ public class GameManager {
 
     public List<Enemy> getEnemyList() {
         return enemyList;
+    }
+
+    public List<ClayPot> getClayPots() {
+        return clayPots;
+    }
+
+    public List<LooseItem> getLooseItemList() {
+        return looseItemList;
     }
 
     public GameState getCurrentState() {
@@ -68,12 +83,28 @@ public class GameManager {
             inputManager.setLastPressed(null);
         }
         if(lastPressed == KeyCode.SPACE) {
-            mainCharacter.attack(enemyList, this);
+            mainCharacter.attack(enemyList,clayPots,this);
             inputManager.setLastPressed(null);
         }
 
-        if(lastPressed == KeyCode.P) {
-            System.out.println("_________________________________________________________________________________________________");
+        if(lastPressed == KeyCode.I) {
+            for(Item i : mainCharacter.getInventory().getInventoryList()){
+                System.out.println("" + i);
+            }
+            inputManager.setLastPressed(null);
+        }
+        if(lastPressed == KeyCode.E){
+            LooseItem toPickUp = null;
+            for(LooseItem l : looseItemList){
+                if((Math.abs(mainCharacter.getCordX() - l.getCordX())) < 30 && Math.abs(mainCharacter.getCordY() - l.getCordY()) < 30){
+                    toPickUp = l;
+                    break; //
+                }
+            }
+            if(toPickUp != null){
+                mainCharacter.getInventory().addItem(toPickUp.getItem());
+                looseItemList.remove(toPickUp);
+            }
             inputManager.setLastPressed(null);
         }
 
@@ -83,9 +114,12 @@ public class GameManager {
 
 
 
+
     }
 
     public void spawnItem(Item item, double cordX, double cordY) {
+        LooseItem looseItem = new LooseItem(item, cordX, cordY);
+        looseItemList.add(looseItem);
     }
 
     public void spawnEntity(Entity entity, int cordX, int cordY) {

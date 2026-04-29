@@ -45,8 +45,8 @@ public class GameApplication extends Application {
                 if( now - lastUpdate < 13_333_333 ) return;
                 lastUpdate = now;
                 gameManager.update();
-                renderer.render(gc,gameManager.getMap(),
-                        gameManager.getMainCharacter(), gameManager.getEnemyList(), gameManager.isMapMode());
+                renderer.render(gc,gameManager.getMap(), gameManager.getMainCharacter(), gameManager.getEnemyList(),
+                        gameManager.getClayPots(),gameManager.getLooseItemList() ,gameManager.isMapMode());
             }
         };
 

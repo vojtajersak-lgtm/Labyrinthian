@@ -6,7 +6,7 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 public class RustyPogoStick extends Consumable {
 
 
-    public RustyPogoStick(String name, String description, int numberOfUses) {
+    public RustyPogoStick() {
         super("Rusty POGO stick","A handy tool for jumping over pesky hedges. Seems to have rusted over the years - could hurt an unexperienced user...", -1);
     }
 

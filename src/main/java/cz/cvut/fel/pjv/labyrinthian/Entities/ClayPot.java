@@ -13,7 +13,7 @@ public class ClayPot extends Entity{
     @Override
     public void onDeath(GameManager gameManager) {
         gameManager.spawnItem(item, cordX, cordY);
-
+        System.out.println("Spawned item:" + item);
     }
 
 }
