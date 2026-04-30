@@ -89,6 +89,11 @@ public class GameManager {
             mainCharacter.attack(enemyList, this);
             inputManager.setLastPressed(null);
         }
+        if(lastPressed == KeyCode.Q) {
+            Item activeItem = mainCharacter.getInventory().getActiveItem();
+            if(activeItem != null) activeItem.use(mainCharacter, this);
+            inputManager.setLastPressed(null);
+        }
 
         if(lastPressed == KeyCode.I) {
             for(Item i : mainCharacter.getInventory().getInventoryList()){
