@@ -4,10 +4,12 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
 
 public class Tile {
    private  TileType tile;
+   private int textureIndex;
 
-    public Tile(TileType tile) {
+    public Tile(TileType tile, int textureIndex) {
 
         this.tile = tile;
+        this.textureIndex = textureIndex;
 
     }
 
@@ -17,5 +19,9 @@ public class Tile {
 
     public TileType getTile() {
         return tile;
+    }
+
+    public int getTextureIndex() {
+        return textureIndex;
     }
 }

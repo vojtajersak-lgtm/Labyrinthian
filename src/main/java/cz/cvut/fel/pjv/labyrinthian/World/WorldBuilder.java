@@ -9,6 +9,8 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
 
 import java.util.*;
 
+import static java.lang.Math.random;
+
 public class WorldBuilder {
     // Tile array convention: tiles[X][Y]
 
@@ -16,7 +18,7 @@ public class WorldBuilder {
         Tile[][] tiles = new Tile[mapSize][mapSize];
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
-                tiles[x][y] = new Tile(TileType.HEDGE);
+                tiles[x][y] = new Tile(TileType.HEDGE,1 );
             }
         }
         addBossArena(tiles, mapSize);
@@ -25,7 +27,7 @@ public class WorldBuilder {
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
                 if(x == mapSize - 1 || y == mapSize - 1 || x == 0 || y == 0){
-                    tiles[x][y] = new Tile(TileType.HEDGE);
+                    tiles[x][y] = new Tile(TileType.HEDGE,1);
                 }
             }
         }
@@ -36,7 +38,7 @@ public class WorldBuilder {
     private void generateMaze(Tile[][] tiles, int mapSize) {
         Deque<int[]> stack = new ArrayDeque<>();
         boolean[][] visited = new boolean[mapSize][mapSize];
-        tiles[1][1] = new Tile(TileType.PATH);
+        tiles[1][1] = new Tile(TileType.PATH,getRandomTextureInt());
         visited[1][1] = true;
         stack.push(new int[]{1, 1}); // {x, y}
         while(!stack.isEmpty()){
@@ -49,10 +51,10 @@ public class WorldBuilder {
                 List<int[]> connectingTiles = getConnectingPath(tiles, mapSize, stackTop, randomNeighbour);
                 for(int[] cord : connectingTiles){
                     if(tiles[cord[0]][cord[1]].getTile() != TileType.ARENA_WALL){
-                        tiles[cord[0]][cord[1]] = new Tile(TileType.PATH);
+                        tiles[cord[0]][cord[1]] = new Tile(TileType.PATH, getRandomTextureInt());
                     }
                 }
-                tiles[randomNeighbour[0]][randomNeighbour[1]] = new Tile(TileType.PATH);
+                tiles[randomNeighbour[0]][randomNeighbour[1]] = new Tile(TileType.PATH, getRandomTextureInt());
                 visited[randomNeighbour[0]][randomNeighbour[1]] = true;
                 stack.push(randomNeighbour);
             } else {
@@ -71,19 +73,19 @@ public class WorldBuilder {
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
                 if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius + 1) {
-                    tiles[x][y] = new Tile(TileType.ARENA_WALL);
+                    tiles[x][y] = new Tile(TileType.ARENA_WALL, 1);
                 }
             }
         }
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
                 if (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= radius) {
-                    tiles[x][y] = new Tile(TileType.PATH);
+                    tiles[x][y] = new Tile(TileType.PATH, getRandomTextureInt());
                 }
             }
         }
         // Entrance on the left side of the arena
-        tiles[centerX - radius - 1][centerY] = new Tile(TileType.PATH);
+        tiles[centerX - radius - 1][centerY] = new Tile(TileType.PATH, getRandomTextureInt());
     }
 
 
@@ -214,5 +216,9 @@ public class WorldBuilder {
         return(x >= 0 && x < mapsize && y >= 0 && y < mapsize);
     }
 
+    public int getRandomTextureInt(){
+        Random random = new Random();
+        return random.nextInt(0,4);
+    }
 }
 

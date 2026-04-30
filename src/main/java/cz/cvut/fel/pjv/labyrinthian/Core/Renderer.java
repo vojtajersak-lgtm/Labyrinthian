@@ -8,16 +8,24 @@ import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.TileType;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.List;
 
 public class Renderer {
+    Image[] pathTiles = new Image[4];
 
+    public Renderer() {
+        for(int i = 0; i < 4; i++) {
+            pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
+        }
+    }
 
     public void render(GraphicsContext gc, Map map, Player player, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
+
 
         offsetX = Math.clamp(offsetX, 0, map.getWidth() * 64 - 1024);
         offsetY = Math.clamp(offsetY, 0, map.getHeight() * 64 - 576);
@@ -64,7 +72,8 @@ public class Renderer {
             for (int i = 0; i < map.getHeight(); i++) {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTileByIndex(j, i).isWalkable()){
-                        gc.setFill(Color.YELLOW);
+                        gc.drawImage(pathTiles[map.getTileByIndex(j,i).getTextureIndex()], j * 64 - offsetX, i * 64 - offsetY, 64, 64);
+                        continue;
                     }else if(map.getTileByIndex(j, i).getTile() == TileType.HEDGE){
                         gc.setFill(Color.GREEN);
                     }else {
