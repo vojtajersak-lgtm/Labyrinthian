@@ -86,7 +86,7 @@ public class GameManager {
         if(lastPressed == KeyCode.SPACE) {
             mainCharacter.attack(enemyList,clayPots,this);
             LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
-            mainCharacter.attack(enemyList, this);
+            mainCharacter.attack(enemyList,clayPots,this);
             inputManager.setLastPressed(null);
         }
         if(lastPressed == KeyCode.Q) {
