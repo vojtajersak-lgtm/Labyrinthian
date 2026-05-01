@@ -23,6 +23,19 @@ public abstract class Consumable extends Item {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        gameManager.addToInventory(player, this);
+        player.getInventory().addItem(this);
     }
+
+    @Override
+    public void use(Player player, GameManager gameManager) {
+        System.out.println("item used!");
+        applyEffect(player, gameManager);
+        decreaseUses();
+        if(usedUp()){
+            gameManager.getMainCharacter().getInventory().removeFromInventory(this);
+            System.out.println("Item used up!");
+        }
+    }
+    protected abstract void applyEffect(Player player, GameManager gameManager);
+
 }

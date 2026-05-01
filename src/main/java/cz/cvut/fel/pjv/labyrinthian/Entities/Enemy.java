@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
@@ -51,12 +52,10 @@ public class Enemy extends Entity {
     public void takeTurn(Player player, Map map, GameManager gameManager) {
         attackCooldown--;
 
-        int distanceToPlayer = (int) ((Math.abs((player.getCordX()) - (this.cordX)) +
-                Math.abs((player.getCordY()) - (this.cordY))) / 64); // apparently something called Manhattan distance
+        int distanceToPlayer = (int) ((Utils.distance(player.getCordX(),player.getCordY(),cordX,cordY)) / 64); // apparently something called Manhattan distance
         //gives real distance with turns instead of "flight" distance
 
-        int distanceToOrigin = (int) ((Math.abs((startX) - (this.cordX)) +
-                Math.abs((startY) - (this.cordY))) / 64);
+        int distanceToOrigin = (int) ((Utils.distance(startX,startY,cordX,cordY)) / 64);
 
         boolean hasLoS = hasLineOfSight(player,map);
 
@@ -77,8 +76,7 @@ public class Enemy extends Entity {
                     LOG.info("Enemy exceeded max chase distance, returning to origin");
                     state = EnemyState.RETURN;
                 }
-                if(Math.abs(player.getCordX() - cordX) < (80)
-                        && Math.abs(player.getCordY() - cordY) < (80)){
+                if(Utils.distance(player.getCordX(),player.getCordY(),cordX,cordY) < (80)){
                     LOG.info("Enemy in attack range, switching to ATTACKING");
                     state = EnemyState.ATTACKING;
                 }

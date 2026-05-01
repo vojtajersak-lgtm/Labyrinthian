@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
@@ -78,43 +79,48 @@ public class GameManager {
         if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 7, map);
         if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-7, 0, map);
         if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(7, 0, map);
-        if(lastPressed == KeyCode.M) {
-            mapMode = !mapMode;
-            LOG.debug("Map mode toggled: {}", mapMode);
-            inputManager.setLastPressed(null);
-        }
-        if(lastPressed == KeyCode.SPACE) {
-            mainCharacter.attack(enemyList,clayPots,this);
-            LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
-            mainCharacter.attack(enemyList,clayPots,this);
-            inputManager.setLastPressed(null);
-        }
-        if(lastPressed == KeyCode.Q) {
-            Item activeItem = mainCharacter.getInventory().getActiveItem();
-            if(activeItem != null) activeItem.use(mainCharacter, this);
+
+        if (lastPressed != null) {
+            switch(lastPressed) {
+                case M -> {
+                    mapMode = !mapMode;
+                    LOG.debug("Map mode toggled: {}", mapMode);
+                }
+                case SPACE -> {
+                    mainCharacter.attack(enemyList, clayPots, this);
+                    LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
+                }
+                case Q -> {
+                    Item activeItem = mainCharacter.getInventory().getActiveItem();
+                    if(activeItem != null) activeItem.use(mainCharacter, this);
+                }
+                case I -> {
+                    for(Item i : mainCharacter.getInventory().getInventorySlots()){
+                        System.out.println("" + i);
+                    }
+                }
+                case E -> {
+                    LooseItem toPickUp = null;
+                    for(LooseItem l : looseItemList){
+                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 30){
+                            toPickUp = l;
+                            break;
+                        }
+                    }
+                    if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
+                }
+                case DIGIT1 -> mainCharacter.getInventory().setActiveIndex(0);
+                case DIGIT2 -> mainCharacter.getInventory().setActiveIndex(1);
+                case DIGIT3 -> mainCharacter.getInventory().setActiveIndex(2);
+                case DIGIT4 -> mainCharacter.getInventory().setActiveIndex(3);
+                case DIGIT5 -> mainCharacter.getInventory().setActiveIndex(4);
+
+
+                default -> {}
+            }
             inputManager.setLastPressed(null);
         }
 
-        if(lastPressed == KeyCode.I) {
-            for(Item i : mainCharacter.getInventory().getInventoryList()){
-                System.out.println("" + i);
-            }
-            inputManager.setLastPressed(null);
-        }
-        if(lastPressed == KeyCode.E){
-            LooseItem toPickUp = null;
-            for(LooseItem l : looseItemList){
-                if((Math.abs(mainCharacter.getCordX() - l.getCordX())) < 30 && Math.abs(mainCharacter.getCordY() - l.getCordY()) < 30){
-                    toPickUp = l;
-                    break; //
-                }
-            }
-            if(toPickUp != null){
-                mainCharacter.getInventory().addItem(toPickUp.getItem());
-                looseItemList.remove(toPickUp);
-            }
-            inputManager.setLastPressed(null);
-        }
 
         for(Enemy e : enemyList){
             e.takeTurn(mainCharacter, map, this);
@@ -134,6 +140,6 @@ public class GameManager {
 
     }
 
-    public void addToInventory(Player player, Consumable consumable) {
-    }
+
+
 }

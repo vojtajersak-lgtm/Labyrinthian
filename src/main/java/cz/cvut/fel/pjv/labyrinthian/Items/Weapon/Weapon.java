@@ -42,7 +42,10 @@ public abstract class Weapon extends Item {
     }
 
     @Override
-    public void use(Player player, GameManager gameManager) {
+    public void use(Player player, GameManager gameManager){}
+
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
         player.setActiveweapon(this);
     }
 }

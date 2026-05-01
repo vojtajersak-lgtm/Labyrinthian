@@ -19,6 +19,10 @@ public class Map {
         return map[x][y];
 
     }
+    public void setTileByIndex(int x, int y, TileType tile){
+        map[x][y].setTile(tile);
+    }
+
 
     public int getHeight() {
         return map.length;

@@ -24,4 +24,8 @@ public class Tile {
     public int getTextureIndex() {
         return textureIndex;
     }
+
+    public void setTile(TileType tile) {
+        this.tile = tile;
+    }
 }

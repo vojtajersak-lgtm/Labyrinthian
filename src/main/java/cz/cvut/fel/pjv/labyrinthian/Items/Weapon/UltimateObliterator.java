@@ -16,6 +16,7 @@ public class UltimateObliterator extends Weapon {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-
+        //TODO: show cutscene confirming choice to equip
+        player.setActiveweapon(this);
     }
 }

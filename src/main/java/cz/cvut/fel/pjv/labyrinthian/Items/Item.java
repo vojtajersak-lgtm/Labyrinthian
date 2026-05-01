@@ -14,8 +14,7 @@ public abstract class Item implements Interactable {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        player.getInventory().addItem(this);
-    }
+        player.getInventory().addItem(this);}
 
     @Override
     public String toString() {

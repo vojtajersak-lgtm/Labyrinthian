@@ -29,7 +29,10 @@ public class LooseItem implements Interactable {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        item.onInteraction(player, gameManager);
-        gameManager.getLooseItemList().remove(this);
+        if(!player.getInventory().inventoryFull()){
+            item.onInteraction(player, gameManager);
+            gameManager.getLooseItemList().remove(this);
+        }
+
     }
 }

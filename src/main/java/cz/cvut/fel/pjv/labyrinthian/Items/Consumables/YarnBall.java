@@ -19,7 +19,7 @@ public class YarnBall extends Consumable {
     }
 
     @Override
-    public void use(Player player, GameManager gameManager) {
+    public void applyEffect(Player player, GameManager gameManager) {
 
     }
 }

@@ -31,7 +31,6 @@ public abstract class Entity extends GameObject {
 
     public void takeDamage(int Damage, GameManager gameManager){
         currHealth = Math.max(currHealth - Damage, 0);
-        // Log damage taken and remaining health
         LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), Damage, currHealth, maxHealth);
         if(currHealth == 0) {
             LOG.info("{} died", this.getClass().getSimpleName());
@@ -39,9 +38,17 @@ public abstract class Entity extends GameObject {
         }
     }
 
+    public void heal(int health, GameManager gameManager){
+        currHealth = Math.min((currHealth + health), maxHealth);
+        LOG.info("{} helaed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
+
+
+    }
+
     public boolean isDead(){
         return currHealth == 0;
     }
+    public boolean fullHealth() {return currHealth == maxHealth;}
 
     public abstract void onDeath(GameManager gameManager);
 
