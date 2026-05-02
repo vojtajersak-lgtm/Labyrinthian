@@ -46,7 +46,7 @@ public class GameApplication extends Application {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Renderer renderer = new Renderer();
+        Renderer renderer = new Renderer(gameManager.getYarnBallTrail());
 
         AnimationTimer timer = new AnimationTimer() {
             private long lastUpdate = 0;
@@ -57,8 +57,8 @@ public class GameApplication extends Application {
                 if( now - lastUpdate < 13_333_333 ) return;
                 lastUpdate = now;
                 gameManager.update();
-                renderer.render(gc,gameManager.getMap(), gameManager.getMainCharacter(), gameManager.getEnemyList(),
-                        gameManager.getClayPots(),gameManager.getLooseItemList() ,gameManager.isMapMode());
+                renderer.render(gc,gameManager.getMap(), gameManager.getMainCharacter(),gameManager.getEscapePortal() ,gameManager.getEnemyList(),
+                        gameManager.getClayPots(),gameManager.getLooseItemList() ,gameManager.isMapMode(), gameManager.isBlindingStewActive());
             }
         };
 

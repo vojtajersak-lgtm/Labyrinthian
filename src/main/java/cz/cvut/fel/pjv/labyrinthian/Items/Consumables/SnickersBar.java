@@ -12,7 +12,7 @@ public class SnickersBar extends Consumable {
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
         /*if(Utils.distance(player.getCordX(), player.getCordY(), gameManager.getBoss.cordX,gameManager.getBoss.cordY ) < 120){
-            int transformChance = (int) (Math.random() % 100);
+            int transformChance = (int) (Math.random() * 100);
             if(transformChance <= 15){
                 gameManager.getBoss.transform();
             }

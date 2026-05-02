@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Entity extends GameObject {
-    protected int maxHealth;
-    protected int currHealth;
+    protected double maxHealth;
+    protected double currHealth;
     protected Directions direction;
     protected double attackRange;
     // Logger for entity health and movement events
     private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
 
-    public Entity(double cordX, double cordY,double height, double width, int maxHealth,double attackRange) {
+    public Entity(double cordX, double cordY,double height, double width, double maxHealth,double attackRange) {
         super(cordX, cordY, height, width);
         this.attackRange = attackRange;
         this.maxHealth = maxHealth;
@@ -25,11 +25,27 @@ public abstract class Entity extends GameObject {
         return direction;
     }
 
-    public int getCurrHealth() {
+    public double getCurrHealth() {
         return currHealth;
     }
 
-    public void takeDamage(int Damage, GameManager gameManager){
+    public double getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(double maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public double getAttackRange() {
+        return attackRange;
+    }
+
+    public void setAttackRange(double attackRange) {
+        this.attackRange = attackRange;
+    }
+
+    public void takeDamage(double Damage, GameManager gameManager){
         currHealth = Math.max(currHealth - Damage, 0);
         LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), Damage, currHealth, maxHealth);
         if(currHealth == 0) {
@@ -38,7 +54,7 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    public void heal(int health, GameManager gameManager){
+    public void heal(double health, GameManager gameManager){
         currHealth = Math.min((currHealth + health), maxHealth);
         LOG.info("{} helaed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
 

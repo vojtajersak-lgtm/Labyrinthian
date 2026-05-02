@@ -1,9 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Components;
 
-import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.CO2Laser;
-import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.CO2Shears;
-import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
-import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.SnickersBar;
+import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
 import java.util.ArrayList;
@@ -23,9 +20,10 @@ public class Inventory {
         this.inventorySlots = new Item[5];
         this.activeIndex = 0;
         inventorySlots[0] = new SnickersBar();
-        inventorySlots[1] = new SnickersBar();
+        inventorySlots[1] = new RustyPogoStick();
         inventorySlots[2] = new CO2Laser();
-        inventorySlots[3] = new CO2Shears();
+        inventorySlots[3] = new BlindingStew();
+        inventorySlots[4] = new YarnBall();
 
 
     }

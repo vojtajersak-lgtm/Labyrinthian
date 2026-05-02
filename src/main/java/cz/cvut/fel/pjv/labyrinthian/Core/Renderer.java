@@ -3,26 +3,31 @@ package cz.cvut.fel.pjv.labyrinthian.Core;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
-import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
+import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.TileType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 
 import java.util.List;
 
 public class Renderer {
-    Image[] pathTiles = new Image[4];
+    private final Image[] pathTiles = new Image[4];
+    private  List<double[]> yarnBallTrail;
 
-    public Renderer() {
+    public Renderer(List<double[]> yarnBallyarnBallTrail) {
         for(int i = 0; i < 4; i++) {
             pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
+        this.yarnBallTrail = yarnBallyarnBallTrail;
     }
 
-    public void render(GraphicsContext gc, Map map, Player player, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode){
+    public void render(GraphicsContext gc, Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 
@@ -66,6 +71,9 @@ public class Renderer {
                 }
             }
 
+            gc.setFill(Color.LIGHTBLUE);
+            gc.fillRect((escapePortal.getCordX()/64) * tileSize, (escapePortal.getCordY()/64) *tileSize,tileSize /2, tileSize /2 );
+
 
 
         }else{
@@ -101,9 +109,37 @@ public class Renderer {
                     gc.fillOval(l.getCordX() - offsetX, l.getCordY() - offsetY, 32, 32);
                 }
             }
+            gc.setFill(Color.LIGHTBLUE);
+            gc.fillRect(escapePortal.getCordX() - offsetX, escapePortal.getCordY()  - offsetY, 64, 64);
+
+
+            gc.setStroke(Color.RED);
+            gc.setLineWidth(3);
+            for(int i = 0; i < yarnBallTrail.size() - 1; i++) {
+                gc.strokeLine(yarnBallTrail.get(i)[0] - offsetX, yarnBallTrail.get(i)[1] - offsetY,
+                        yarnBallTrail.get(i+1)[0] - offsetX, yarnBallTrail.get(i+1)[1] - offsetY);
+            }
+            if(blindingStewActive) {
+                double playerScreenX = player.getCordX() - offsetX;
+                double playerScreenY = player.getCordY() - offsetY;
+
+                RadialGradient gradient = new RadialGradient(
+                        0, 0,
+                        playerScreenX / 1024,
+                        playerScreenY / 576,
+                        128.0 / Math.min(1024, 576),
+                        true,
+                        CycleMethod.NO_CYCLE,
+                        new Stop(0, Color.TRANSPARENT),
+                        new Stop(1, Color.BLACK)
+                );
+                gc.setFill(gradient);
+                gc.fillRect(0, 0, 1024, 576);
+            }
         }
 
     }
+   
 
 
 }

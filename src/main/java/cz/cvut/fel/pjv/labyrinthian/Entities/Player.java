@@ -25,9 +25,14 @@ public class Player extends Entity{
         return inventory;
     }
 
+    public Weapon getActiveweapon() {
+        return activeweapon;
+    }
+
     public void setActiveweapon(Weapon activeweapon) {
         this.activeweapon = activeweapon;
     }
+
 
     @Override
     public void onDeath(GameManager gameManager) {

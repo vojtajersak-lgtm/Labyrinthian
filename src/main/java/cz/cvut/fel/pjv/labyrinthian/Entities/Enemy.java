@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Enemy extends Entity {
-    private int baseDamage;
+    private double baseDamage;
     private int attackSpeed;
     private EnemyState state = EnemyState.IDLE;
     private double startX, startY;       // starting position of the enemy
@@ -20,7 +20,7 @@ public class Enemy extends Entity {
     // Logger for enemy AI state changes and combat events
     private static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
 
-    public Enemy(double cordX, double cordY, double height, double width, int maxHealth, int baseDamage,int attackSpeed ,double attackRange) {
+    public Enemy(double cordX, double cordY, double height, double width, double maxHealth, double baseDamage,int attackSpeed ,double attackRange) {
         super(cordX, cordY, height, width, maxHealth, attackRange);
         this.baseDamage = baseDamage;
         this.attackSpeed = attackSpeed;
@@ -34,7 +34,7 @@ public class Enemy extends Entity {
 
     }
 
-    public int getBaseDamage() {
+    public double getBaseDamage() {
         return baseDamage;
     }
 
@@ -118,7 +118,7 @@ public class Enemy extends Entity {
                 }
                 else{
                     if(attackCooldown <= 0 && distanceToPlayer <= attackRange){
-                        LOG.info("Enemy attacked player for {} damage", baseDamage);
+                        LOG.info("Enemy attacked player for {} damage, from distance {}", baseDamage, distanceToPlayer);
                         player.takeDamage(baseDamage,gameManager);
                         attackCooldown = attackSpeed * 60;
                     }

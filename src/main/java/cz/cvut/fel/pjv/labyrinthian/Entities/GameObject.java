@@ -31,4 +31,12 @@ public abstract class GameObject {
     public double getHeight() {
         return height;
     }
+
+    public void setCordY(double cordY) {
+        this.cordY = cordY;
+    }
+
+    public void setCordX(double cordX) {
+        this.cordX = cordX;
+    }
 }

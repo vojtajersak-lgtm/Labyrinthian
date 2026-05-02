@@ -2,9 +2,11 @@ package cz.cvut.fel.pjv.labyrinthian.World;
 
 public class Map {
     private Tile[][] map;
+    private int mapSize;
 
-    public Map(Tile[][] map) {
+    public Map(Tile[][] map,int mapSize) {
         this.map = map;
+        this.mapSize = mapSize;
     }
 
     public Tile[][] getMap() {
@@ -23,6 +25,9 @@ public class Map {
         map[x][y].setTile(tile);
     }
 
+    public int getMapSize() {
+        return mapSize;
+    }
 
     public int getHeight() {
         return map.length;

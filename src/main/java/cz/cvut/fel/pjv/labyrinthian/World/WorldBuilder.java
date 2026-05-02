@@ -37,7 +37,7 @@ public class WorldBuilder {
             }
         }
 
-        return new Map(tiles);
+        return new Map(tiles,mapSize);
     }
 
     private void generateMaze(Tile[][] tiles, int mapSize) {
@@ -94,6 +94,18 @@ public class WorldBuilder {
         tiles[centerX - radius - 1][centerY] = new Tile(TileType.PATH, getRandomTextureInt());
     }
 
+    public List<Enemy> buildEnemies(int count, Map map, double scale){
+        LOG.info("Spawning {} enemies", count);
+        List<Enemy> enemyList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            int[] enemyCords = getRandomPosition(map, enemyList);
+            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6 * scale, 2 * scale,2,48);
+            LOG.debug("Enemy {} spawned at ({}, {})", i+1, enemyCords[0], enemyCords[1]);
+            enemyList.add(enemy);
+        }
+        return enemyList;
+    }
+
 
 
     public List<ClayPot> buildClaypots(int count, Map map){
@@ -104,6 +116,10 @@ public class WorldBuilder {
             clayPots.add(clayPot);
         }
         return clayPots;
+    }
+
+    public EscapePortal buildPortal(int mapsize){
+        return new EscapePortal((mapsize / 2) * 64, (mapsize / 2) * 64);
     }
 
 
@@ -206,17 +222,7 @@ public class WorldBuilder {
         return items.get(i);
     }
 
-    public List<Enemy> buildEnemies(int count, Map map){
-        LOG.info("Spawning {} enemies", count);
-        List<Enemy> enemyList = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            int[] enemyCords = getRandomPosition(map, enemyList);
-            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48,48,6, 1,2,48);
-            LOG.debug("Enemy {} spawned at ({}, {})", i+1, enemyCords[0], enemyCords[1]);
-            enemyList.add(enemy);
-        }
-        return enemyList;
-    }
+
 
 
     public boolean isInbounds(int x, int y, int mapsize){

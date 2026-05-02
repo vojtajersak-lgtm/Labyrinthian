@@ -6,7 +6,7 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 public class YarnBall extends Consumable {
     private boolean isActive;
     public YarnBall() {
-        super("Yarn Ball", "A ball of red yarn, could be used to keep directions in a confusing maze.", 30);
+        super("Yarn Ball", "A ball of red yarn, could be used to keep directions in a confusing maze.", 240);
        isActive = false;
     }
 
@@ -20,6 +20,13 @@ public class YarnBall extends Consumable {
 
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
+        if(gameManager.isYarnBallActive()) {
+            gameManager.setYarnBallActive(false);
 
+        } else {
+            gameManager.getYarnBallTrail().clear();
+            gameManager.setYarnBallActive(true);
+            gameManager.getYarnBallTrail().add(new double[]{player.getCordX(), player.getCordY()});
+        }
     }
 }
