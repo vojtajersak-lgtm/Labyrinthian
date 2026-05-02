@@ -34,6 +34,12 @@ public class GameApplication extends Application {
         LOG.info("Application starting");
         InputManager inputManager = new InputManager();
         GameManager gameManager = new GameManager(inputManager);
+        gameManager.getTimerService().start();
+        gameManager.getTimerService().valueProperty().addListener((obs, old, newVal) -> {
+            if(newVal != null) {
+                // zatím jen pro debug, později aktualizuje HUD
+            }
+        });
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -57,7 +63,7 @@ public class GameApplication extends Application {
                 if( now - lastUpdate < 13_333_333 ) return;
                 lastUpdate = now;
                 gameManager.update();
-                renderer.render(gc,gameManager.getMap(), gameManager.getMainCharacter(),gameManager.getEscapePortal() ,gameManager.getEnemyList(),
+                renderer.render(gc,gameManager.getGamestats().getCurrentLevelTime(),gameManager.getGamestats().getTotalScore(),gameManager.getMap(), gameManager.getMainCharacter(),gameManager.getEscapePortal() ,gameManager.getEnemyList(),
                         gameManager.getClayPots(),gameManager.getLooseItemList() ,gameManager.isMapMode(), gameManager.isBlindingStewActive());
             }
         };

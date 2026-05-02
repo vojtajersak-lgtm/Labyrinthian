@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.GameStats;
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
@@ -24,7 +25,9 @@ import org.slf4j.LoggerFactory;
 
 
 public class GameManager {
-
+    private GameState currentState;
+    private GameStats gamestats;
+    private  GameTimerService timerService;
     private Player mainCharacter;
     private Map map;
     private InputManager inputManager;
@@ -33,7 +36,6 @@ public class GameManager {
     private List<Enemy> enemyList;
     private List<ClayPot> clayPots;
     private List<LooseItem> looseItemList;
-    private GameState currentState;
     private boolean mapMode = false;
     private boolean yarnBallActive = false;
     private boolean blindingStewActive = false;
@@ -43,6 +45,8 @@ public class GameManager {
 
     public GameManager(InputManager inputManager) {
         LOG.info("GameManager initialized");
+        gamestats = new GameStats();
+        timerService = new GameTimerService(gamestats);
         this.mainCharacter = new Player(64, 64, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
@@ -52,6 +56,14 @@ public class GameManager {
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
         this.currentState = GameState.RUNNING;
+    }
+
+    public GameStats getGamestats() {
+        return gamestats;
+    }
+
+    public GameTimerService getTimerService() {
+        return timerService;
     }
 
     public Player getMainCharacter() {
@@ -232,6 +244,8 @@ public class GameManager {
 
         escapePortal = worldBuilder.buildPortal(72);
         currentState = GameState.RUNNING;
+        gamestats.completeLevelScore();
+        gamestats.resetLevel();
 
 
     }

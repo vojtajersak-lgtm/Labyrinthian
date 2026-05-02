@@ -27,7 +27,7 @@ public class Renderer {
         this.yarnBallTrail = yarnBallyarnBallTrail;
     }
 
-    public void render(GraphicsContext gc, Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
+    public void render(GraphicsContext gc,long currentLevelTime,int totalScore ,Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 
@@ -136,6 +136,10 @@ public class Renderer {
                 gc.setFill(gradient);
                 gc.fillRect(0, 0, 1024, 576);
             }
+
+            gc.setFill(Color.WHITE);
+            gc.fillText("Time: " + currentLevelTime + "s", 10, 20);
+            gc.fillText("Score: " + totalScore, 10, 40);
         }
 
     }
