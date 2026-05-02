@@ -12,11 +12,13 @@ import java.util.List;
 public class Player extends Entity{
     private Inventory inventory;
     private Weapon activeweapon;
+    private double[] deafaultValues;
 
     public Player(double cordX, double cordY, double height, double width, double attackRange) {
         super(cordX, cordY,height, width ,6, attackRange);
         this.inventory = new Inventory();
         this.activeweapon = new Sword();
+        this.deafaultValues = new double[]{maxHealth, 1.0, activeweapon.getDamage(), attackRange};
 
     }
 
@@ -27,6 +29,10 @@ public class Player extends Entity{
 
     public Weapon getActiveweapon() {
         return activeweapon;
+    }
+
+    public double[] getDeafaultValues() {
+        return deafaultValues;
     }
 
     public void setActiveweapon(Weapon activeweapon) {

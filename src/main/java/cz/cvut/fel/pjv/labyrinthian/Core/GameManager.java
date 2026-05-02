@@ -9,6 +9,7 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.YarnBall;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
 import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
@@ -161,7 +162,7 @@ public class GameManager {
                     }
                     if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
 
-                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) < 30){
+                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 64){
                         escapePortal.onInteraction(mainCharacter, this);
                     }
                 }
@@ -210,14 +211,29 @@ public class GameManager {
 
     }
     public void nextLevel(){
+
+
+        blindingStewActive = false;
+        yarnBallActive = false;
+        yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
         enemyList = worldBuilder.buildEnemies(5, map, 2);
         clayPots =worldBuilder.buildClaypots(5,map);
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
         mainCharacter.setCordX(64);
         mainCharacter.setCordY(64);
+        mainCharacter.setMaxHealth(mainCharacter.getDeafaultValues()[0]);
+        speedMultiplier = mainCharacter.getDeafaultValues()[1];
+
+        if(mainCharacter.getActiveweapon() instanceof Sword){
+            mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
+            mainCharacter.getActiveweapon().setRange(mainCharacter.getDeafaultValues()[3]);
+        }
+
         escapePortal = worldBuilder.buildPortal(72);
         currentState = GameState.RUNNING;
+
+
     }
 
 

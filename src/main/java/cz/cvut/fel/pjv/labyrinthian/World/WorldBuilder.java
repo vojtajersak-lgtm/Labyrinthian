@@ -115,7 +115,7 @@ public class WorldBuilder {
             ClayPot clayPot = new ClayPot(potCords[0] * 64, potCords[1] * 64, 48,48,getRandomItem());
             clayPots.add(clayPot);
         }
-        return clayPots;
+         return clayPots;
     }
 
     public EscapePortal buildPortal(int mapsize){

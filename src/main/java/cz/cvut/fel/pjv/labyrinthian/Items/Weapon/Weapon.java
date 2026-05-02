@@ -6,22 +6,22 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
 public abstract class Weapon extends Item {
-    private int damage;
+    private double damage;
     private int attackSpeed;
-    private int range;
+    private double range;
 
-    public Weapon(String name, String description, int damage, int attackSpeed, int range) {
+    public Weapon(String name, String description, double damage, int attackSpeed,double range) {
         super(name, description);
         this.damage = damage;
         this.attackSpeed = attackSpeed;
         this.range = range;
     }
 
-    public int getDamage() {
+    public double getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(double damage) {
         this.damage = damage;
     }
 
@@ -33,11 +33,11 @@ public abstract class Weapon extends Item {
         this.attackSpeed = attackSpeed;
     }
 
-    public int getRange() {
+    public double getRange() {
         return range;
     }
 
-    public void setRange(int range) {
+    public void setRange(double range) {
         this.range = range;
     }
 
