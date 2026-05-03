@@ -18,13 +18,15 @@ import java.util.List;
 
 public class Renderer {
     private final Image[] pathTiles = new Image[4];
+    private final Image hedgeTile;
     private  List<double[]> yarnBallTrail;
 
     public Renderer(List<double[]> yarnBallyarnBallTrail) {
         for(int i = 0; i < 4; i++) {
-            pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
+            this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
         this.yarnBallTrail = yarnBallyarnBallTrail;
+        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge1.png"));
     }
 
     public void render(GraphicsContext gc,long currentLevelTime,int totalScore ,Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
@@ -83,7 +85,8 @@ public class Renderer {
                         gc.drawImage(pathTiles[map.getTileByIndex(j,i).getTextureIndex()], j * 64 - offsetX, i * 64 - offsetY, 64, 64);
                         continue;
                     }else if(map.getTileByIndex(j, i).getTile() == TileType.HEDGE){
-                        gc.setFill(Color.GREEN);
+                        gc.drawImage(hedgeTile, j * 64 - offsetX, i * 64 - offsetY, 64, 64);
+                        continue;
                     }else {
                         gc.setFill(Color.PURPLE);
                     }
