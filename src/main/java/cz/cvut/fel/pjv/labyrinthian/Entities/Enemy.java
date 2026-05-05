@@ -199,7 +199,7 @@ public class Enemy extends Entity {
 
     private List<int[]> getUnvisitedNeighbors(int x, int y, Map map) { //helper method, returns list valid neigbors in all four directions
         List<int[]> neighboursList = new ArrayList<>();
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int[][] directions = {{-1,0},{1,0},{0,-1},{0,1},{-1,-1},{1,-1},{-1,1},{1,1}};
         for (int[] direction : directions) {
             int newCordX = x + direction[0];
             int newCordY = y + direction[1];
@@ -207,9 +207,15 @@ public class Enemy extends Entity {
             if (map.isInboundsByIndex(newCordX, newCordY)) {
 
                 if (map.getTileByIndex(newCordX, newCordY).isWalkable()) { // takes tile on xy coordinates and checks if walkable
+                    boolean isDiagonal = direction[0] != 0 && direction[1] != 0;
+                    if(isDiagonal) {
+                        if(!map.getTileByIndex(x + direction[0], y).isWalkable()) continue;
+                        if(!map.getTileByIndex(x, y + direction[1]).isWalkable()) continue;
+                    }
                     neighboursList.add(new int[]{newCordX, newCordY});
                 }
             }
+
         }
         return neighboursList;
     }

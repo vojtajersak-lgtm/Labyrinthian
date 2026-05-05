@@ -19,11 +19,11 @@ public class Inventory {
         this.inventorySize = 5;
         this.inventorySlots = new Item[5];
         this.activeIndex = 0;
-        /* inventorySlots[0] = new SnickersBar();
+         inventorySlots[0] = new SnickersBar();
         inventorySlots[1] = new RustyPogoStick();
         inventorySlots[2] = new CO2Laser();
         inventorySlots[3] = new BlindingStew();
-        inventorySlots[4] = new YarnBall(); */
+        inventorySlots[4] = new YarnBall();
 
 
     }
