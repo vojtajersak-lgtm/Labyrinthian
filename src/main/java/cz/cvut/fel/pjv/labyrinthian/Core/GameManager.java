@@ -181,6 +181,10 @@ public class GameManager {
                 case F ->{
                     mainCharacter.getInventory().removeFromInventory(mainCharacter.getActiveweapon());
                 }
+                case P ->{
+                    mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
+                    mainCharacter.heal(mainCharacter.getMaxHealth(), this);
+                }
 
                 case DIGIT1 -> mainCharacter.getInventory().setActiveIndex(0);
                 case DIGIT2 -> mainCharacter.getInventory().setActiveIndex(1);

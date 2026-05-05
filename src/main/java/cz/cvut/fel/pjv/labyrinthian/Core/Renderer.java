@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.labyrinthian.Core;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
+import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
@@ -19,6 +20,11 @@ import java.util.List;
 public class Renderer {
     private final Image[] pathTiles = new Image[4];
     private final Image[][] itemSprites;
+    private final Image heartFull;
+    private final Image heartHalf;
+    private final Image heartEmpty;
+    private final Image slotEmpty;
+    private  final Image slotActive;
     private final Image hedgeTile;
     private  List<double[]> yarnBallTrail;
 
@@ -33,8 +39,14 @@ public class Renderer {
             itemSprites[i][1] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_inv.png"));
             itemSprites[i][2] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_active.png"));
         }
+        this.heartFull = new Image(getClass().getResourceAsStream("/heart_full.png"));
+        this.heartHalf = new Image(getClass().getResourceAsStream("/heart_half.png"));
+        this.heartEmpty = new Image(getClass().getResourceAsStream("/heart_empty.png"));
+        this.slotEmpty = new Image(getClass().getResourceAsStream("/slot_empty.png"));
+        this.slotActive = new Image(getClass().getResourceAsStream("/slot_empty_active.png"));
         this.yarnBallTrail = yarnBallTrail;
-        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge1.png"));
+        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
+
     }
 
     public void render(GraphicsContext gc,long currentLevelTime,int totalScore ,Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
@@ -93,7 +105,7 @@ public class Renderer {
                         gc.drawImage(pathTiles[map.getTileByIndex(j,i).getTextureIndex()], j * 64 - offsetX, i * 64 - offsetY, 64, 64);
                         continue;
                     }else if(map.getTileByIndex(j, i).getTile() == TileType.HEDGE){
-                        gc.drawImage(hedgeTile, j * 64 - offsetX, i * 64 - offsetY, 64, 64);
+                        gc.drawImage(hedgeTile, j * 64 - offsetX, i * 64 - offsetY, 72, 72);
                         continue;
                     }else {
                         gc.setFill(Color.PURPLE);
@@ -147,11 +159,65 @@ public class Renderer {
                 gc.fillRect(0, 0, 1024, 576);
             }
 
+            renderHUD(gc, player);
+
+
             gc.setFill(Color.WHITE);
-            gc.fillText("Time: " + currentLevelTime + "s", 10, 20);
-            gc.fillText("Score: " + totalScore, 10, 40);
+            gc.fillText("Time: " + currentLevelTime + "s", 1024 - 50, 576 - 40);
+            gc.fillText("Score: " + totalScore, 1024 - 50, 576 - 20);
         }
 
+    }
+
+    public void renderHearts(GraphicsContext gc,Player player){
+        double heartSize = 36;
+        double gap = 10;
+        int maxPerRow = (int) ((1024 - 10) / (heartSize + gap));
+
+        for (int i = 0; i < player.getMaxHealth() /2; i++) {
+            double heartX = 10 + (i % maxPerRow) * (heartSize + gap);
+            double heartY = 10 + (i / maxPerRow) * (15);
+            if(player.getCurrHealth() >= (i+1) * 2){
+                gc.drawImage(heartFull, heartX, heartY);
+            }else if(player.getCurrHealth() == i * 2 + 1){
+                gc.drawImage(heartHalf, heartX, heartY);
+            }else if(player.getCurrHealth() <= i * 2){
+                gc.drawImage(heartEmpty, heartX, heartY);
+            }
+
+        }
+    }
+
+    public void renderInventory(GraphicsContext gc, Player player){
+        double slotSize = 64, activeSize = 72, gap = 4,
+        startX = 344, slotY = 502, weaponX = 260;
+
+        gc.drawImage(slotEmpty, weaponX, slotY);
+        //TODO: render weapon sprite in weapon slot
+
+        for (int i = 0; i < 5; i++) {
+            double slotX = startX + i *(slotSize + gap);
+            Item item = player.getInventory().getInventorySlots()[i];
+            boolean isActive = (i == player.getInventory().getActiveIndex());
+
+            if(item == null){
+                if(isActive){
+                    gc.drawImage(slotActive, slotX - 4, slotY - 4, 72, 72);
+                }else{
+                    gc.drawImage(slotEmpty, slotX , slotY , 64, 64);
+                }
+            }else{
+                if(isActive) gc.drawImage(itemSprites[item.getSpriteIndex()][2],slotX - 4, slotY - 4, 72, 72 );
+                else gc.drawImage(itemSprites[item.getSpriteIndex()][1],slotX, slotY, 64, 64 );
+
+            }
+
+        }
+
+    }
+    public void renderHUD(GraphicsContext gc, Player player){
+        renderHearts(gc, player);
+        renderInventory(gc, player);
     }
    
 

@@ -58,6 +58,10 @@ public class Inventory {
 
     }
 
+    public int getActiveIndex() {
+        return activeIndex;
+    }
+
     public boolean inventoryFull(){
         return getSlotsFull() == inventorySize;
     }
