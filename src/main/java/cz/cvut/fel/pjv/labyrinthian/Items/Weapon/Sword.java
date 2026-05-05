@@ -12,7 +12,7 @@ public class Sword extends Weapon{
 
     @Override
     public int getSpriteIndex() {
-        return 8;
+        return 6;
     }
 
     @Override

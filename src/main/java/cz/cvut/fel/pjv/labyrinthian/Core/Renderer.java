@@ -26,13 +26,14 @@ public class Renderer {
     private final Image slotEmpty;
     private  final Image slotActive;
     private final Image hedgeTile;
+    private final Image clayPot;
     private  List<double[]> yarnBallTrail;
 
     public Renderer(List<double[]> yarnBallTrail) {
         for(int i = 0; i < 4; i++) {
             this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
-        String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball"};
+        String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball", "sword"};
         itemSprites = new Image[itemNames.length][3];
         for(int i = 0; i < itemNames.length; i++) {
             itemSprites[i][0] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + ".png"));
@@ -44,6 +45,7 @@ public class Renderer {
         this.heartEmpty = new Image(getClass().getResourceAsStream("/heart_empty.png"));
         this.slotEmpty = new Image(getClass().getResourceAsStream("/slot_empty.png"));
         this.slotActive = new Image(getClass().getResourceAsStream("/slot_empty_active.png"));
+        this.clayPot = new Image(getClass().getResourceAsStream("/claypot.png"));
         this.yarnBallTrail = yarnBallTrail;
         this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
 
@@ -105,7 +107,7 @@ public class Renderer {
                         gc.drawImage(pathTiles[map.getTileByIndex(j,i).getTextureIndex()], j * 64 - offsetX, i * 64 - offsetY, 64, 64);
                         continue;
                     }else if(map.getTileByIndex(j, i).getTile() == TileType.HEDGE){
-                        gc.drawImage(hedgeTile, j * 64 - offsetX, i * 64 - offsetY, 72, 72);
+                        gc.drawImage(hedgeTile, j * 64 - offsetX -2, i * 64 - offsetY -2 , 72, 72);
                         continue;
                     }else {
                         gc.setFill(Color.PURPLE);
@@ -122,9 +124,9 @@ public class Renderer {
             for(Enemy e : enemyList){
                 gc.fillOval(e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
             }
-            gc.setFill(Color.GRAY);
+
             for(ClayPot c : Pots){
-                gc.fillOval(c.getCordX() - offsetX, c.getCordY() - offsetY, 64, 64);
+                gc.drawImage(clayPot,c.getCordX() - offsetX, c.getCordY() - offsetY, 49, 51);
             }
             if(looseItems != null){
                 for(LooseItem l : looseItems){
@@ -192,7 +194,8 @@ public class Renderer {
         double slotSize = 64, activeSize = 72, gap = 4,
         startX = 344, slotY = 502, weaponX = 260;
 
-        gc.drawImage(slotEmpty, weaponX, slotY);
+        Image weaponSlot = player.getActiveweapon() == null ? slotEmpty : itemSprites[player.getActiveweapon().getSpriteIndex()][1];
+        gc.drawImage(weaponSlot, weaponX, slotY);
         //TODO: render weapon sprite in weapon slot
 
         for (int i = 0; i < 5; i++) {
