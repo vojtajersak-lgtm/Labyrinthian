@@ -10,6 +10,11 @@ public class BlindingStew extends Consumable {
     }
 
     @Override
+    public int getSpriteIndex() {
+        return 0;
+    }
+
+    @Override
     public void applyEffect(Player player, GameManager gameManager) {
         gameManager.setBlindingStewActive(true);
         int effect = (int) (Math.random() * 4);

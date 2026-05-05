@@ -9,6 +9,12 @@ public class Sword extends Weapon{
         super("Sword","You should not be reading this, but if you are, congrats, i messed up", 1,1, 1);
     }
 
+
+    @Override
+    public int getSpriteIndex() {
+        return 8;
+    }
+
     @Override
     public void use(Player player, GameManager gameManager) {
 

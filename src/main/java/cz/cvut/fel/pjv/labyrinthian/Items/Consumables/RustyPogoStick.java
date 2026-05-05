@@ -25,4 +25,10 @@ public class RustyPogoStick extends Consumable {
 
         }
     }
+
+
+    @Override
+    public int getSpriteIndex() {
+        return 3;
+    }
 }

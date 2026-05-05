@@ -29,4 +29,10 @@ public class YarnBall extends Consumable {
             gameManager.getYarnBallTrail().add(new double[]{player.getCordX(), player.getCordY()});
         }
     }
+
+
+    @Override
+    public int getSpriteIndex() {
+        return 5;
+    }
 }

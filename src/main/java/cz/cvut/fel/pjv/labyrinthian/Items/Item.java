@@ -23,5 +23,7 @@ public abstract class Item implements Interactable {
                 '}';
     }
 
+    public abstract int getSpriteIndex();
+
     public abstract void use(Player player, GameManager gameManager);
 }

@@ -18,4 +18,10 @@ public class CO2Shears extends Consumable {
 
         }
     }
+
+
+    @Override
+    public int getSpriteIndex() {
+        return 2;
+    }
 }

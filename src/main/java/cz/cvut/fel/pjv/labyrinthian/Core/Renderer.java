@@ -18,14 +18,22 @@ import java.util.List;
 
 public class Renderer {
     private final Image[] pathTiles = new Image[4];
+    private final Image[][] itemSprites;
     private final Image hedgeTile;
     private  List<double[]> yarnBallTrail;
 
-    public Renderer(List<double[]> yarnBallyarnBallTrail) {
+    public Renderer(List<double[]> yarnBallTrail) {
         for(int i = 0; i < 4; i++) {
             this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
-        this.yarnBallTrail = yarnBallyarnBallTrail;
+        String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball"};
+        itemSprites = new Image[itemNames.length][3];
+        for(int i = 0; i < itemNames.length; i++) {
+            itemSprites[i][0] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + ".png"));
+            itemSprites[i][1] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_inv.png"));
+            itemSprites[i][2] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_active.png"));
+        }
+        this.yarnBallTrail = yarnBallTrail;
         this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge1.png"));
     }
 
@@ -107,9 +115,8 @@ public class Renderer {
                 gc.fillOval(c.getCordX() - offsetX, c.getCordY() - offsetY, 64, 64);
             }
             if(looseItems != null){
-                gc.setFill(Color.PURPLE);
                 for(LooseItem l : looseItems){
-                    gc.fillOval(l.getCordX() - offsetX, l.getCordY() - offsetY, 32, 32);
+                    gc.drawImage(itemSprites[l.getItem().getSpriteIndex()][0],l.getCordX() - offsetX, l.getCordY() - offsetY);
                 }
             }
             gc.setFill(Color.LIGHTBLUE);

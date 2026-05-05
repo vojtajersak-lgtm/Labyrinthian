@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.Inventory;
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
@@ -54,26 +55,22 @@ public class Player extends Entity{
         List<Enemy> toRemove = new ArrayList<>();
         for(Enemy e : enemyList){
 
-            if(attackX < e.getCordX() + e.getWidth() &&
+            if((attackX < e.getCordX() + e.getWidth() &&
                     attackX + attackW > e.getCordX() &&
                     attackY < e.getCordY() + e.getHeight() &&
-                    attackY + attackH > e.getCordY()){
+                    attackY + attackH > e.getCordY() )||
+                    Utils.distance(cordX, cordY, e.getCordX(),e.getCordY()) <= attackRange){
                 e.takeDamage(this.activeweapon.getDamage(), gameManager);
                 if(e.isDead()) toRemove.add(e);
-                System.out.println("Attacked!");
             }
         }
         enemyList.removeAll(toRemove);
 
         List<ClayPot> toRemovePots = new ArrayList<>();
         for(ClayPot c : Pots){
-            if(attackX < c.getCordX() + c.getWidth() &&
-                    attackX + attackW > c.getCordX() &&
-                    attackY < c.getCordY() + c.getHeight() &&
-                    attackY + attackH > c.getCordY()){
+            if(Utils.distance(cordX, cordY, c.getCordX(),c.getCordY()) < 60){
                 c.takeDamage(this.activeweapon.getDamage(), gameManager);
                 if(c.isDead()) toRemovePots.add(c);
-                System.out.println("Attacked!");
             }
         }
         Pots.removeAll(toRemovePots);

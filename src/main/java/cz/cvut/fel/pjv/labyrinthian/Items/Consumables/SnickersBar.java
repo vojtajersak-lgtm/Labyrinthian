@@ -21,4 +21,9 @@ public class SnickersBar extends Consumable {
 
         if(!player.fullHealth()) player.heal(4,gameManager);
     }
+
+    @Override
+    public int getSpriteIndex() {
+        return 4;
+    }
 }

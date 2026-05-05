@@ -19,4 +19,10 @@ public class CO2Laser extends Consumable {
 
         }
     }
+
+
+    @Override
+    public int getSpriteIndex() {
+        return 1;
+    }
 }

@@ -19,4 +19,10 @@ public class UltimateObliterator extends Weapon {
         //TODO: show cutscene confirming choice to equip
         player.setActiveweapon(this);
     }
+
+    @Override
+    public int getSpriteIndex() {
+        return 7;
+    }
+
 }
