@@ -20,6 +20,7 @@ public class WorldBuilder {
 
     public Map buildMap(int mapSize){
         LOG.info("Starting map generation, size: {}x{}", mapSize, mapSize);
+        if(mapSize < 22) throw new IllegalArgumentException("Map size must be at least 22");
         Tile[][] tiles = new Tile[mapSize][mapSize];
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
