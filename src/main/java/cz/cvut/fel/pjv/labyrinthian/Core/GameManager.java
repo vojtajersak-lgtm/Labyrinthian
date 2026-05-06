@@ -245,6 +245,7 @@ public class GameManager {
             mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
             mainCharacter.getActiveweapon().setRange(mainCharacter.getDeafaultValues()[3]);
         }
+        mainCharacter.heal(0,this);
 
         escapePortal = worldBuilder.buildPortal(72);
         currentState = GameState.RUNNING;
