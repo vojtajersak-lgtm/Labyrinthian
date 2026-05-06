@@ -205,9 +205,9 @@ public class WorldBuilder {
 
 
     public Item getRandomItem(){
-        List<Item> items = List.of(new UltimateObliterator(),new YarnBall(), new CO2Shears(), new CO2Laser(),
-                new BlindingStew(), new SnickersBar(), new RustyPogoStick());
-        List<Integer> weights = List.of(90, 25, 15, 15, 8, 5, 2);
+        List<Item> items = List.of(new YarnBall(), new CO2Shears(), new CO2Laser(),
+                new BlindingStew(), new SnickersBar(), new RustyPogoStick(), new UltimateObliterator());
+        List<Integer> weights = List.of(30, 25, 15, 15, 8, 5, 2);
         Random random = new Random();
 
         int randomInt = random.nextInt(1,101);
