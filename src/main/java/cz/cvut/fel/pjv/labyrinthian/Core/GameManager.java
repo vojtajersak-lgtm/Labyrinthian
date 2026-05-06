@@ -39,6 +39,7 @@ public class GameManager {
     private boolean mapMode = false;
     private boolean yarnBallActive = false;
     private boolean blindingStewActive = false;
+    private boolean hasObliterator = false;
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private  List<double[]> yarnBallTrail;
     private double speedMultiplier = 1.0;
@@ -88,6 +89,14 @@ public class GameManager {
 
     public List<LooseItem> getLooseItemList() {
         return looseItemList;
+    }
+
+    public boolean isHasObliterator() {
+        return hasObliterator;
+    }
+
+    public void setHasObliterator(boolean hasObliterator) {
+        this.hasObliterator = hasObliterator;
     }
 
     public GameState getCurrentState() {
@@ -196,6 +205,10 @@ public class GameManager {
                 default -> {}
             }
             inputManager.setLastPressed(null);
+        }
+
+        if(hasObliterator){
+            mainCharacter.heal(1, this);
         }
 
 

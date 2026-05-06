@@ -26,7 +26,7 @@ public class Enemy extends Entity {
         this.attackSpeed = attackSpeed;
         this.startX = cordX;
         this.startY = cordY;
-        this.attackCooldown = 0;
+        this.attackCooldown = 60;
     }
 
     @Override

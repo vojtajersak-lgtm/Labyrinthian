@@ -33,7 +33,7 @@ public class Renderer {
         for(int i = 0; i < 4; i++) {
             this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
-        String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball", "sword"};
+        String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball", "sword","obliterator"};
         itemSprites = new Image[itemNames.length][3];
         for(int i = 0; i < itemNames.length; i++) {
             itemSprites[i][0] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + ".png"));
@@ -196,7 +196,7 @@ public class Renderer {
 
         Image weaponSlot = player.getActiveweapon() == null ? slotEmpty : itemSprites[player.getActiveweapon().getSpriteIndex()][1];
         gc.drawImage(weaponSlot, weaponX, slotY);
-        //TODO: render weapon sprite in weapon slot
+
 
         for (int i = 0; i < 5; i++) {
             double slotX = startX + i *(slotSize + gap);

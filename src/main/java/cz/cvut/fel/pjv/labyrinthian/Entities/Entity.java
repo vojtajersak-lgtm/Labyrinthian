@@ -55,8 +55,11 @@ public abstract class Entity extends GameObject {
     }
 
     public void heal(double health, GameManager gameManager){
-        currHealth = Math.min((currHealth + health), maxHealth);
-        LOG.info("{} helaed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
+
+        if(!gameManager.isHasObliterator()){
+            currHealth = Math.min((currHealth + health), maxHealth);
+            LOG.info("{} helaed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
+        }
 
 
     }

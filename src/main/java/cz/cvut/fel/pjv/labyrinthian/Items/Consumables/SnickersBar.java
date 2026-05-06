@@ -14,11 +14,9 @@ public class SnickersBar extends Consumable {
         /*if(Utils.distance(player.getCordX(), player.getCordY(), gameManager.getBoss.cordX,gameManager.getBoss.cordY ) < 120){
             int transformChance = (int) (Math.random() * 100);
             if(transformChance <= 15){
-                gameManager.getBoss.transform();
+                gameManager.getBoss.transform()
             }
-        }else */
-
-
+        }else*/
         if(!player.fullHealth()) player.heal(4,gameManager);
     }
 

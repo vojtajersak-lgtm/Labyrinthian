@@ -15,10 +15,7 @@ public class Sword extends Weapon{
         return 6;
     }
 
-    @Override
-    public void use(Player player, GameManager gameManager) {
 
-    }
 
 
 }

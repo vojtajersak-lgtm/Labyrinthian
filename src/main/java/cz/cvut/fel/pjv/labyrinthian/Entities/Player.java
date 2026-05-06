@@ -40,6 +40,9 @@ public class Player extends Entity{
         this.activeweapon = activeweapon;
     }
 
+    public void setDeafaultValues(double value, int index) {
+        this.deafaultValues[index] =  value;
+    }
 
     @Override
     public void onDeath(GameManager gameManager) {

@@ -6,6 +6,7 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ public class Inventory {
     }
 
     public void addItem(Item item){
+
         int i = 0;
         if(inventoryFull()) return;
         while (!(inventorySlots[i] == null)){
@@ -63,9 +65,11 @@ public class Inventory {
     public boolean inventoryFull(){
         return getSlotsFull() == inventorySize;
     }
+
     public void removeFromInventory(Item item){
         inventorySlots[activeIndex] = null;
     }
+
     public int getSlotsFull(){
         int count = 0;
         for (int i = 0; i < 5; i++) {

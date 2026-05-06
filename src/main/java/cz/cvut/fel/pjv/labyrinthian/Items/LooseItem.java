@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.labyrinthian.Items;
 import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
 
 public class LooseItem implements Interactable {
     private Item item;
@@ -29,7 +30,7 @@ public class LooseItem implements Interactable {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        if(!player.getInventory().inventoryFull()){
+        if((!player.getInventory().inventoryFull()) || item instanceof Weapon){
             item.onInteraction(player, gameManager);
             gameManager.getLooseItemList().remove(this);
         }
