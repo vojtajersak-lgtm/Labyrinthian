@@ -27,6 +27,7 @@ public class Renderer {
     private  final Image slotActive;
     private final Image hedgeTile;
     private final Image clayPot;
+    private final Image enemy;
     private  List<double[]> yarnBallTrail;
 
     public Renderer(List<double[]> yarnBallTrail) {
@@ -46,6 +47,7 @@ public class Renderer {
         this.slotEmpty = new Image(getClass().getResourceAsStream("/slot_empty.png"));
         this.slotActive = new Image(getClass().getResourceAsStream("/slot_empty_active.png"));
         this.clayPot = new Image(getClass().getResourceAsStream("/claypot.png"));
+        this.enemy = new Image(getClass().getResourceAsStream("/enemy.png"));
         this.yarnBallTrail = yarnBallTrail;
         this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
 
@@ -122,7 +124,17 @@ public class Renderer {
 
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
-                gc.fillOval(e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
+                // sprite
+                gc.drawImage(enemy, e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
+
+                    // healthbar background (grey)
+                gc.setFill(Color.DARKGRAY);
+                gc.fillRect(e.getCordX() - offsetX, e.getCordY() - offsetY - 8, 64, 5);
+
+                // healthbar fill (red)
+                double healthPct = (double) e.getCurrHealth() / e.getMaxHealth();
+                gc.setFill(Color.RED);
+                gc.fillRect(e.getCordX() - offsetX, e.getCordY() - offsetY - 8, 64 * healthPct, 5);
             }
 
             for(ClayPot c : Pots){
