@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.Entities.Boss;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
@@ -20,6 +21,7 @@ import java.util.List;
 public class Renderer {
     private final Image[] pathTiles = new Image[4];
     private final Image[][] itemSprites;
+    private final Image[] bossSprites = new Image[2];
     private final Image heartFull;
     private final Image heartHalf;
     private final Image heartEmpty;
@@ -41,6 +43,11 @@ public class Renderer {
             itemSprites[i][1] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_inv.png"));
             itemSprites[i][2] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_active.png"));
         }
+        for (int i = 0; i < bossSprites.length; i++) {
+            bossSprites[i] = new Image(getClass().getResourceAsStream("/boss"  + (i + 1) + ".png"));
+        }
+
+
         this.heartFull = new Image(getClass().getResourceAsStream("/heart_full.png"));
         this.heartHalf = new Image(getClass().getResourceAsStream("/heart_half.png"));
         this.heartEmpty = new Image(getClass().getResourceAsStream("/heart_empty.png"));
@@ -53,7 +60,7 @@ public class Renderer {
 
     }
 
-    public void render(GraphicsContext gc,long currentLevelTime,int totalScore ,Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
+    public void render(GraphicsContext gc, long currentLevelTime, int totalScore , Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, Boss boss, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 
@@ -103,6 +110,7 @@ public class Renderer {
 
 
         }else{
+            //MAP RENDERING
             for (int i = 0; i < map.getHeight(); i++) {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTileByIndex(j, i).isWalkable()){
@@ -118,10 +126,12 @@ public class Renderer {
                 }
 
             }
-
+            //PLAYER RENDERING
             gc.setFill(Color.AQUA);
             gc.fillOval(player.getCordX() - offsetX, player.getCordY() - offsetY,32, 32);
 
+
+            //ENEMY RENDERING
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
                 // sprite
@@ -136,25 +146,48 @@ public class Renderer {
                 gc.setFill(Color.RED);
                 gc.fillRect(e.getCordX() - offsetX, e.getCordY() - offsetY - 8, 64 * healthPct, 5);
             }
-
+            //BOSS RENDERING
+            gc.drawImage(bossSprites[0], boss.getCordX() - offsetX, boss.getCordY() - offsetY, 196, 196);
+            if(boss.isAoeActive() || boss.getAoeFlashTimer() > 0) {
+                gc.setStroke(boss.getAoeColor());
+                gc.setLineWidth(3);
+                if(boss.getAoeFlashTimer() > 0) {
+                    gc.setFill(boss.getAoeColor());
+                    gc.fillOval(boss.getCenterX() - boss.getAoeRadius() - offsetX,
+                            boss.getCenterY() - boss.getAoeRadius() - offsetY,
+                            boss.getAoeRadius() * 2,
+                            boss.getAoeRadius() * 2);
+                } else if(boss.isAoeActive()) {
+                    gc.setStroke(boss.getAoeColor());
+                    gc.setLineWidth(3);
+                    gc.strokeOval(boss.getCenterX() - boss.getAoeRadius() - offsetX,
+                            boss.getCenterY() - boss.getAoeRadius() - offsetY,
+                            boss.getAoeRadius() * 2,
+                            boss.getAoeRadius() * 2);
+                }
+            }
+            //CLAYPOT RENDERING
             for(ClayPot c : Pots){
                 gc.drawImage(clayPot,c.getCordX() - offsetX, c.getCordY() - offsetY, 49, 51);
             }
+            //ITEMS RENDERING
             if(looseItems != null){
                 for(LooseItem l : looseItems){
                     gc.drawImage(itemSprites[l.getItem().getSpriteIndex()][0],l.getCordX() - offsetX, l.getCordY() - offsetY);
                 }
             }
+            //PORTAL RENDERING
             gc.setFill(Color.LIGHTBLUE);
             gc.fillRect(escapePortal.getCordX() - offsetX, escapePortal.getCordY()  - offsetY, 64, 64);
 
-
+            //YARNBALL TRAIL
             gc.setStroke(Color.RED);
             gc.setLineWidth(3);
             for(int i = 0; i < yarnBallTrail.size() - 1; i++) {
                 gc.strokeLine(yarnBallTrail.get(i)[0] - offsetX, yarnBallTrail.get(i)[1] - offsetY,
                         yarnBallTrail.get(i+1)[0] - offsetX, yarnBallTrail.get(i+1)[1] - offsetY);
             }
+            //BLINDNESSEFFECT
             if(blindingStewActive) {
                 double playerScreenX = player.getCordX() - offsetX;
                 double playerScreenY = player.getCordY() - offsetY;

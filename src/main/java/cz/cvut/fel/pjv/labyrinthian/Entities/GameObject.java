@@ -39,4 +39,12 @@ public abstract class GameObject {
     public void setCordX(double cordX) {
         this.cordX = cordX;
     }
+
+    public double getCenterX(){
+        return  cordX + width / 2;
+    }
+
+    public double getCenterY(){
+        return  cordY + width / 2;
+    }
 }

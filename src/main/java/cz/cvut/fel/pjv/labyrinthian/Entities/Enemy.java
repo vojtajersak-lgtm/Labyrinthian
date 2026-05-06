@@ -9,16 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Enemy extends Entity {
-    private double baseDamage;
-    private int attackSpeed;
-    private EnemyState state = EnemyState.IDLE;
-    private double startX, startY;       // starting position of the enemy
-    int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
-    int attackCooldown;
-    private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
-    private double lastKnownY = 0;
+    protected double baseDamage;
+    protected int attackSpeed;
+    protected EnemyState state = EnemyState.IDLE;
+    protected double startX, startY;       // starting position of the enemy
+    protected int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
+    protected int attackCooldown;
+    protected double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
+    protected double lastKnownY = 0;
     // Logger for enemy AI state changes and combat events
-    private static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
 
     public Enemy(double cordX, double cordY, double height, double width, double maxHealth, double baseDamage,int attackSpeed ,double attackRange) {
         super(cordX, cordY, height, width, maxHealth, attackRange);

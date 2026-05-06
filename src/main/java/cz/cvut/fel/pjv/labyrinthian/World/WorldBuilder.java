@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.World;
 
+import cz.cvut.fel.pjv.labyrinthian.Entities.Boss;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
@@ -105,6 +106,11 @@ public class WorldBuilder {
             enemyList.add(enemy);
         }
         return enemyList;
+    }
+
+    public Boss spawnBoss(Map map, double scale){
+        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 20, 3, 2, 80, false);
+        return  boss;
     }
 
 

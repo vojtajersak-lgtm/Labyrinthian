@@ -2,10 +2,7 @@ package cz.cvut.fel.pjv.labyrinthian.Core;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.GameStats;
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
-import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
+import cz.cvut.fel.pjv.labyrinthian.Entities.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.YarnBall;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
@@ -34,6 +31,7 @@ public class GameManager {
     private WorldBuilder worldBuilder = new WorldBuilder();
     private EscapePortal escapePortal;
     private List<Enemy> enemyList;
+    private Boss boss;
     private List<ClayPot> clayPots;
     private List<LooseItem> looseItemList;
     private boolean mapMode = false;
@@ -53,6 +51,7 @@ public class GameManager {
         this.inputManager = inputManager;
         this.escapePortal = worldBuilder.buildPortal(72);
         this.enemyList = worldBuilder.buildEnemies(5,map, 1);
+        this.boss = worldBuilder.spawnBoss(map,1);
         this.clayPots = worldBuilder.buildClaypots(5,map);
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
@@ -70,6 +69,8 @@ public class GameManager {
     public Player getMainCharacter() {
         return mainCharacter;
     }
+
+    public Boss getBoss()  { return boss; }
 
     public Map getMap() {
         return map;
@@ -215,6 +216,7 @@ public class GameManager {
         for(Enemy e : enemyList){
             e.takeTurn(mainCharacter, map, this);
         }
+        boss.takeTurn(mainCharacter, map, this);
         if(yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
             if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
