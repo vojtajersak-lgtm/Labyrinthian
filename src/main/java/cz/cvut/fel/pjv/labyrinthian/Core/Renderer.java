@@ -28,6 +28,7 @@ public class Renderer {
     private final Image hedgeTile;
     private final Image clayPot;
     private final Image enemy;
+    private final Image portal;
     private  List<double[]> yarnBallTrail;
 
     public Renderer(List<double[]> yarnBallTrail) {
@@ -48,6 +49,7 @@ public class Renderer {
         this.slotActive = new Image(getClass().getResourceAsStream("/slot_empty_active.png"));
         this.clayPot = new Image(getClass().getResourceAsStream("/claypot.png"));
         this.enemy = new Image(getClass().getResourceAsStream("/enemy.png"));
+        this.portal = new Image(getClass().getResourceAsStream("/portal.png"));
         this.yarnBallTrail = yarnBallTrail;
         this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
 
@@ -145,9 +147,7 @@ public class Renderer {
                     gc.drawImage(itemSprites[l.getItem().getSpriteIndex()][0],l.getCordX() - offsetX, l.getCordY() - offsetY);
                 }
             }
-            gc.setFill(Color.LIGHTBLUE);
-            gc.fillRect(escapePortal.getCordX() - offsetX, escapePortal.getCordY()  - offsetY, 64, 64);
-
+            gc.drawImage(portal, escapePortal.getCordX() - offsetX, escapePortal.getCordY() - offsetY, 120, 120);
 
             gc.setStroke(Color.RED);
             gc.setLineWidth(3);

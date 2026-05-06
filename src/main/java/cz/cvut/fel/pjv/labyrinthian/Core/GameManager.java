@@ -183,7 +183,7 @@ public class GameManager {
                     }
                     if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
 
-                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 64){
+                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
                         escapePortal.onInteraction(mainCharacter, this);
                     }
                 }
