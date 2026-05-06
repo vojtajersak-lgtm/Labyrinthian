@@ -32,6 +32,7 @@ public class GameManager {
     private EscapePortal escapePortal;
     private List<Enemy> enemyList;
     private Boss boss;
+    private List<Projectile> projectiles;
     private List<ClayPot> clayPots;
     private List<LooseItem> looseItemList;
     private boolean mapMode = false;
@@ -46,12 +47,13 @@ public class GameManager {
         LOG.info("GameManager initialized");
         gamestats = new GameStats();
         timerService = new GameTimerService(gamestats);
-        this.mainCharacter = new Player(64, 64, 32, 32, 80);
+        this.mainCharacter = new Player(72 * 32 - 11 * 64,72 * 32, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
-        this.escapePortal = worldBuilder.buildPortal(72);
+        this.escapePortal = null;
         this.enemyList = worldBuilder.buildEnemies(5,map, 1);
         this.boss = worldBuilder.spawnBoss(map,1);
+        this.projectiles = new ArrayList<Projectile>();
         this.clayPots = worldBuilder.buildClaypots(5,map);
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
@@ -71,6 +73,10 @@ public class GameManager {
     }
 
     public Boss getBoss()  { return boss; }
+
+    public void setBoss(Boss boss) {
+        this.boss = boss;
+    }
 
     public Map getMap() {
         return map;
@@ -125,6 +131,14 @@ public class GameManager {
         this.blindingStewActive = blindingStewActive;
     }
 
+    public List<Projectile> getProjectiles() {
+        return projectiles;
+    }
+
+    public void setProjectiles(List<Projectile> projectiles) {
+        this.projectiles = projectiles;
+    }
+
     public List<double[]> getYarnBallTrail() {
         return yarnBallTrail;
     }
@@ -149,10 +163,22 @@ public class GameManager {
         Set keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed =inputManager.getLastPressed();
 
-        if (keyCodeSet.contains(KeyCode.W)) mainCharacter.move(0, -7 * speedMultiplier, map);
-        if (keyCodeSet.contains(KeyCode.S)) mainCharacter.move(0, 7 * speedMultiplier, map);
-        if (keyCodeSet.contains(KeyCode.A)) mainCharacter.move(-7 * speedMultiplier, 0, map);
-        if (keyCodeSet.contains(KeyCode.D)) mainCharacter.move(7 * speedMultiplier, 0, map);
+        if (keyCodeSet.contains(KeyCode.W)) {
+            mainCharacter.move(0, -7 * speedMultiplier, map);
+            mainCharacter.setDirection(Directions.NORTH);
+        }
+        if (keyCodeSet.contains(KeyCode.S)) {
+            mainCharacter.move(0, 7 * speedMultiplier, map);
+            mainCharacter.setDirection(Directions.SOUTH);
+        }
+        if (keyCodeSet.contains(KeyCode.A)) {
+            mainCharacter.move(-7 * speedMultiplier, 0, map);
+            mainCharacter.setDirection(Directions.WEST);
+        }
+        if (keyCodeSet.contains(KeyCode.D)){
+            mainCharacter.move(7 * speedMultiplier, 0, map);
+            mainCharacter.setDirection(Directions.EAST);
+        }
 
         if (lastPressed != null) {
             switch(lastPressed) {
@@ -161,7 +187,7 @@ public class GameManager {
                     LOG.debug("Map mode toggled: {}", mapMode);
                 }
                 case SPACE -> {
-                    mainCharacter.attack(enemyList, clayPots, this);
+                    mainCharacter.attack(enemyList,boss ,clayPots, this);
                     LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
                 }
                 case Q -> {
@@ -184,7 +210,7 @@ public class GameManager {
                     }
                     if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
 
-                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 64){
+                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
                         escapePortal.onInteraction(mainCharacter, this);
                     }
                 }
@@ -214,9 +240,18 @@ public class GameManager {
 
 
         for(Enemy e : enemyList){
-            e.takeTurn(mainCharacter, map, this);
+            e.takeTurn(mainCharacter, map, this, 5);
         }
-        boss.takeTurn(mainCharacter, map, this);
+        List<Projectile> toRemove = new ArrayList<>();
+        if(boss != null)  {
+             boss.takeTurn(mainCharacter, map, this, 5);
+
+            for(Projectile p : projectiles){
+                p.update(this);
+                if(!p.isActive()) toRemove.add(p);
+            }
+            projectiles.removeAll(toRemove);
+        }else projectiles.removeAll(toRemove);
         if(yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
             if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
@@ -230,6 +265,8 @@ public class GameManager {
 
 
 
+
+
         if(currentState == GameState.LEVEL_COMPLETE) nextLevel();
     }
 
@@ -238,23 +275,31 @@ public class GameManager {
         looseItemList.add(looseItem);
     }
 
-    public void spawnEntity(Entity entity, int cordX, int cordY) {
-
+    public void spawnPortal(double cordX, double cordY) {
+        this.escapePortal = worldBuilder.buildPortal(cordX, cordY);
     }
+    public void removeBoss(){
+        boss = null;
+        projectiles.clear();
+    }
+
     public void nextLevel(){
 
-
+        gamestats.setCurrentLevel(gamestats.getCurrentLevel() + 1);
+        gamestats.setLevelsCompleted(gamestats.getLevelsCompleted() + 1);
         blindingStewActive = false;
         yarnBallActive = false;
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
         enemyList = worldBuilder.buildEnemies(5, map, 2);
+        boss = worldBuilder.spawnBoss(map, 2);
         clayPots =worldBuilder.buildClaypots(5,map);
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
         mainCharacter.setCordX(64);
         mainCharacter.setCordY(64);
         mainCharacter.setMaxHealth(mainCharacter.getDeafaultValues()[0]);
         speedMultiplier = mainCharacter.getDeafaultValues()[1];
+        boss.setTransformed(false);
 
         if(mainCharacter.getActiveweapon() instanceof Sword){
             mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
@@ -262,7 +307,7 @@ public class GameManager {
         }
         mainCharacter.heal(0,this);
 
-        escapePortal = worldBuilder.buildPortal(72);
+        escapePortal = null;
         currentState = GameState.RUNNING;
         gamestats.completeLevelScore();
         gamestats.resetLevel();

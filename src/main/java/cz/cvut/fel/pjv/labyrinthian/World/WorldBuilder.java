@@ -125,8 +125,8 @@ public class WorldBuilder {
          return clayPots;
     }
 
-    public EscapePortal buildPortal(int mapsize){
-        return new EscapePortal((mapsize / 2) * 64, (mapsize / 2) * 64);
+    public EscapePortal buildPortal(double cordX, double cordY){
+        return new EscapePortal(cordX, cordY);
     }
 
 

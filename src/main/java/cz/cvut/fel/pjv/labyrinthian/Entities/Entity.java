@@ -45,6 +45,10 @@ public abstract class Entity extends GameObject {
         this.attackRange = attackRange;
     }
 
+    public void setDirection(Directions direction) {
+        this.direction = direction;
+    }
+
     public void takeDamage(double Damage, GameManager gameManager){
         currHealth = Math.max(currHealth - Damage, 0);
         LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), Damage, currHealth, maxHealth);
@@ -90,10 +94,7 @@ public abstract class Entity extends GameObject {
 
     }
 
-    public boolean isCornerValid(double newX, double newY, Map map){
-        return map.isInbounds(newX, newY) && map.getTile(newX, newY).isWalkable();
 
-    }
 
 
 }

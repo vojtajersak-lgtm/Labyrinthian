@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Entities;
 
+import cz.cvut.fel.pjv.labyrinthian.World.Map;
+
 public abstract class GameObject {
     protected double cordY, cordX;
     protected double width, height;
@@ -46,5 +48,10 @@ public abstract class GameObject {
 
     public double getCenterY(){
         return  cordY + width / 2;
+    }
+
+    public boolean isCornerValid(double newX, double newY, Map map){
+        return map.isInbounds(newX, newY) && map.getTile(newX, newY).isWalkable();
+
     }
 }
