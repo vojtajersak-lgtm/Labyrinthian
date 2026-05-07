@@ -1,7 +1,7 @@
-package cz.cvut.fel.pjv.labyrinthian.Core;
+package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
-import cz.cvut.fel.pjv.labyrinthian.Entities.GameObject;
+import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 
 
 public class Projectile extends GameObject {

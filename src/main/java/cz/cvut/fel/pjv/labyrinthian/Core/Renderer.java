@@ -1,9 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
-import cz.cvut.fel.pjv.labyrinthian.Entities.Boss;
-import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
+import cz.cvut.fel.pjv.labyrinthian.Entities.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
@@ -63,7 +60,7 @@ public class Renderer {
 
     }
 
-    public void render(GraphicsContext gc, long currentLevelTime, int totalScore , Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, Boss boss,List<Projectile> projectiles ,List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
+    public void render(GraphicsContext gc, long currentLevelTime, int totalScore , Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, Boss boss, List<Projectile> projectiles , List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 

@@ -3,7 +3,6 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
-import cz.cvut.fel.pjv.labyrinthian.Core.Projectile;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import javafx.scene.paint.Color;
 
