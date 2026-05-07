@@ -49,7 +49,7 @@ public class Player extends Entity{
 
     }
 
-    public void attack(List<Enemy> enemyList,List<ClayPot> Pots,GameManager gameManager){
+    public void attack(List<Enemy> enemyList,Boss boss,List<ClayPot> Pots,GameManager gameManager){
         double attackX = cordX + (direction.dx > 0 ? width : direction.dx < 0 ? -attackRange : 0);
         double attackY = cordY + (direction.dy > 0 ? height : direction.dy < 0 ? -attackRange : 0);
         double attackW = direction.dx != 0 ? attackRange : width;
@@ -69,6 +69,24 @@ public class Player extends Entity{
         }
         enemyList.removeAll(toRemove);
 
+        if(boss != null || !boss.isTransformed()){
+            if((attackX < boss.getCordX() + boss.getWidth() &&
+                    attackX + attackW > boss.getCordX() &&
+                    attackY < boss.getCordY() + boss.getHeight() &&
+                    attackY + attackH > boss.getCordY() )||
+                    Utils.distance(cordX, cordY, boss.getCordX(),boss.getCordY()) <= attackRange) {
+                boss.takeDamage(this.activeweapon.getDamage(), gameManager);
+                if (boss.isDead()) {
+                    boss.onDeath(gameManager);
+                    gameManager.removeBoss();
+                }
+
+            }
+        }
+
+
+
+
         List<ClayPot> toRemovePots = new ArrayList<>();
         for(ClayPot c : Pots){
             if(Utils.distance(cordX, cordY, c.getCordX(),c.getCordY()) < 60){
@@ -77,8 +95,8 @@ public class Player extends Entity{
             }
         }
         Pots.removeAll(toRemovePots);
+
+
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.World;
 
+import cz.cvut.fel.pjv.labyrinthian.Entities.Boss;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
@@ -107,6 +108,11 @@ public class WorldBuilder {
         return enemyList;
     }
 
+    public Boss spawnBoss(Map map, double scale){
+        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 20, 3, 2, 80, false);
+        return  boss;
+    }
+
 
 
     public List<ClayPot> buildClaypots(int count, Map map){
@@ -119,8 +125,8 @@ public class WorldBuilder {
          return clayPots;
     }
 
-    public EscapePortal buildPortal(int mapsize){
-        return new EscapePortal((mapsize / 2) * 64, (mapsize / 2) * 64);
+    public EscapePortal buildPortal(double cordX, double cordY){
+        return new EscapePortal(cordX, cordY);
     }
 
 

@@ -63,7 +63,8 @@ public class GameApplication extends Application {
                 if( now - lastUpdate < 13_333_333 ) return;
                 lastUpdate = now;
                 gameManager.update();
-                renderer.render(gc,gameManager.getGamestats().getCurrentLevelTime(),gameManager.getGamestats().getTotalScore(),gameManager.getMap(), gameManager.getMainCharacter(),gameManager.getEscapePortal() ,gameManager.getEnemyList(),
+                renderer.render(gc,gameManager.getGamestats().getCurrentLevelTime(),gameManager.getGamestats().getTotalScore(),gameManager.getMap(),
+                        gameManager.getMainCharacter(),gameManager.getEscapePortal() ,gameManager.getEnemyList(), gameManager.getBoss(),gameManager.getProjectiles(),
                         gameManager.getClayPots(),gameManager.getLooseItemList() ,gameManager.isMapMode(), gameManager.isBlindingStewActive());
             }
         };

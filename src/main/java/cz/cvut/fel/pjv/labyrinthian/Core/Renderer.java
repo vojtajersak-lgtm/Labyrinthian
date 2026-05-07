@@ -1,8 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
-import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
+import cz.cvut.fel.pjv.labyrinthian.Entities.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
@@ -18,8 +16,10 @@ import javafx.scene.paint.Stop;
 import java.util.List;
 
 public class Renderer {
+    //TODO: cleanup image loading
     private final Image[] pathTiles = new Image[4];
     private final Image[][] itemSprites;
+    private final Image[] bossSprites = new Image[2];
     private final Image heartFull;
     private final Image heartHalf;
     private final Image heartEmpty;
@@ -42,6 +42,11 @@ public class Renderer {
             itemSprites[i][1] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_inv.png"));
             itemSprites[i][2] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_active.png"));
         }
+        for (int i = 0; i < bossSprites.length; i++) {
+            bossSprites[i] = new Image(getClass().getResourceAsStream("/boss"  + (i + 1) + ".png"));
+        }
+
+
         this.heartFull = new Image(getClass().getResourceAsStream("/heart_full.png"));
         this.heartHalf = new Image(getClass().getResourceAsStream("/heart_half.png"));
         this.heartEmpty = new Image(getClass().getResourceAsStream("/heart_empty.png"));
@@ -55,7 +60,7 @@ public class Renderer {
 
     }
 
-    public void render(GraphicsContext gc,long currentLevelTime,int totalScore ,Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
+    public void render(GraphicsContext gc, long currentLevelTime, int totalScore , Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, Boss boss, List<Projectile> projectiles , List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive){
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 
@@ -98,13 +103,16 @@ public class Renderer {
                     gc.fillOval((i.getCordX()/64) * tileSize, (i.getCordY()/64) *tileSize,tileSize / 2 , tileSize / 2 );
                 }
             }
+            if(escapePortal != null){
+                gc.setFill(Color.LIGHTBLUE);
+                gc.fillRect((escapePortal.getCordX()/64) * tileSize, (escapePortal.getCordY()/64) *tileSize,tileSize /2, tileSize /2 );
+            }
 
-            gc.setFill(Color.LIGHTBLUE);
-            gc.fillRect((escapePortal.getCordX()/64) * tileSize, (escapePortal.getCordY()/64) *tileSize,tileSize /2, tileSize /2 );
 
 
 
         }else{
+            //MAP RENDERING
             for (int i = 0; i < map.getHeight(); i++) {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTileByIndex(j, i).isWalkable()){
@@ -120,10 +128,13 @@ public class Renderer {
                 }
 
             }
-
+            //PLAYER RENDERING
+            //TODO: add player texture and direction logic
             gc.setFill(Color.AQUA);
             gc.fillOval(player.getCordX() - offsetX, player.getCordY() - offsetY,32, 32);
 
+
+            //ENEMY RENDERING
             gc.setFill(Color.RED);
             for(Enemy e : enemyList){
                 // sprite
@@ -138,16 +149,67 @@ public class Renderer {
                 gc.setFill(Color.RED);
                 gc.fillRect(e.getCordX() - offsetX, e.getCordY() - offsetY - 8, 64 * healthPct, 5);
             }
+            //BOSS RENDERING
 
+            if(boss != null){
+                if(boss.isTransformed()){
+                    //TODO: add npc sprite
+                    gc.setFill(Color.RED);
+                    gc.fillOval(boss.getCordX() - offsetX, boss.getCordY() - offsetY,20,20);
+                }
+                else{
+                    if(boss.isAoeActive() || boss.getAoeFlashTimer() > 0) {
+                        gc.setStroke(boss.getAoeColor());
+                        gc.setLineWidth(3);
+                        if(boss.getAoeFlashTimer() > 0) {
+                            gc.setFill(boss.getAoeColor());
+                            gc.fillOval(boss.getCenterX() - boss.getAoeRadius() - offsetX,
+                                    boss.getCenterY() - boss.getAoeRadius() - offsetY,
+                                    boss.getAoeRadius() * 2,
+                                    boss.getAoeRadius() * 2);
+                        } else if(boss.isAoeActive()) {
+                            gc.setStroke(boss.getAoeColor());
+                            gc.setLineWidth(3);
+                            gc.strokeOval(boss.getCenterX() - boss.getAoeRadius() - offsetX,
+                                    boss.getCenterY() - boss.getAoeRadius() - offsetY,
+                                    boss.getAoeRadius() * 2,
+                                    boss.getAoeRadius() * 2);
+                        }
+                    }
+                    int attackMode = boss.getSpriteChangeTimer() > 0 ? 1 : 0;
+                    gc.drawImage(bossSprites[attackMode], boss.getCordX() - offsetX, boss.getCordY() - offsetY, 196, 196);
+                    gc.setFill(Color.DARKGRAY);
+                    gc.fillRect(boss.getCordX() - offsetX , boss.getCordY() - offsetY - 25, 196, 10);
+
+                    // healthbar fill (red)
+                    double healthPct = (double) boss.getCurrHealth() / boss.getMaxHealth();
+                    gc.setFill(Color.RED);
+                    gc.fillRect(boss.getCordX() - offsetX , boss.getCordY() - offsetY - 25, 196 * healthPct, 10);
+                }
+
+            }
+            //BOSS PROJECTIL ERENDERING
+            //TODO: add projectile texture
+            for(Projectile p : projectiles){
+                gc.setFill(Color.RED);
+                gc.fillOval(p.getCordX() - offsetX, p.getCordY() - offsetY,p.getSize(), p.getSize());
+            }
+
+
+            //CLAYPOT RENDERING
             for(ClayPot c : Pots){
                 gc.drawImage(clayPot,c.getCordX() - offsetX, c.getCordY() - offsetY, 49, 51);
             }
+            //ITEMS RENDERING
             if(looseItems != null){
                 for(LooseItem l : looseItems){
                     gc.drawImage(itemSprites[l.getItem().getSpriteIndex()][0],l.getCordX() - offsetX, l.getCordY() - offsetY);
                 }
             }
-            gc.drawImage(portal, escapePortal.getCordX() - offsetX, escapePortal.getCordY() - offsetY, 120, 120);
+            //PORTAL RENDERING
+            if(escapePortal != null){
+                gc.drawImage(portal,escapePortal.getCordX() - offsetX, escapePortal.getCordY() - offsetY);
+            }
 
             gc.setStroke(Color.RED);
             gc.setLineWidth(3);
@@ -155,6 +217,7 @@ public class Renderer {
                 gc.strokeLine(yarnBallTrail.get(i)[0] - offsetX, yarnBallTrail.get(i)[1] - offsetY,
                         yarnBallTrail.get(i+1)[0] - offsetX, yarnBallTrail.get(i+1)[1] - offsetY);
             }
+            //BLINDNESSEFFECT
             if(blindingStewActive) {
                 double playerScreenX = player.getCordX() - offsetX;
                 double playerScreenY = player.getCordY() - offsetY;
@@ -163,7 +226,7 @@ public class Renderer {
                         0, 0,
                         playerScreenX / 1024,
                         playerScreenY / 576,
-                        128.0 / Math.min(1024, 576),
+                        200.0 / Math.min(1024, 576),
                         true,
                         CycleMethod.NO_CYCLE,
                         new Stop(0, Color.TRANSPARENT),
@@ -178,7 +241,7 @@ public class Renderer {
 
             gc.setFill(Color.WHITE);
             gc.fillText("Time: " + currentLevelTime + "s", 1024 - 50, 576 - 40);
-            gc.fillText("Score: " + totalScore, 1024 - 50, 576 - 20);
+            gc.fillText("Score: " + totalScore, 1024 - 75, 576 - 20);
         }
 
     }

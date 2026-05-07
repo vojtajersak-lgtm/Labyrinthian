@@ -4,21 +4,22 @@ import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
+import java.lang.annotation.Target;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Enemy extends Entity {
-    private double baseDamage;
-    private int attackSpeed;
-    private EnemyState state = EnemyState.IDLE;
-    private double startX, startY;       // starting position of the enemy
-    int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
-    int attackCooldown;
-    private double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
-    private double lastKnownY = 0;
+    protected double baseDamage;
+    protected int attackSpeed;
+    protected EnemyState state = EnemyState.IDLE;
+    protected double startX, startY;       // starting position of the enemy
+    protected int chaseTimer = 120; //how long enemy chases after loosing LoS, 120 frames or ~2 seconds
+    protected int attackCooldown;
+    protected double lastKnownX = 0; //target for enemy to keep chasing after loosing LoS until timer runs out
+    protected double lastKnownY = 0;
     // Logger for enemy AI state changes and combat events
-    private static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
 
     public Enemy(double cordX, double cordY, double height, double width, double maxHealth, double baseDamage,int attackSpeed ,double attackRange) {
         super(cordX, cordY, height, width, maxHealth, attackRange);
@@ -49,7 +50,7 @@ public class Enemy extends Entity {
     public void attack(Entity target) {
     }
 
-    public void takeTurn(Player player, Map map, GameManager gameManager) {
+    public void takeTurn(Player player, Map map, GameManager gameManager, int chaseTreshold) {
         attackCooldown--;
 
         int distanceToPlayer = (int) ((Utils.distance(player.getCordX(),player.getCordY(),cordX,cordY)) / 64); // apparently something called Manhattan distance
@@ -60,7 +61,7 @@ public class Enemy extends Entity {
         boolean hasLoS = hasLineOfSight(player,map);
 
 
-        int chaseThreshold = state == EnemyState.CHASING ? 15 : 5; //5 tiles to start chasing, 15 when already chasing before player escapes
+        int chaseThreshold = state == EnemyState.CHASING ? 15 : chaseTreshold; //5 tiles to start chasing, 15 when already chasing before player escapes
 
         switch (state) {
             case IDLE -> {
@@ -120,6 +121,7 @@ public class Enemy extends Entity {
                     if(attackCooldown <= 0 && distanceToPlayer <= attackRange){
                         LOG.info("Enemy attacked player for {} damage, from distance {}", baseDamage, distanceToPlayer);
                         player.takeDamage(baseDamage,gameManager);
+
                         attackCooldown = attackSpeed * 60;
                     }
                 }
@@ -220,17 +222,27 @@ public class Enemy extends Entity {
         return neighboursList;
     }
 
-    private boolean hasLineOfSight(Player player, Map map) { //uses something called Bresenham line algorithm to figure if player is standing behind a wall
+    protected boolean hasLineOfSight(Player player, Map map) { //uses something called Bresenham line algorithm to figure if player is standing behind a wall
+        return bresenham(getCenterX(), getCenterY(),
+                player.getCenterX(), player.getCenterY(), map)
+                || bresenham(cordX, cordY,
+                player.getCordX(), player.getCordY(), map)
+                || bresenham(cordX + width, cordY + height,
+                player.getCordX() + player.getWidth(),
+                player.getCordY() + player.getHeight(), map);
+    }
+
+    protected boolean bresenham(double sourceX,double sourceY,double targetX,double targetY, Map map){
         boolean LoS = true;
         double error = 0;
-        int dx = (int) ((player.getCordX() / 64) - (cordX / 64));
-        int dy = (int) ((player.getCordY() / 64) - (cordY / 64));
-        int currentX = (int)(cordX / 64);
-        int currentY = (int)(cordY / 64);
+        int dx = (int) ((targetX / 64) - (sourceX / 64));
+        int dy = (int) ((targetY / 64) - (sourceY / 64));
+        int currentX = (int)(sourceX / 64);
+        int currentY = (int)(sourceY / 64);
 
         if (dx == 0 && dy == 0) return true;
 
-        while (!((currentX == (int) player.getCordX() / 64) && (currentY == (int) player.getCordY() / 64))) {
+        while (!((currentX == (int) targetX / 64) && (currentY == (int) targetY / 64))) {
             if (!map.getTileByIndex(currentX, currentY).isWalkable()) {
                 LoS = false;
                 break;

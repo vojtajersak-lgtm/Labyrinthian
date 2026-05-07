@@ -7,4 +7,5 @@ module cz.cvut.fel.pjv.labyrinthian {
     requires ch.qos.logback.classic;
 
     exports cz.cvut.fel.pjv.labyrinthian.Core;
+    exports cz.cvut.fel.pjv.labyrinthian.Entities;
 }
