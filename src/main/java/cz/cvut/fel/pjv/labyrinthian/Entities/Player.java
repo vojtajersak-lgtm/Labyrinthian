@@ -69,7 +69,7 @@ public class Player extends Entity{
         }
         enemyList.removeAll(toRemove);
 
-        if(boss != null || !boss.isTransformed()){
+        if(boss != null && !boss.isTransformed()){
             if((attackX < boss.getCordX() + boss.getWidth() &&
                     attackX + attackW > boss.getCordX() &&
                     attackY < boss.getCordY() + boss.getHeight() &&
