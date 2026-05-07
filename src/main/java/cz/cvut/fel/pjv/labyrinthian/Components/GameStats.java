@@ -60,8 +60,8 @@ public class GameStats {
     }
 
     public void addKillScore(boolean isBoss, boolean isTransformed){
-        if(isTransformed) totalScore += 10 * currentLevel * 1000;
-        else if(isBoss) totalScore += 10 * currentLevel * 500;
+        if(isBoss) totalScore += 10 * currentLevel * 500;
+        else if(isTransformed) totalScore += 10 * currentLevel * 1000;
         else totalScore += 10 * currentLevel * 50;
     }
     public void completeLevelScore(){

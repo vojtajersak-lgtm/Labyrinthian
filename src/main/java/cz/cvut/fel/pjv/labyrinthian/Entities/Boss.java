@@ -101,6 +101,7 @@ public class Boss extends Enemy implements Interactable {
 
     @Override
     public void onDeath(GameManager gameManager) {
+        gameManager.getGamestats().addKillScore(true, isTransformed);
         gameManager.spawnPortal(getCenterX(), getCenterY());
         cordX -= 120;
 

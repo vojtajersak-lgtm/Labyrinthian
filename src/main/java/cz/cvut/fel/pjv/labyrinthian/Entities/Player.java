@@ -77,7 +77,6 @@ public class Player extends Entity{
                     Utils.distance(cordX, cordY, boss.getCordX(),boss.getCordY()) <= attackRange) {
                 boss.takeDamage(this.activeweapon.getDamage(), gameManager);
                 if (boss.isDead()) {
-                    boss.onDeath(gameManager);
                     gameManager.removeBoss();
                 }
 

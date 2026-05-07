@@ -32,7 +32,7 @@ public class Enemy extends Entity {
 
     @Override
     public void onDeath(GameManager gameManager) {
-
+        gameManager.getGamestats().addKillScore(false, false);
     }
 
     public double getBaseDamage() {
