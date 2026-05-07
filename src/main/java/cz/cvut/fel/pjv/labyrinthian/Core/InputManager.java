@@ -7,7 +7,21 @@ import java.util.Set;
 
 public class InputManager {
     private Set<KeyCode> lastCode = new HashSet<>();
+    Set<KeyCode> justPressed = new HashSet<>();
+    private Set<KeyCode> justReleased = new HashSet<>();
     private KeyCode LastPressed;
+
+    public Set<KeyCode> getJustReleased() {
+        return justReleased;
+    }
+
+    public Set<KeyCode> getJustPressed() {
+        return justPressed;
+    }
+
+    public void setJustReleased(KeyCode justReleased) {
+        this.justReleased.add(justReleased);
+    }
 
     public KeyCode getLastPressed() {
         return LastPressed;
@@ -21,8 +35,11 @@ public class InputManager {
         return lastCode;
     }
 
-    public void setLastCode(KeyCode lastCode) {
-        this.lastCode.add(lastCode);
+    public void setLastCode(KeyCode code) {
+        if(justReleased.contains(code) || !lastCode.contains(code)) {
+            justPressed.add(code);
+        }
+        lastCode.add(code);
     }
 
     public void removeLastCode(KeyCode lastCode){

@@ -186,7 +186,7 @@ public class GameManager {
                     LOG.debug("Map mode toggled: {}", mapMode);
                 }
                 case SPACE -> {
-                    mainCharacter.attack(enemyList,boss ,clayPots, this);
+                    if(inputManager.getJustPressed().contains(KeyCode.SPACE)) mainCharacter.attack(enemyList,boss ,clayPots, this);
                     LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
                 }
                 case Q -> {
@@ -208,10 +208,13 @@ public class GameManager {
                         }
                     }
                     if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
-
-                    if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
-                        escapePortal.onInteraction(mainCharacter, this);
+                    if(escapePortal != null){
+                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
+                            escapePortal.onInteraction(mainCharacter, this);
+                        }
                     }
+
+
                 }
                 case F ->{
                     mainCharacter.getInventory().removeFromInventory(mainCharacter.getActiveweapon());
@@ -267,6 +270,8 @@ public class GameManager {
 
 
         if(currentState == GameState.LEVEL_COMPLETE) nextLevel();
+        inputManager.getJustReleased().clear();
+        inputManager.getJustPressed().clear();
     }
 
     public void spawnItem(Item item, double cordX, double cordY) {
