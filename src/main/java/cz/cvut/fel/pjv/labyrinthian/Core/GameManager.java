@@ -46,7 +46,7 @@ public class GameManager {
         LOG.info("GameManager initialized");
         gamestats = new GameStats();
         timerService = new GameTimerService(gamestats);
-        this.mainCharacter = new Player(72 * 32 - 11 * 64,72 * 32, 32, 32, 80);
+        this.mainCharacter = new Player(64,64, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.escapePortal = null;
@@ -56,7 +56,7 @@ public class GameManager {
         this.clayPots = worldBuilder.buildClaypots(5,map);
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
-        this.currentState = GameState.RUNNING;
+        this.currentState = GameState.MAIN_MENU;
     }
 
     public GameStats getGamestats() {
@@ -202,7 +202,7 @@ public class GameManager {
                 case E -> {
                     LooseItem toPickUp = null;
                     for(LooseItem l : looseItemList){
-                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 30){
+                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 50){
                             toPickUp = l;
                             break;
                         }
@@ -217,11 +217,15 @@ public class GameManager {
 
                 }
                 case F ->{
-                    mainCharacter.getInventory().removeFromInventory(mainCharacter.getActiveweapon());
+                    mainCharacter.getInventory().removeFromInventory();
                 }
-                case P ->{
+                case O ->{
                     mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
                     mainCharacter.heal(mainCharacter.getMaxHealth(), this);
+                }
+                case ESCAPE ->{
+                    currentState = GameState.PAUSED;
+
                 }
 
                 case DIGIT1 -> mainCharacter.getInventory().setActiveIndex(0);
@@ -254,14 +258,19 @@ public class GameManager {
             }
             projectiles.removeAll(toRemove);
         }else projectiles.removeAll(toRemove);
+
         if(yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
             if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
                 yarnBallTrail.add(new double[]{mainCharacter.getCordX(), mainCharacter.getCordY()});
                 ((Consumable) mainCharacter.getInventory().getActiveItem()).decreaseUses();
+                if(active instanceof Consumable && ((Consumable) active).usedUp()){
+                    mainCharacter.getInventory().removeFromInventory();
+                }
             } else if (active instanceof Consumable && ((Consumable) active).usedUp()
                     || !(mainCharacter.getInventory().getActiveItem() instanceof YarnBall)) {
                 yarnBallActive = false;
+
             }
         }
 
@@ -269,7 +278,7 @@ public class GameManager {
 
 
 
-        if(currentState == GameState.LEVEL_COMPLETE) nextLevel();
+
         inputManager.getJustReleased().clear();
         inputManager.getJustPressed().clear();
     }
@@ -288,6 +297,10 @@ public class GameManager {
     }
 
     public void nextLevel(){
+        if(gamestats.getCurrentLevel() == 5){
+            currentState = GameState.WON;
+            return;
+        }
 
         gamestats.setCurrentLevel(gamestats.getCurrentLevel() + 1);
         gamestats.setLevelsCompleted(gamestats.getLevelsCompleted() + 1);
@@ -317,6 +330,34 @@ public class GameManager {
         gamestats.resetLevel();
 
 
+    }
+
+    public void startNewGame() {
+        LOG.info("Resetting game for a new playthrough");
+
+        this.gamestats = new GameStats();
+        this.timerService = new GameTimerService(gamestats);
+        this.timerService.start();
+
+        this.mainCharacter = new Player(64,64, 32, 32, 80);
+        this.map = worldBuilder.buildMap(72);
+        this.escapePortal = null;
+        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
+        this.boss = worldBuilder.spawnBoss(map, 1);
+        this.clayPots = worldBuilder.buildClaypots(5, map);
+
+        this.projectiles.clear();
+        this.looseItemList.clear();
+        this.yarnBallTrail.clear();
+
+
+        this.mapMode = false;
+        this.yarnBallActive = false;
+        this.blindingStewActive = false;
+        this.hasObliterator = false;
+        this.speedMultiplier = 1.0;
+
+        this.currentState = GameState.RUNNING;
     }
 
 

@@ -16,6 +16,7 @@ public class CO2Laser extends Consumable {
         int tileY = (int)(player.getCordY() / 64) + player.getDirection().dy;
         if(gameManager.getMap().getTileByIndex(tileX, tileY).getTile() == TileType.HEDGE){
             gameManager.getMap().setTileByIndex(tileX,tileY, TileType.PATH);
+            decreaseUses();
 
         }
     }

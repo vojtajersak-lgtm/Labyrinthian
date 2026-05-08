@@ -35,32 +35,32 @@ public class Renderer {
 
     public Renderer(List<double[]> yarnBallTrail) {
         for(int i = 0; i < 4; i++) {
-            this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
+            this.pathTiles[i] = new Image(getClass().getResourceAsStream("/textures/maze/path_" + i + ".png"));
         }
-        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
-        this.arenaTile = new Image(getClass().getResourceAsStream("/arena_wall.png"));
+        this.hedgeTile = new Image(getClass().getResourceAsStream("/textures/maze/hedge.png"));
+        this.arenaTile = new Image(getClass().getResourceAsStream("/textures/maze/arena_wall.png"));
 
         String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball", "sword","obliterator"};
         itemSprites = new Image[itemNames.length][3];
         for(int i = 0; i < itemNames.length; i++) {
-            itemSprites[i][0] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + ".png"));
-            itemSprites[i][1] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_inv.png"));
-            itemSprites[i][2] = new Image(getClass().getResourceAsStream("/" + itemNames[i] + "_active.png"));
+            itemSprites[i][0] = new Image(getClass().getResourceAsStream("/textures/items/" + itemNames[i] + ".png"));
+            itemSprites[i][1] = new Image(getClass().getResourceAsStream("/textures/items/" + itemNames[i] + "_inv.png"));
+            itemSprites[i][2] = new Image(getClass().getResourceAsStream("/textures/items/" + itemNames[i] + "_active.png"));
         }
         for (int i = 0; i < bossSprites.length; i++) {
-            bossSprites[i] = new Image(getClass().getResourceAsStream("/boss"  + (i + 1) + ".png"));
+            bossSprites[i] = new Image(getClass().getResourceAsStream("/textures/entities/boss"  + (i + 1) + ".png"));
         }
 
 
-        this.heartFull = new Image(getClass().getResourceAsStream("/heart_full.png"));
-        this.heartHalf = new Image(getClass().getResourceAsStream("/heart_half.png"));
-        this.heartEmpty = new Image(getClass().getResourceAsStream("/heart_empty.png"));
-        this.slotEmpty = new Image(getClass().getResourceAsStream("/slot_empty.png"));
-        this.slotActive = new Image(getClass().getResourceAsStream("/slot_empty_active.png"));
-        this.clayPot = new Image(getClass().getResourceAsStream("/claypot.png"));
-        this.enemy = new Image(getClass().getResourceAsStream("/enemy.png"));
-        this.portal = new Image(getClass().getResourceAsStream("/portal.png"));
-        this.projectile = new Image(getClass().getResourceAsStream("/projectile.png"));
+        this.heartFull = new Image(getClass().getResourceAsStream("/textures/HUD/heart_full.png"));
+        this.heartHalf = new Image(getClass().getResourceAsStream("/textures/HUD/heart_half.png"));
+        this.heartEmpty = new Image(getClass().getResourceAsStream("/textures/HUD/heart_empty.png"));
+        this.slotEmpty = new Image(getClass().getResourceAsStream("/textures/HUD/slot_empty.png"));
+        this.slotActive = new Image(getClass().getResourceAsStream("/textures/HUD/slot_empty_active.png"));
+        this.clayPot = new Image(getClass().getResourceAsStream("/textures/entities/claypot.png"));
+        this.enemy = new Image(getClass().getResourceAsStream("/textures/entities/enemy.png"));
+        this.portal = new Image(getClass().getResourceAsStream("/textures/entities/portal.png"));
+        this.projectile = new Image(getClass().getResourceAsStream("/textures/entities/projectile.png"));
         this.yarnBallTrail = yarnBallTrail;
 
 

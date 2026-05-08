@@ -21,6 +21,10 @@ public abstract class Consumable extends Item {
         return (numberOfUses == 0);
     }
 
+    public void setNumberOfUses(int numberOfUses) {
+        this.numberOfUses = numberOfUses;
+    }
+
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
         player.getInventory().addItem(this);
@@ -28,12 +32,10 @@ public abstract class Consumable extends Item {
 
     @Override
     public void use(Player player, GameManager gameManager) {
-        System.out.println("item used!");
         applyEffect(player, gameManager);
-        decreaseUses();
         if(usedUp()){
-            gameManager.getMainCharacter().getInventory().removeFromInventory(this);
-            System.out.println("Item used up!");
+            gameManager.getMainCharacter().getInventory().removeFromInventory();
+
         }
     }
     protected abstract void applyEffect(Player player, GameManager gameManager);

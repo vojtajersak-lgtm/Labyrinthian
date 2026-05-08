@@ -1,8 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
-import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
-import cz.cvut.fel.pjv.labyrinthian.World.Map;
-import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
+import cz.cvut.fel.pjv.labyrinthian.UI.MainMenuScreen;
+import cz.cvut.fel.pjv.labyrinthian.UI.PauseMenuScreen;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +26,7 @@ public class GameApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
         // logging setup
         String level = System.getProperty("logLevel", "INFO");
         ch.qos.logback.classic.Logger rootLogger =
@@ -37,9 +37,14 @@ public class GameApplication extends Application {
         GameManager gameManager = new GameManager(inputManager);
         gameManager.getTimerService().start();
 
-        // Herní scéna
+        // Game scene
         StackPane gameRoot = new StackPane();
         gameRoot.getChildren().add(canvas);
+
+        FXMLLoader pauseLoader = new FXMLLoader(getClass().getResource("/PauseMenu.fxml"));
+        Parent pauseMenuRoot = pauseLoader.load();
+        pauseMenuRoot.setVisible(false);
+        gameRoot.getChildren().add(pauseMenuRoot);
         Scene gameScene = new Scene(gameRoot, 1024, 576);
         gameScene.setOnKeyPressed(e -> {
             inputManager.setLastCode(e.getCode());
@@ -60,7 +65,29 @@ public class GameApplication extends Application {
             public void handle(long now) {
                 if(now - lastUpdate < 13_333_333) return;
                 lastUpdate = now;
-                gameManager.update();
+                switch (gameManager.getCurrentState()){
+
+                    case RUNNING -> gameManager.update();
+                    case LEVEL_COMPLETE -> gameManager.nextLevel();
+                    case PAUSED -> {
+
+
+                        pauseMenuRoot.setVisible(true);
+
+                    }
+                    case DIALOGUE -> {
+                        //dialogue
+                    }
+                    case GAME_OVER -> {
+                        //draw game over screen, show score, exit to menu button, stop timer?
+                    }
+                    case WON -> {
+                        //show win scree, show score, offer continuing into endless mode or return into main menu
+                    }
+                }
+
+
+
                 renderer.render(gc, gameManager.getGamestats().getCurrentLevelTime(),
                         gameManager.getGamestats().getTotalScore(), gameManager.getMap(),
                         gameManager.getMainCharacter(), gameManager.getEscapePortal(),
@@ -71,15 +98,26 @@ public class GameApplication extends Application {
             }
         };
 
-        // Menu scéna
+        // Menu scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         Parent menuRoot = loader.load();
         Scene menuScene = new Scene(menuRoot, 1024, 576);
 
-        MainMenuController controller = loader.getController();
-        controller.setStage(stage);
-        controller.setGameScene(gameScene);
-        controller.setTimer(timer);
+
+        MainMenuScreen menuScreen = loader.getController();
+        menuScreen.setStage(stage);
+        menuScreen.setGameScene(gameScene);
+        menuScreen.setTimer(timer);
+        menuScreen.setGameManager(gameManager);
+
+        PauseMenuScreen pauseScreen = pauseLoader.getController();
+        pauseScreen.setPauseMenuRoot(pauseMenuRoot);
+        pauseScreen.setStage(stage);
+        pauseScreen.setMenuScene(menuScene);
+        pauseScreen.setTimer(timer);
+        pauseScreen.setGameManager(gameManager);
+
+
 
         stage.setTitle("Labyrinthian");
         stage.setScene(menuScene);

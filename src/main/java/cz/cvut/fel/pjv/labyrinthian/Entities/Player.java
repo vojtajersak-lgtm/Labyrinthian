@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 import cz.cvut.fel.pjv.labyrinthian.Components.Inventory;
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
+import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
@@ -45,7 +46,7 @@ public class Player extends Entity{
     }
 
     @Override
-    public void onDeath(GameManager gameManager) {
+    public void onDeath(GameManager gameManager) {gameManager.setCurrentState(GameState.GAME_OVER);
 
     }
 

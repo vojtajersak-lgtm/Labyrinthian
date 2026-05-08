@@ -37,7 +37,9 @@ public class BlindingStew extends Consumable {
                 System.out.println("movement speed doubled");
                 gameManager.setSpeedMultiplier(2.0);
             }
+
         }
+        decreaseUses();
     }
 
 

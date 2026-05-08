@@ -27,7 +27,7 @@ public class Enemy extends Entity {
         this.attackSpeed = attackSpeed;
         this.startX = cordX;
         this.startY = cordY;
-        this.attackCooldown = 60;
+        this.attackCooldown = 120;
     }
 
     @Override
@@ -118,8 +118,8 @@ public class Enemy extends Entity {
                     state = EnemyState.CHASING;
                 }
                 else{
-                    if(attackCooldown <= 0 && distanceToPlayer <= attackRange){
-                        LOG.info("Enemy attacked player for {} damage, from distance {}", baseDamage, distanceToPlayer);
+                    if(attackCooldown <= 0 && distanceToPlayer * 64 <= attackRange){
+                        LOG.info("Enemy attacked player for {} damage, from distance {}", baseDamage, distanceToPlayer * 64);
                         player.takeDamage(baseDamage,gameManager);
 
                         attackCooldown = attackSpeed * 60;
