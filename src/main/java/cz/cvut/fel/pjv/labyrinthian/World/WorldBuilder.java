@@ -34,7 +34,7 @@ public class WorldBuilder {
         for (int x = 0; x < mapSize; x++) {
             for (int y = 0; y < mapSize; y++) {
                 if(x == mapSize - 1 || y == mapSize - 1 || x == 0 || y == 0){
-                    tiles[x][y] = new Tile(TileType.HEDGE,1);
+                    tiles[x][y] = new Tile(TileType.ARENA_WALL,1);
                 }
             }
         }
@@ -109,7 +109,7 @@ public class WorldBuilder {
     }
 
     public Boss spawnBoss(Map map, double scale){
-        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 20, 3, 2, 80, false);
+        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 20, 3, 2, 0, false);
         return  boss;
     }
 

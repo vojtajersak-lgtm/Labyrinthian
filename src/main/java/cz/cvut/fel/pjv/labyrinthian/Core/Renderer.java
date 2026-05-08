@@ -26,15 +26,20 @@ public class Renderer {
     private final Image slotEmpty;
     private  final Image slotActive;
     private final Image hedgeTile;
+    private final Image arenaTile;
     private final Image clayPot;
     private final Image enemy;
     private final Image portal;
+    private final Image projectile;
     private  List<double[]> yarnBallTrail;
 
     public Renderer(List<double[]> yarnBallTrail) {
         for(int i = 0; i < 4; i++) {
             this.pathTiles[i] = new Image(getClass().getResourceAsStream("/path_" + i + ".png"));
         }
+        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
+        this.arenaTile = new Image(getClass().getResourceAsStream("/arena_wall.png"));
+
         String[] itemNames = {"stew", "laser", "shears", "pogo", "sn1", "yarnball", "sword","obliterator"};
         itemSprites = new Image[itemNames.length][3];
         for(int i = 0; i < itemNames.length; i++) {
@@ -55,8 +60,9 @@ public class Renderer {
         this.clayPot = new Image(getClass().getResourceAsStream("/claypot.png"));
         this.enemy = new Image(getClass().getResourceAsStream("/enemy.png"));
         this.portal = new Image(getClass().getResourceAsStream("/portal.png"));
+        this.projectile = new Image(getClass().getResourceAsStream("/projectile.png"));
         this.yarnBallTrail = yarnBallTrail;
-        this.hedgeTile = new Image(getClass().getResourceAsStream("/hedge.png"));
+
 
     }
 
@@ -113,7 +119,6 @@ public class Renderer {
 
         }else{
             //MAP RENDERING
-            //TODO: add arena wall and maze wall textues
             for (int i = 0; i < map.getHeight(); i++) {
                 for (int j = 0; j < map.getWidth(); j++) {
                     if(map.getTileByIndex(j, i).isWalkable()){
@@ -123,9 +128,9 @@ public class Renderer {
                         gc.drawImage(hedgeTile, j * 64 - offsetX -2, i * 64 - offsetY -2 , 72, 72);
                         continue;
                     }else {
-                        gc.setFill(Color.PURPLE);
+                        gc.drawImage(arenaTile, j * 64 - offsetX -2, i * 64 - offsetY -2 , 70, 72);
+                        continue;
                     }
-                    gc.fillRect(j *64 - offsetX, i * 64 - offsetY, 64, 64);
                 }
 
             }
@@ -192,8 +197,7 @@ public class Renderer {
             //BOSS PROJECTIL ERENDERING
             //TODO: add projectile texture
             for(Projectile p : projectiles){
-                gc.setFill(Color.RED);
-                gc.fillOval(p.getCordX() - offsetX, p.getCordY() - offsetY,p.getSize(), p.getSize());
+                gc.drawImage(projectile,p.getCordX() - offsetX, p.getCordY() - offsetY,p.getSize(), p.getSize());
             }
 
 

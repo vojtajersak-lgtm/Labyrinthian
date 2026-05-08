@@ -11,11 +11,14 @@ public class SnickersBar extends Consumable {
 
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
-        if(Utils.distance(player.getCordX(), player.getCordY(), gameManager.getBoss().getCenterX(),gameManager.getBoss().getCenterY() ) < 120){
-            int transformChance = (int) (Math.random() * 100);
-            if(transformChance <= 10){
-                gameManager.getBoss().transform(gameManager);
-            }
+        if(gameManager.getBoss() != null){
+            if(Utils.distance(player.getCordX(), player.getCordY(), gameManager.getBoss().getCenterX(),gameManager.getBoss().getCenterY() ) < 120){
+                int transformChance = (int) (Math.random() * 100);
+                if(transformChance <= 10){
+                    gameManager.getBoss().transform(gameManager);
+                }
+        }
+
         }else
         if(!player.fullHealth()) player.heal(4,gameManager);
     }
