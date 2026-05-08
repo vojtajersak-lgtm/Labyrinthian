@@ -5,6 +5,7 @@ module cz.cvut.fel.pjv.labyrinthian {
     requires java.logging;
     requires org.slf4j;
     requires ch.qos.logback.classic;
+    requires javafx.fxml;
 
     exports cz.cvut.fel.pjv.labyrinthian.Core;
     exports cz.cvut.fel.pjv.labyrinthian.Entities;
