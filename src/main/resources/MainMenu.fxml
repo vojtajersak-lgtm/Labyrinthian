@@ -7,9 +7,11 @@
 
 <AnchorPane prefHeight="576.0" prefWidth="1024.0" stylesheets="@CSS/style.css" id="mainMenuRoot" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.cvut.fel.pjv.labyrinthian.UI.MainMenuScreen">
    <children>
-      <VBox alignment="CENTER" layoutX="410.0" layoutY="229.0" prefHeight="283.0" prefWidth="165.0" spacing="10.0">
+      <VBox alignment="CENTER" layoutX="440.0" layoutY="180.0" prefHeight="283.0" prefWidth="165.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game" />
+            <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game" >
+               <VBox.margin><Insets bottom="10.0" /></VBox.margin>
+            </Button>
             <Button mnemonicParsing="false" text="Load Game" />
             <Button mnemonicParsing="false" text="Settings">
                <VBox.margin><Insets top="5.0" /></VBox.margin>
@@ -19,6 +21,6 @@
             </Button>
          </children>
       </VBox>
-      <Label layoutX="332.0" layoutY="37.0" prefHeight="185.0" prefWidth="360.0" text="LABYRINTHIAN" styleClass="titleText" />
+      <Label layoutX="300.0" layoutY="10.0" prefHeight="100.0" prefWidth="440.0" text="LABYRINTHIAN" styleClass="titleText" />
    </children>
 </AnchorPane>
