@@ -5,6 +5,7 @@ import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Player extends Entity {
     private Inventory inventory;
     private Weapon activeweapon;
     private double[] deafaultValues;
+    private boolean lifeStealActive = false;
 
     public Player(double cordX, double cordY, double height, double width, double attackRange) {
         super(cordX, cordY, height, width, 6, attackRange);
@@ -23,6 +25,9 @@ public class Player extends Entity {
 
     }
 
+    public void setLifeStealActive(boolean lifeStealActive) {
+        this.lifeStealActive = lifeStealActive;
+    }
 
     public Inventory getInventory() {
         return inventory;
@@ -65,6 +70,9 @@ public class Player extends Entity {
                     attackY + attackH > e.getCordY()) ||
                     Utils.distance(cordX, cordY, e.getCordX(), e.getCordY()) <= attackRange) {
                 e.takeDamage(this.activeweapon.getDamage(), gameManager);
+                if(lifeStealActive && !(activeweapon instanceof UltimateObliterator)){
+                    heal(activeweapon.getDamage(), gameManager);
+                }
                 if (e.isDead()) toRemove.add(e);
             }
         }

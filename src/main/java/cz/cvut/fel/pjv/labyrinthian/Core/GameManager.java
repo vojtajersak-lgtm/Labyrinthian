@@ -272,7 +272,6 @@ public class GameManager {
         }
 
         if (hasObliterator) {
-            mainCharacter.heal(1, this);
             mainCharacter.setMaxHealth(1);
             mainCharacter.setDeafaultValues(1, 0);
         }
@@ -336,6 +335,7 @@ public class GameManager {
         gamestats.setLevelsCompleted(gamestats.getLevelsCompleted() + 1);
         blindingStewActive = false;
         yarnBallActive = false;
+        mainCharacter.setLifeStealActive(false);
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
         enemyList = worldBuilder.buildEnemies(5, map, 2);
@@ -385,6 +385,7 @@ public class GameManager {
         this.yarnBallActive = false;
         this.blindingStewActive = false;
         this.hasObliterator = false;
+        mainCharacter.setLifeStealActive(false);
         this.speedMultiplier = 1.0;
 
         this.currentState = GameState.RUNNING;

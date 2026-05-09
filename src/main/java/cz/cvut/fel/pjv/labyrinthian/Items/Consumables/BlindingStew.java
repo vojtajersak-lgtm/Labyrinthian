@@ -33,7 +33,7 @@ public class BlindingStew extends Consumable {
                 gameManager.getMainCharacter().getActiveweapon().setDamage(gameManager.getMainCharacter().getActiveweapon().getDamage() * 2);
             }
             case 2 -> {
-                gameManager.getMainCharacter().setAttackRange(gameManager.getMainCharacter().getAttackRange() * 2);
+                gameManager.getMainCharacter().setLifeStealActive(true);
 
             }
             case 3 -> {
