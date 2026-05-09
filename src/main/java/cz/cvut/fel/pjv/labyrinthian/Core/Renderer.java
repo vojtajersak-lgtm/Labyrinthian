@@ -195,7 +195,6 @@ public class Renderer {
 
             }
             //BOSS PROJECTIL ERENDERING
-            //TODO: add projectile texture
             for(Projectile p : projectiles){
                 gc.drawImage(projectile,p.getCordX() - offsetX, p.getCordY() - offsetY,p.getSize(), p.getSize());
             }

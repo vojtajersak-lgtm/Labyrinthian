@@ -20,7 +20,7 @@ public class Boss extends Enemy implements Interactable {
     public Boss(double cordX, double cordY,double height, double width ,int maxHealth, int baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
         super(cordX, cordY,height, width,maxHealth, baseDamage, attackSpeed, attackRange);
         this.isTransformed = false;
-        this.projectileCountdown = 120;
+        this.projectileCountdown = 60;
         this.aoeMaxRadius = 320;
         this.spriteChangeTimer = 0;
         this.aoeRadius = 0;
@@ -146,10 +146,10 @@ public class Boss extends Enemy implements Interactable {
                 aoeExploded = false;
                 aoeRadius = 0;
                 aoeColor = Color.GRAY;
-                projectileCountdown = 40;
+                projectileCountdown = 0;
             }
         }else{
-            if(distanceToPlayer <= 200){
+            if(distanceToPlayer <= 150){
                 aoeActive = true;
 
             }else{
@@ -195,6 +195,7 @@ public class Boss extends Enemy implements Interactable {
     public void transform(GameManager gameManager){
         isTransformed = true;
         gameManager.spawnPortal(getCenterX(), getCenterY());
+        gameManager.getDialogScreen().showNpcDialog();
         cordX -= 100;
 
     }

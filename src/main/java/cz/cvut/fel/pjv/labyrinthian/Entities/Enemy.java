@@ -2,6 +2,7 @@ package cz.cvut.fel.pjv.labyrinthian.Entities;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
+import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 
 import java.lang.annotation.Target;
@@ -32,7 +33,10 @@ public class Enemy extends Entity {
 
     @Override
     public void onDeath(GameManager gameManager) {
+
         gameManager.getGamestats().addKillScore(false, false);
+        gameManager.getDialogScreen().showUpgradeDialog();
+        gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
     public double getBaseDamage() {
@@ -51,7 +55,7 @@ public class Enemy extends Entity {
     }
 
     public void takeTurn(Player player, Map map, GameManager gameManager, int chaseTreshold) {
-        attackCooldown--;
+
 
         int distanceToPlayer = (int) ((Utils.distance(player.getCordX(),player.getCordY(),cordX,cordY)) / 64); // apparently something called Manhattan distance
         //gives real distance with turns instead of "flight" distance
@@ -65,6 +69,7 @@ public class Enemy extends Entity {
 
         switch (state) {
             case IDLE -> {
+                attackCooldown = attackSpeed * 60;
                 EnemyState prev = state;
                 state = (distanceToPlayer <= chaseThreshold) && hasLoS  ? EnemyState.CHASING : EnemyState.IDLE;
                 if(distanceToOrigin >= 10) state = EnemyState.RETURN;
@@ -73,6 +78,7 @@ public class Enemy extends Entity {
             }
 
             case CHASING -> { // starts chasing, return if player escapes
+                attackCooldown = attackSpeed * 60;
                 if(distanceToOrigin >= 40) {
                     LOG.info("Enemy exceeded max chase distance, returning to origin");
                     state = EnemyState.RETURN;
@@ -102,6 +108,7 @@ public class Enemy extends Entity {
 
             }
             case RETURN -> {
+                attackCooldown = attackSpeed * 60;
                 if(distanceToOrigin <= 1) {
                     LOG.debug("Enemy reached origin, switching to IDLE");
                     state = EnemyState.IDLE;
@@ -113,6 +120,7 @@ public class Enemy extends Entity {
                 }
             }
             case ATTACKING -> {
+                attackCooldown--;
                 if(distanceToPlayer > attackRange || !hasLoS) {
                     LOG.debug("Player out of attack range or LoS lost, switching to CHASING");
                     state = EnemyState.CHASING;

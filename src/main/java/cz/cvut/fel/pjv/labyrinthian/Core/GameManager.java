@@ -8,6 +8,8 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.YarnBall;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
+import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
+import cz.cvut.fel.pjv.labyrinthian.UI.DialogScreen;
 import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
@@ -24,6 +26,7 @@ public class GameManager {
     private GameState currentState;
     private GameStats gamestats;
     private  GameTimerService timerService;
+    private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
     private InputManager inputManager;
@@ -34,6 +37,7 @@ public class GameManager {
     private List<Projectile> projectiles;
     private List<ClayPot> clayPots;
     private List<LooseItem> looseItemList;
+    private LooseItem pendingPickup;
     private boolean mapMode = false;
     private boolean yarnBallActive = false;
     private boolean blindingStewActive = false;
@@ -61,6 +65,22 @@ public class GameManager {
 
     public GameStats getGamestats() {
         return gamestats;
+    }
+
+    public DialogScreen getDialogScreen() {
+        return dialogScreen;
+    }
+
+    public void setDialogScreen(DialogScreen dialogScreen) {
+        this.dialogScreen = dialogScreen;
+    }
+
+    public LooseItem getPendingPickup() {
+        return pendingPickup;
+    }
+
+    public void setPendingPickup(LooseItem pendingPickup) {
+        this.pendingPickup = pendingPickup;
     }
 
     public GameTimerService getTimerService() {
@@ -207,7 +227,15 @@ public class GameManager {
                             break;
                         }
                     }
-                    if(toPickUp != null) toPickUp.onInteraction(mainCharacter, this);
+                    if(toPickUp != null) {
+                        if(toPickUp.getItem() instanceof UltimateObliterator) {
+                            pendingPickup = toPickUp;
+                            dialogScreen.showObliteratorDialog(toPickUp.getItem());
+                        } else {
+                            toPickUp.onInteraction(mainCharacter, this);
+                            dialogScreen.showItemDialog(toPickUp.getItem());
+                        }
+                    }
                     if(escapePortal != null){
                         if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
                             escapePortal.onInteraction(mainCharacter, this);
@@ -242,6 +270,8 @@ public class GameManager {
 
         if(hasObliterator){
             mainCharacter.heal(1, this);
+            mainCharacter.setMaxHealth(1);
+            mainCharacter.setDeafaultValues(1,0);
         }
 
 

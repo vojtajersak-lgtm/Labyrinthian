@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.UI.DialogScreen;
 import cz.cvut.fel.pjv.labyrinthian.UI.MainMenuScreen;
 import cz.cvut.fel.pjv.labyrinthian.UI.PauseMenuScreen;
 import javafx.animation.AnimationTimer;
@@ -45,6 +46,12 @@ public class GameApplication extends Application {
         Parent pauseMenuRoot = pauseLoader.load();
         pauseMenuRoot.setVisible(false);
         gameRoot.getChildren().add(pauseMenuRoot);
+
+        FXMLLoader dialogLoader = new FXMLLoader(getClass().getResource("/Dialog.fxml"));
+        Parent dialogMenuRoot = dialogLoader.load();
+        dialogMenuRoot.setVisible(false);
+        gameRoot.getChildren().add(dialogMenuRoot);
+
         Scene gameScene = new Scene(gameRoot, 1024, 576);
         gameScene.setOnKeyPressed(e -> {
             inputManager.setLastCode(e.getCode());
@@ -116,6 +123,10 @@ public class GameApplication extends Application {
         pauseScreen.setMenuScene(menuScene);
         pauseScreen.setTimer(timer);
         pauseScreen.setGameManager(gameManager);
+
+        DialogScreen dialogScreen = dialogLoader.getController();
+        dialogScreen.setGameManager(gameManager);
+        gameManager.setDialogScreen(dialogScreen);
 
 
 

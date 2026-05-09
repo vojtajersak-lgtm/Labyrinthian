@@ -1,27 +1,17 @@
-
-
 #mainMenuRoot {
-    /* Tvůj obrázek s opravenou cestou */
     -fx-background-image: url("../textures/HUD/bgr.png");
-
-    /* Roztáhne obrázek přes celou plochu (1024x576) */
     -fx-background-size: cover;
-
-    /* Vycentruje ho, kdyby náhodou neseděl poměr stran */
     -fx-background-position: center center;
-
-    /* Zabrání tomu, aby se obrázek skládal vedle sebe jako dlaždice */
     -fx-background-repeat: no-repeat;
 }
 
 #pauseMenuRoot {
-
     -fx-background-color: rgba(20, 20, 19, 0.7);
 }
 
-
+/* ===================== BUTTONS ===================== */
 .button {
-    -fx-background-color: rgba(36, 23, 3,0.5);
+    -fx-background-color: rgba(36, 23, 3, 0.5);
     -fx-text-fill: white;
     -fx-font-size: 24px;
     -fx-font-family: "Star Crush";
@@ -34,10 +24,96 @@
     -fx-text-fill: #ffcc00;
 }
 
+.dialogButtonPrimary {
+    -fx-pref-width: 160px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 16px;
+    -fx-background-color: rgba(120, 70, 10, 0.85);
+    -fx-border-color: rgba(212, 138, 25, 0.8);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.dialogButtonPrimary:hover {
+    -fx-background-color: rgba(180, 110, 20, 0.9);
+    -fx-text-fill: #ffcc00;
+}
+
+.dialogButtonSecondary {
+    -fx-pref-width: 140px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 16px;
+    -fx-background-color: rgba(40, 25, 5, 0.85);
+    -fx-border-color: rgba(130, 80, 20, 0.7);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.dialogButtonSecondary:hover {
+    -fx-background-color: rgba(80, 50, 10, 0.9);
+    -fx-text-fill: #ffcc00;
+}
+
+/* ===================== TITLE ===================== */
 .titleText {
     -fx-font-family: "Star Crush";
     -fx-font-size: 70px;
-    -fx-text-fill: rgba(212, 138, 25);
+    -fx-text-fill: rgba(212, 138, 25, 1);
     -fx-alignment: center;
     -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
+}
+
+/* ===================== DIALOG OVERLAY ===================== */
+.dialogOverlay {
+    -fx-background-color: rgba(0, 0, 0, 0.65);
+}
+
+/* ===================== DIALOG BOX ===================== */
+.dialogBox {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 0% 100%,
+            rgba(90, 55, 10, 0.97),
+            rgba(55, 30, 5, 0.97)
+    );
+    -fx-border-color: rgba(212, 138, 25, 0.9);
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 28px 32px 28px 32px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0.4, 0, 4);
+}
+
+/* ===================== DIALOG TEXT ===================== */
+.dialogTitle {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 26px;
+    -fx-text-fill: rgba(255, 210, 100, 1);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.dialogBody {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(230, 200, 150, 1);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.dialogStats {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(180, 150, 100, 1);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.dialogWarning {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(255, 160, 60, 1);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 }

@@ -13,7 +13,6 @@ public class UltimateObliterator extends Weapon {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        //TODO: show cutscene confirming choice to equip
         player.setActiveweapon(this);
         player.setMaxHealth(1);
         player.heal(1,gameManager);
