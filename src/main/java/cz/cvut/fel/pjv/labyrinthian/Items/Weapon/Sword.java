@@ -1,12 +1,8 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Weapon;
 
-import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
-
-public class Sword extends Weapon{
+public class Sword extends Weapon {
     public Sword() {
-        super("Sword","You should not be reading this, but if you are, congrats, i messed up", 1,1, 1);
+        super("Sword", "You should not be reading this, but if you are, congrats, i messed up", 1, 1, 1);
     }
 
 
@@ -14,8 +10,6 @@ public class Sword extends Weapon{
     public int getSpriteIndex() {
         return 6;
     }
-
-
 
 
 }

@@ -18,6 +18,7 @@
     -fx-cursor: hand;
     -fx-pref-width: 250px;
     -fx-pref-height: 45px;
+    -fx-focus-traversable: false;
 }
 
 .button:hover {
@@ -98,8 +99,8 @@
     -fx-font-family: "Star Crush";
     -fx-font-size: 14px;
     -fx-text-fill: rgba(230, 200, 150, 1);
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+    -fx-text-alignment: left;
+    -fx-alignment: center-left;
 }
 
 .dialogStats {

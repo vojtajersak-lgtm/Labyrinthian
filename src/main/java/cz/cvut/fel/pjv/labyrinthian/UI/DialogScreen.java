@@ -3,7 +3,6 @@ package cz.cvut.fel.pjv.labyrinthian.UI;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
-import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,14 +11,22 @@ import javafx.scene.layout.VBox;
 
 public class DialogScreen {
 
-    @FXML private AnchorPane dialogRoot;
-    @FXML private VBox itemContent;
-    @FXML private VBox obliteratorWarning;
-    @FXML private VBox upgradeContent;
-    @FXML private VBox npcContent;
-    @FXML private Button continueButton;
-    @FXML private Label itemName;
-    @FXML private Label itemDescription;
+    @FXML
+    private AnchorPane dialogRoot;
+    @FXML
+    private VBox itemContent;
+    @FXML
+    private VBox obliteratorWarning;
+    @FXML
+    private VBox upgradeContent;
+    @FXML
+    private VBox npcContent;
+    @FXML
+    private Button continueButton;
+    @FXML
+    private Label itemName;
+    @FXML
+    private Label itemDescription;
 
 
     private GameManager gameManager;
@@ -78,6 +85,7 @@ public class DialogScreen {
         gameManager.setPendingPickup(null);
         gameManager.setCurrentState(GameState.RUNNING);
     }
+
     @FXML
     public void onNevermind() {
         dialogRoot.setVisible(false);
@@ -88,7 +96,7 @@ public class DialogScreen {
     public void onUpgradeHealth() {
         dialogRoot.setVisible(false);
         gameManager.getMainCharacter().setMaxHealth(gameManager.getMainCharacter().getMaxHealth() + 2);
-        gameManager.getMainCharacter().setDeafaultValues(gameManager.getMainCharacter().getMaxHealth(),0);
+        gameManager.getMainCharacter().setDeafaultValues(gameManager.getMainCharacter().getMaxHealth(), 0);
         gameManager.getMainCharacter().heal(gameManager.getMainCharacter().getMaxHealth(), gameManager);
         gameManager.setCurrentState(GameState.RUNNING);
     }
@@ -97,13 +105,12 @@ public class DialogScreen {
     public void onUpgradeDamage() {
         dialogRoot.setVisible(false);
         gameManager.getMainCharacter().getActiveweapon().setDamage(
-                (int)(gameManager.getMainCharacter().getActiveweapon().getDamage() * 1.5)
+                (int) (gameManager.getMainCharacter().getActiveweapon().getDamage() * 1.5)
         );
-        gameManager.getMainCharacter().setDeafaultValues(gameManager.getMainCharacter().getActiveweapon().getDamage(),2);
+        gameManager.getMainCharacter().setDeafaultValues(gameManager.getMainCharacter().getActiveweapon().getDamage(), 2);
 
         gameManager.setCurrentState(GameState.RUNNING);
     }
-
 
 
     private void hideAll() {

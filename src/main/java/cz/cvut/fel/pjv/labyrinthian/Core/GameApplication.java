@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 public class GameApplication extends Application {
 
 
-
-
     private static final Logger LOG = LoggerFactory.getLogger(GameApplication.class);
     private final Canvas canvas = new Canvas(1024, 576);
 
@@ -68,11 +66,12 @@ public class GameApplication extends Application {
 
         AnimationTimer timer = new AnimationTimer() {
             private long lastUpdate = 0;
+
             @Override
             public void handle(long now) {
-                if(now - lastUpdate < 13_333_333) return;
+                if (now - lastUpdate < 13_333_333) return;
                 lastUpdate = now;
-                switch (gameManager.getCurrentState()){
+                switch (gameManager.getCurrentState()) {
 
                     case RUNNING -> gameManager.update();
                     case LEVEL_COMPLETE -> gameManager.nextLevel();
@@ -92,7 +91,6 @@ public class GameApplication extends Application {
                         //show win scree, show score, offer continuing into endless mode or return into main menu
                     }
                 }
-
 
 
                 renderer.render(gc, gameManager.getGamestats().getCurrentLevelTime(),
@@ -127,7 +125,6 @@ public class GameApplication extends Application {
         DialogScreen dialogScreen = dialogLoader.getController();
         dialogScreen.setGameManager(gameManager);
         gameManager.setDialogScreen(dialogScreen);
-
 
 
         stage.setTitle("Labyrinthian");

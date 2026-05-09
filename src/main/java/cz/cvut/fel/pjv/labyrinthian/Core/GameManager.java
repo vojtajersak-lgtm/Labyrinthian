@@ -14,18 +14,19 @@ import cz.cvut.fel.pjv.labyrinthian.World.EscapePortal;
 import cz.cvut.fel.pjv.labyrinthian.World.Map;
 import cz.cvut.fel.pjv.labyrinthian.World.WorldBuilder;
 import javafx.scene.input.KeyCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class GameManager {
+    private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
     private GameStats gamestats;
-    private  GameTimerService timerService;
+    private GameTimerService timerService;
     private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
@@ -42,22 +43,21 @@ public class GameManager {
     private boolean yarnBallActive = false;
     private boolean blindingStewActive = false;
     private boolean hasObliterator = false;
-    private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
-    private  List<double[]> yarnBallTrail;
+    private List<double[]> yarnBallTrail;
     private double speedMultiplier = 1.0;
 
     public GameManager(InputManager inputManager) {
         LOG.info("GameManager initialized");
         gamestats = new GameStats();
         timerService = new GameTimerService(gamestats);
-        this.mainCharacter = new Player(64,64, 32, 32, 80);
+        this.mainCharacter = new Player(64, 64, 50, 50, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
         this.escapePortal = null;
-        this.enemyList = worldBuilder.buildEnemies(5,map, 1);
-        this.boss = worldBuilder.spawnBoss(map,1);
+        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
+        this.boss = worldBuilder.spawnBoss(map, 1);
         this.projectiles = new ArrayList<Projectile>();
-        this.clayPots = worldBuilder.buildClaypots(5,map);
+        this.clayPots = worldBuilder.buildClaypots(5, map);
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
         this.currentState = GameState.MAIN_MENU;
@@ -91,7 +91,9 @@ public class GameManager {
         return mainCharacter;
     }
 
-    public Boss getBoss()  { return boss; }
+    public Boss getBoss() {
+        return boss;
+    }
 
     public void setBoss(Boss boss) {
         this.boss = boss;
@@ -141,15 +143,6 @@ public class GameManager {
         this.speedMultiplier = speedMultiplier;
     }
 
-    public void setYarnBallActive(boolean yarnBallActive) {
-        this.yarnBallActive = yarnBallActive;
-    }
-
-
-    public void setBlindingStewActive(boolean blindingStewActive) {
-        this.blindingStewActive = blindingStewActive;
-    }
-
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
@@ -174,13 +167,21 @@ public class GameManager {
         return yarnBallActive;
     }
 
+    public void setYarnBallActive(boolean yarnBallActive) {
+        this.yarnBallActive = yarnBallActive;
+    }
+
     public boolean isBlindingStewActive() {
         return blindingStewActive;
     }
 
+    public void setBlindingStewActive(boolean blindingStewActive) {
+        this.blindingStewActive = blindingStewActive;
+    }
+
     public void update() {
         Set keyCodeSet = inputManager.getLastCode();
-        KeyCode lastPressed =inputManager.getLastPressed();
+        KeyCode lastPressed = inputManager.getLastPressed();
 
         if (keyCodeSet.contains(KeyCode.W)) {
             mainCharacter.move(0, -7 * speedMultiplier, map);
@@ -192,43 +193,44 @@ public class GameManager {
         }
         if (keyCodeSet.contains(KeyCode.A)) {
             mainCharacter.move(-7 * speedMultiplier, 0, map);
-            mainCharacter.setDirection(Directions.WEST);
-        }
-        if (keyCodeSet.contains(KeyCode.D)){
-            mainCharacter.move(7 * speedMultiplier, 0, map);
             mainCharacter.setDirection(Directions.EAST);
+        }
+        if (keyCodeSet.contains(KeyCode.D)) {
+            mainCharacter.move(7 * speedMultiplier, 0, map);
+            mainCharacter.setDirection(Directions.WEST);
         }
 
         if (lastPressed != null) {
-            switch(lastPressed) {
+            switch (lastPressed) {
                 case M -> {
                     mapMode = !mapMode;
                     LOG.debug("Map mode toggled: {}", mapMode);
                 }
                 case SPACE -> {
-                    if(inputManager.getJustPressed().contains(KeyCode.SPACE)) mainCharacter.attack(enemyList,boss ,clayPots, this);
+                    if (inputManager.getJustPressed().contains(KeyCode.SPACE))
+                        mainCharacter.attack(enemyList, boss, clayPots, this);
                     LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
                 }
                 case Q -> {
                     Item activeItem = mainCharacter.getInventory().getActiveItem();
-                    if(activeItem != null) activeItem.use(mainCharacter, this);
+                    if (activeItem != null) activeItem.use(mainCharacter, this);
 
                 }
                 case I -> {
-                    for(Item i : mainCharacter.getInventory().getInventorySlots()){
+                    for (Item i : mainCharacter.getInventory().getInventorySlots()) {
                         System.out.println("" + i);
                     }
                 }
                 case E -> {
                     LooseItem toPickUp = null;
-                    for(LooseItem l : looseItemList){
-                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 50){
+                    for (LooseItem l : looseItemList) {
+                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 50) {
                             toPickUp = l;
                             break;
                         }
                     }
-                    if(toPickUp != null) {
-                        if(toPickUp.getItem() instanceof UltimateObliterator) {
+                    if (toPickUp != null) {
+                        if (toPickUp.getItem() instanceof UltimateObliterator) {
                             pendingPickup = toPickUp;
                             dialogScreen.showObliteratorDialog(toPickUp.getItem());
                         } else {
@@ -236,22 +238,22 @@ public class GameManager {
                             dialogScreen.showItemDialog(toPickUp.getItem());
                         }
                     }
-                    if(escapePortal != null){
-                        if(Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120){
+                    if (escapePortal != null) {
+                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120) {
                             escapePortal.onInteraction(mainCharacter, this);
                         }
                     }
 
 
                 }
-                case F ->{
+                case F -> {
                     mainCharacter.getInventory().removeFromInventory();
                 }
-                case O ->{
+                case O -> {
                     mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
                     mainCharacter.heal(mainCharacter.getMaxHealth(), this);
                 }
-                case ESCAPE ->{
+                case ESCAPE -> {
                     currentState = GameState.PAUSED;
 
                 }
@@ -263,38 +265,39 @@ public class GameManager {
                 case DIGIT5 -> mainCharacter.getInventory().setActiveIndex(4);
 
 
-                default -> {}
+                default -> {
+                }
             }
             inputManager.setLastPressed(null);
         }
 
-        if(hasObliterator){
+        if (hasObliterator) {
             mainCharacter.heal(1, this);
             mainCharacter.setMaxHealth(1);
-            mainCharacter.setDeafaultValues(1,0);
+            mainCharacter.setDeafaultValues(1, 0);
         }
 
 
-        for(Enemy e : enemyList){
+        for (Enemy e : enemyList) {
             e.takeTurn(mainCharacter, map, this, 5);
         }
         List<Projectile> toRemove = new ArrayList<>();
-        if(boss != null)  {
-             boss.takeTurn(mainCharacter, map, this, 5);
+        if (boss != null) {
+            boss.takeTurn(mainCharacter, map, this, 5);
 
-            for(Projectile p : projectiles){
+            for (Projectile p : projectiles) {
                 p.update(this);
-                if(!p.isActive()) toRemove.add(p);
+                if (!p.isActive()) toRemove.add(p);
             }
             projectiles.removeAll(toRemove);
-        }else projectiles.removeAll(toRemove);
+        } else projectiles.removeAll(toRemove);
 
-        if(yarnBallActive) {
+        if (yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
             if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
                 yarnBallTrail.add(new double[]{mainCharacter.getCordX(), mainCharacter.getCordY()});
                 ((Consumable) mainCharacter.getInventory().getActiveItem()).decreaseUses();
-                if(active instanceof Consumable && ((Consumable) active).usedUp()){
+                if (active instanceof Consumable && ((Consumable) active).usedUp()) {
                     mainCharacter.getInventory().removeFromInventory();
                 }
             } else if (active instanceof Consumable && ((Consumable) active).usedUp()
@@ -303,10 +306,6 @@ public class GameManager {
 
             }
         }
-
-
-
-
 
 
         inputManager.getJustReleased().clear();
@@ -321,13 +320,14 @@ public class GameManager {
     public void spawnPortal(double cordX, double cordY) {
         this.escapePortal = worldBuilder.buildPortal(cordX, cordY);
     }
-    public void removeBoss(){
+
+    public void removeBoss() {
         boss = null;
         projectiles.clear();
     }
 
-    public void nextLevel(){
-        if(gamestats.getCurrentLevel() == 5){
+    public void nextLevel() {
+        if (gamestats.getCurrentLevel() == 5) {
             currentState = GameState.WON;
             return;
         }
@@ -340,7 +340,7 @@ public class GameManager {
         map = worldBuilder.buildMap(72);
         enemyList = worldBuilder.buildEnemies(5, map, 2);
         boss = worldBuilder.spawnBoss(map, 2);
-        clayPots =worldBuilder.buildClaypots(5,map);
+        clayPots = worldBuilder.buildClaypots(5, map);
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
         mainCharacter.setCordX(64);
         mainCharacter.setCordY(64);
@@ -348,11 +348,11 @@ public class GameManager {
         speedMultiplier = mainCharacter.getDeafaultValues()[1];
         boss.setTransformed(false);
 
-        if(mainCharacter.getActiveweapon() instanceof Sword){
+        if (mainCharacter.getActiveweapon() instanceof Sword) {
             mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
             mainCharacter.getActiveweapon().setRange(mainCharacter.getDeafaultValues()[3]);
         }
-        mainCharacter.heal(0,this);
+        mainCharacter.heal(0, this);
 
         escapePortal = null;
         currentState = GameState.RUNNING;
@@ -369,7 +369,7 @@ public class GameManager {
         this.timerService = new GameTimerService(gamestats);
         this.timerService.start();
 
-        this.mainCharacter = new Player(64,64, 32, 32, 80);
+        this.mainCharacter = new Player(64, 64, 32, 32, 80);
         this.map = worldBuilder.buildMap(72);
         this.escapePortal = null;
         this.enemyList = worldBuilder.buildEnemies(5, map, 1);
@@ -389,7 +389,6 @@ public class GameManager {
 
         this.currentState = GameState.RUNNING;
     }
-
 
 
 }

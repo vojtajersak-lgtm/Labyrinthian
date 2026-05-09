@@ -1,4 +1,5 @@
 package cz.cvut.fel.pjv.labyrinthian.Items;
+
 import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;

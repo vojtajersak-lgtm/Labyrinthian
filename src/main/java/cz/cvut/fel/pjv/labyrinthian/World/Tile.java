@@ -1,10 +1,8 @@
 package cz.cvut.fel.pjv.labyrinthian.World;
 
-import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
-
 public class Tile {
-   private  TileType tile;
-   private int textureIndex;
+    private TileType tile;
+    private int textureIndex;
 
     public Tile(TileType tile, int textureIndex) {
 
@@ -21,11 +19,15 @@ public class Tile {
         return tile;
     }
 
+    public void setTile(TileType tile) {
+        this.tile = tile;
+    }
+
     public int getTextureIndex() {
         return textureIndex;
     }
 
-    public void setTile(TileType tile) {
-        this.tile = tile;
+    public void setTextureIndex(int textureIndex) {
+        this.textureIndex = textureIndex;
     }
 }

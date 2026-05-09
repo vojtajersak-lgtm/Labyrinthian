@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Entity extends GameObject {
+    // Logger for entity health and movement events
+    private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
     protected double maxHealth;
     protected double currHealth;
     protected Directions direction;
     protected double attackRange;
-    // Logger for entity health and movement events
-    private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
 
-    public Entity(double cordX, double cordY,double height, double width, double maxHealth,double attackRange) {
+    public Entity(double cordX, double cordY, double height, double width, double maxHealth, double attackRange) {
         super(cordX, cordY, height, width);
         this.attackRange = attackRange;
         this.maxHealth = maxHealth;
@@ -23,6 +23,10 @@ public abstract class Entity extends GameObject {
 
     public Directions getDirection() {
         return direction;
+    }
+
+    public void setDirection(Directions direction) {
+        this.direction = direction;
     }
 
     public double getCurrHealth() {
@@ -45,22 +49,18 @@ public abstract class Entity extends GameObject {
         this.attackRange = attackRange;
     }
 
-    public void setDirection(Directions direction) {
-        this.direction = direction;
-    }
-
-    public void takeDamage(double Damage, GameManager gameManager){
+    public void takeDamage(double Damage, GameManager gameManager) {
         currHealth = Math.max(currHealth - Damage, 0);
         LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), Damage, currHealth, maxHealth);
-        if(currHealth == 0) {
+        if (currHealth == 0) {
             LOG.info("{} died", this.getClass().getSimpleName());
             onDeath(gameManager);
         }
     }
 
-    public void heal(double health, GameManager gameManager){
+    public void heal(double health, GameManager gameManager) {
 
-        if(!gameManager.isHasObliterator()){
+        if (!gameManager.isHasObliterator()) {
             currHealth = Math.min((currHealth + health), maxHealth);
             LOG.info("{} helaed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
         }
@@ -68,33 +68,34 @@ public abstract class Entity extends GameObject {
 
     }
 
-    public boolean isDead(){
+    public boolean isDead() {
         return currHealth == 0;
     }
-    public boolean fullHealth() {return currHealth == maxHealth;}
+
+    public boolean fullHealth() {
+        return currHealth == maxHealth;
+    }
 
     public abstract void onDeath(GameManager gameManager);
 
-    public void move(double dx, double dy, Map map){
+    public void move(double dx, double dy, Map map) {
         double newCordx = cordX + dx;
         double newCordy = cordY + dy;
-        if(isCornerValid(newCordx, newCordy,map) &&
-                isCornerValid(newCordx + width, newCordy,map) &&
-                isCornerValid(newCordx, newCordy + height,map) &&
-                isCornerValid(newCordx + width, newCordy + height,map)){
+        if (isCornerValid(newCordx, newCordy, map) &&
+                isCornerValid(newCordx + width, newCordy, map) &&
+                isCornerValid(newCordx, newCordy + height, map) &&
+                isCornerValid(newCordx + width, newCordy + height, map)) {
 
             cordX = newCordx;
             cordY = newCordy;
             if (Math.abs(dx) > Math.abs(dy)) {
                 direction = dx > 0 ? Directions.EAST : Directions.WEST;
             } else {
-                direction = dy> 0 ? Directions.SOUTH : Directions.NORTH;
+                direction = dy > 0 ? Directions.SOUTH : Directions.NORTH;
             }
         }
 
     }
-
-
 
 
 }

@@ -9,13 +9,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class PauseMenuScreen {
-    private  Stage stage;
-    private  Scene menuScene;
+    private Stage stage;
+    private Scene menuScene;
     private AnimationTimer timer;
-    private  GameManager gameManager;
+    private GameManager gameManager;
     private Parent pauseMenuRoot;
 
-    public void setStage(Stage stage) {this.stage = stage;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
 
@@ -36,10 +37,11 @@ public class PauseMenuScreen {
     }
 
     @FXML
-    public void onResumeGame(){
+    public void onResumeGame() {
         pauseMenuRoot.setVisible(false);
         gameManager.setCurrentState(GameState.RUNNING);
     }
+
     @FXML
     public void onSaveGame() {
         //save game

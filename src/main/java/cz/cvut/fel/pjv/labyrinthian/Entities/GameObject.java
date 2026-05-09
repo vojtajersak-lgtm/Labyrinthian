@@ -22,8 +22,16 @@ public abstract class GameObject {
         return cordY;
     }
 
+    public void setCordY(double cordY) {
+        this.cordY = cordY;
+    }
+
     public double getCordX() {
         return cordX;
+    }
+
+    public void setCordX(double cordX) {
+        this.cordX = cordX;
     }
 
     public double getWidth() {
@@ -34,23 +42,15 @@ public abstract class GameObject {
         return height;
     }
 
-    public void setCordY(double cordY) {
-        this.cordY = cordY;
+    public double getCenterX() {
+        return cordX + width / 2;
     }
 
-    public void setCordX(double cordX) {
-        this.cordX = cordX;
+    public double getCenterY() {
+        return cordY + width / 2;
     }
 
-    public double getCenterX(){
-        return  cordX + width / 2;
-    }
-
-    public double getCenterY(){
-        return  cordY + width / 2;
-    }
-
-    public boolean isCornerValid(double newX, double newY, Map map){
+    public boolean isCornerValid(double newX, double newY, Map map) {
         return map.isInbounds(newX, newY) && map.getTile(newX, newY).isWalkable();
 
     }

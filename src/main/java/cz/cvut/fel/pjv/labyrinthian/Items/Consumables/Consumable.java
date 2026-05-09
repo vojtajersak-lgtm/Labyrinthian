@@ -1,6 +1,5 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Consumables;
 
-import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
@@ -13,11 +12,11 @@ public abstract class Consumable extends Item {
         this.numberOfUses = numberOfUses;
     }
 
-    public void decreaseUses(){
-        if(numberOfUses > 0) numberOfUses--;
+    public void decreaseUses() {
+        if (numberOfUses > 0) numberOfUses--;
     }
 
-    public boolean usedUp(){
+    public boolean usedUp() {
         return (numberOfUses == 0);
     }
 
@@ -33,11 +32,12 @@ public abstract class Consumable extends Item {
     @Override
     public void use(Player player, GameManager gameManager) {
         applyEffect(player, gameManager);
-        if(usedUp()){
+        if (usedUp()) {
             gameManager.getMainCharacter().getInventory().removeFromInventory();
 
         }
     }
+
     protected abstract void applyEffect(Player player, GameManager gameManager);
 
 }

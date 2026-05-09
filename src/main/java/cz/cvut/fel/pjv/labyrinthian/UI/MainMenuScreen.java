@@ -2,7 +2,6 @@ package cz.cvut.fel.pjv.labyrinthian.UI;
 
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
-import cz.cvut.fel.pjv.labyrinthian.Core.InputManager;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -14,10 +13,21 @@ public class MainMenuScreen {
     private AnimationTimer timer;
     private GameManager gameManager;
 
-    public void setStage(Stage stage) { this.stage = stage; }
-    public void setGameScene(Scene gameScene) { this.gameScene = gameScene; }
-    public void setTimer(AnimationTimer timer) { this.timer = timer; }
-    public void setGameManager(GameManager gameManager) {this.gameManager = gameManager;}
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setGameScene(Scene gameScene) {
+        this.gameScene = gameScene;
+    }
+
+    public void setTimer(AnimationTimer timer) {
+        this.timer = timer;
+    }
+
+    public void setGameManager(GameManager gameManager) {
+        this.gameManager = gameManager;
+    }
 
     @FXML
     public void onStartGame() {
