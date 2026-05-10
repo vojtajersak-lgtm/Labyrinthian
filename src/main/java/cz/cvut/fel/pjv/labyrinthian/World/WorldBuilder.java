@@ -113,9 +113,15 @@ public class WorldBuilder {
 
     public List<ClayPot> buildClaypots(int count, Map map) {
         List<ClayPot> clayPots = new ArrayList<>();
+        List<int[]> deadEnds = findDeadEnds(map);
+        Random random = new Random();
+
+
         for (int i = 0; i < count; i++) {
-            int[] potCords = getRandomPosition(map, clayPots);
+            int randomPosition = random.nextInt(deadEnds.size());
+            int[] potCords = deadEnds.get(randomPosition);
             ClayPot clayPot = new ClayPot(potCords[0] * 64, potCords[1] * 64, 48, 48, getRandomItem());
+            deadEnds.remove(randomPosition);
             clayPots.add(clayPot);
         }
         return clayPots;
@@ -201,6 +207,27 @@ public class WorldBuilder {
             }
         }
         return positionXY;
+    }
+
+    private List<int[]> findDeadEnds(Map map){
+        List<int[]> deadEnds = new ArrayList<>();
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int i = 0; i < map.getMapSize(); i++) {
+            for (int j = 0; j < map.getMapSize(); j++) {
+                if(!map.getTileByIndex(j, i).isWalkable()) continue;
+                else{
+                    int directionsBlocked = 0;
+                    for(int[] d : directions){
+                        if(map.getTileByIndex(j + d[0],i + d[1]).isWalkable() && !(map.getTileByIndex(j + d[0] * 2,i + d[1] * 2).isWalkable())){
+                            directionsBlocked++;
+                        }
+                    }
+                    if(directionsBlocked == 3) deadEnds.add(new int[]{j, i});
+                }
+            }
+
+        }
+        return deadEnds;
     }
 
 

@@ -27,7 +27,7 @@ public class InventoryTest {
         Inventory inventory = new Inventory();
         BlindingStew stew = new BlindingStew();
         inventory.addItem(stew);
-        inventory.removeFromInventory(stew);
+        inventory.removeFromInventory();
         assertNull(inventory.getInventorySlots()[0]);
     }
 
