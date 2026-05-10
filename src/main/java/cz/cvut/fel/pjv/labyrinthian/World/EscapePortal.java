@@ -14,10 +14,7 @@ public class EscapePortal extends GameObject implements Interactable {
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
         gameManager.setCurrentState(GameState.LEVEL_COMPLETE);
-        System.out.println("level complete");
     }
-
-
 
 
 }

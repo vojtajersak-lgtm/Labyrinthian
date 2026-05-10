@@ -5,8 +5,8 @@ import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 
 
 public class Projectile extends GameObject {
-    private  double dirX;
-    private  double dirY;
+    private double dirX;
+    private double dirY;
     private double speed;
     private double damage;
     private boolean isActive;
@@ -67,7 +67,7 @@ public class Projectile extends GameObject {
     }
 
 
-    public void update(GameManager gameManager){
+    public void update(GameManager gameManager) {
         this.cordX += dirX * speed;
         this.cordY += dirY * speed;
         boolean playerHit = (Utils.distance(getCenterX(), getCenterY(),
@@ -75,12 +75,12 @@ public class Projectile extends GameObject {
                 (size + gameManager.getMainCharacter().getWidth()));
 
 
-        if(playerHit || !(isCornerValid(cordX, cordY, gameManager.getMap())) ||
+        if (playerHit || !(isCornerValid(cordX, cordY, gameManager.getMap())) ||
                 (Utils.distance(getCenterX(), getCenterY(),
-                gameManager.getBoss().getCenterX(),
-                        gameManager.getBoss().getCenterY())) >= 1500){
+                        gameManager.getBoss().getCenterX(),
+                        gameManager.getBoss().getCenterY())) >= 1500) {
             isActive = false;
-            if(playerHit){
+            if (playerHit) {
                 gameManager.getMainCharacter().takeDamage(damage, gameManager);
             }
 

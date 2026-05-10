@@ -1,13 +1,13 @@
 package cz.cvut.fel.pjv.labyrinthian.Components;
 
 public class GameStats {
+    private int levelsCompleted;
     private int currentLevel;
     private int totalScore;
     private long levelStartTime;
     private double averageLevelTime;
-    int levelsCompleted;
 
-    public GameStats( ) {
+    public GameStats() {
         this.currentLevel = 1;
         this.totalScore = 0;
         this.levelStartTime = System.currentTimeMillis();
@@ -55,22 +55,34 @@ public class GameStats {
         this.levelsCompleted = levelsCompleted;
     }
 
-    public long getCurrentLevelTime(){
+    public long getCurrentLevelTime() {
         return (System.currentTimeMillis() - levelStartTime) / 1000;
     }
 
-    public void addKillScore(boolean isBoss, boolean isTransformed){
-        if(isBoss) totalScore += 10 * currentLevel * 500;
-        else if(isTransformed) totalScore += 10 * currentLevel * 1000;
+    @Override
+    public String toString() {
+        return
+                "Levels Completed: " + levelsCompleted +
+                "\n\nTotal Score: " + totalScore +
+                "\n\nAverage Level Time: "  + averageLevelTime;
+
+
+    }
+
+    public void addKillScore(boolean isBoss, boolean isTransformed) {
+        if (isBoss) totalScore += 10 * currentLevel * 500;
+        else if (isTransformed) totalScore += 10 * currentLevel * 1000;
         else totalScore += 10 * currentLevel * 50;
     }
-    public void completeLevelScore(){
+
+    public void completeLevelScore() {
         long levelTime = getCurrentLevelTime();
         totalScore += (int) (Math.max(0, 60 - levelTime) * 10);
         averageLevelTime = (averageLevelTime * levelsCompleted + levelTime) / (levelsCompleted + 1);
         levelsCompleted++;
     }
-    public void resetLevel(){
+
+    public void resetLevel() {
         levelStartTime = System.currentTimeMillis();
         currentLevel++;
     }

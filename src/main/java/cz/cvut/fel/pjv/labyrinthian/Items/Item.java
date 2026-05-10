@@ -1,4 +1,5 @@
 package cz.cvut.fel.pjv.labyrinthian.Items;
+
 import cz.cvut.fel.pjv.labyrinthian.Components.Interactable;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
@@ -12,9 +13,18 @@ public abstract class Item implements Interactable {
         this.description = description;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        player.getInventory().addItem(this);}
+        player.getInventory().addItem(this);
+    }
 
     @Override
     public String toString() {

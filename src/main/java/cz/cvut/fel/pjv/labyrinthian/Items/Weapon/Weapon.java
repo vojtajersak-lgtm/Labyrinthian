@@ -1,7 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Weapon;
 
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
-import cz.cvut.fel.pjv.labyrinthian.Entities.Entity;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 
@@ -10,7 +9,7 @@ public abstract class Weapon extends Item {
     private int attackSpeed;
     private double range;
 
-    public Weapon(String name, String description, double damage, int attackSpeed,double range) {
+    public Weapon(String name, String description, double damage, int attackSpeed, double range) {
         super(name, description);
         this.damage = damage;
         this.attackSpeed = attackSpeed;
@@ -42,7 +41,8 @@ public abstract class Weapon extends Item {
     }
 
     @Override
-    public void use(Player player, GameManager gameManager){}
+    public void use(Player player, GameManager gameManager) {
+    }
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="dialogRoot" prefHeight="576.0" prefWidth="1024.0"
+            styleClass="dialogOverlay" stylesheets="@CSS/style.css"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cz.cvut.fel.pjv.labyrinthian.UI.DialogScreen">
+    <children>
+
+        <VBox fx:id="dialogBox" styleClass="dialogBox" alignment="CENTER"
+              layoutX="312.0" layoutY="163.0" prefWidth="400.0" prefHeight="250.0" spacing="12.0">
+
+            <VBox fx:id="itemContent" visible="false" managed="false" alignment="CENTER" spacing="8.0">
+                <Label fx:id="itemName" styleClass="dialogTitle" text="Item Name" />
+                <Label fx:id="itemDescription" styleClass="dialogBody" text="Description" wrapText="true" maxWidth="340.0" alignment="CENTER_LEFT" />
+            </VBox>
+
+            <VBox fx:id="obliteratorWarning" visible="false" managed="false" alignment="CENTER" spacing="10.0">
+                <Label styleClass="dialogWarning" text="Are you sure you want to proceed?" wrapText="true" maxWidth="340.0" />
+                <HBox alignment="CENTER" spacing="16.0">
+                    <Button styleClass="button,dialogButtonSecondary" mnemonicParsing="false"
+                            text="Nevermind" onAction="#onNevermind" />
+                    <Button styleClass="button,dialogButtonPrimary" mnemonicParsing="false"
+                            text="Equip Weapon" onAction="#onEquip" />
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="upgradeContent" visible="false" managed="false" alignment="CENTER" spacing="12.0">
+                <Label styleClass="dialogBody" text="You gained the essence of the slain enemy."
+                       wrapText="true" maxWidth="340.0" textAlignment="CENTER" />
+                <Label styleClass="dialogTitle" text="Choose an upgrade:" />
+                <HBox alignment="CENTER" spacing="16.0">
+                    <Button styleClass="button,dialogButtonSecondary" mnemonicParsing="false"
+                            text="Health" onAction="#onUpgradeHealth" />
+                    <Button styleClass="button,dialogButtonPrimary" mnemonicParsing="false"
+                            text="Weapon Damage" onAction="#onUpgradeDamage" />
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="npcContent" visible="false" managed="false" alignment="CENTER" spacing="10.0">
+                <Label styleClass="dialogBody"
+                       text="Thank you for saving me. You may pass through the portal."
+                       wrapText="true" maxWidth="340.0" textAlignment="CENTER" />
+            </VBox>
+
+            <Button fx:id="continueButton" styleClass="button,dialogButtonPrimary"
+                    mnemonicParsing="false" text="Continue"
+                    onAction="#onContinue" visible="false" managed="false" />
+
+        </VBox>
+    </children>
+</AnchorPane>

@@ -5,7 +5,8 @@ public enum GameState {
     RUNNING,
     PAUSED,
     DIALOGUE,
-    INVENTORY,
     GAME_OVER,
-    LEVEL_COMPLETE
+    WON,
+    LEVEL_COMPLETE,
+    SHOWING_END
 }

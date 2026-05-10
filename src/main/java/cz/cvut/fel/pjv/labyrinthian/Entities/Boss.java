@@ -17,10 +17,10 @@ public class Boss extends Enemy implements Interactable {
     private int aoeFlashTimer;
     private boolean aoeExploded = false;
 
-    public Boss(double cordX, double cordY,double height, double width ,int maxHealth, int baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
-        super(cordX, cordY,height, width,maxHealth, baseDamage, attackSpeed, attackRange);
+    public Boss(double cordX, double cordY, double height, double width, int maxHealth, int baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
+        super(cordX, cordY, height, width, maxHealth, baseDamage, attackSpeed, attackRange);
         this.isTransformed = false;
-        this.projectileCountdown = 120;
+        this.projectileCountdown = 60;
         this.aoeMaxRadius = 320;
         this.spriteChangeTimer = 0;
         this.aoeRadius = 0;
@@ -37,7 +37,7 @@ public class Boss extends Enemy implements Interactable {
     }
 
 
-    public AttackTypes chooseAttack(){
+    public AttackTypes chooseAttack() {
 
         return null;
     }
@@ -114,53 +114,53 @@ public class Boss extends Enemy implements Interactable {
 
     @Override
     public void takeTurn(Player player, Map map, GameManager gameManager, int chaseThreshold) {
-        if(isTransformed){
+        if (isTransformed) {
             return;
         }
 
         spriteChangeTimer--;
-        double distanceToPlayer = Utils.distance(player.getCordX(),player.getCordY(), getCenterX(),getCenterY());
+        double distanceToPlayer = Utils.distance(player.getCordX(), player.getCordY(), getCenterX(), getCenterY());
         LOG.debug("distance to player:{}", distanceToPlayer);
-        if(aoeActive){
-            if(aoeRadius < aoeMaxRadius) {
+        if (aoeActive) {
+            if (aoeRadius < aoeMaxRadius) {
                 aoeRadius += 3;
-                if(aoeRadius >= aoeMaxRadius - 80 && aoeRadius <= aoeMaxRadius -40){
+                if (aoeRadius >= aoeMaxRadius - 80 && aoeRadius <= aoeMaxRadius - 40) {
                     cordY -= 5;
                 }
-                if(aoeRadius >= aoeMaxRadius - 40){
+                if (aoeRadius >= aoeMaxRadius - 40) {
                     cordY += 5;
                 }
             }
 
-            if(aoeRadius >= aoeMaxRadius && aoeFlashTimer == 0 && !aoeExploded){
+            if (aoeRadius >= aoeMaxRadius && aoeFlashTimer == 0 && !aoeExploded) {
                 aoeColor = Color.DARKRED;
                 aoeExploded = true;
                 aoeFlashTimer = 40;
-                if(distanceToPlayer <= 320 ) player.takeDamage(baseDamage, gameManager);
+                if (distanceToPlayer <= 320) player.takeDamage(baseDamage, gameManager);
             }
 
-            if(aoeFlashTimer > 0){
+            if (aoeFlashTimer > 0) {
                 aoeFlashTimer--;
-            } else if(aoeExploded) {
+            } else if (aoeExploded) {
                 aoeActive = false;
                 aoeExploded = false;
                 aoeRadius = 0;
                 aoeColor = Color.GRAY;
-                projectileCountdown = 40;
+                projectileCountdown = 0;
             }
-        }else{
-            if(distanceToPlayer <= 200){
+        } else {
+            if (distanceToPlayer <= 150) {
                 aoeActive = true;
 
-            }else{
+            } else {
                 super.takeTurn(player, map, gameManager, 10);
-                if(projectileCountdown > 0){
+                if (projectileCountdown > 0) {
                     projectileCountdown--;
 
                 } else {
                     boolean hasLoS = hasLineOfSight(player, map);
                     LOG.debug("hasLos is {}", hasLoS);
-                    if (hasLoS && gameManager.getProjectiles().isEmpty()){
+                    if (hasLoS && gameManager.getProjectiles().isEmpty()) {
                         spawnProjectiles(gameManager);
                         spriteChangeTimer = 40;
                         projectileCountdown = 0;
@@ -171,30 +171,30 @@ public class Boss extends Enemy implements Interactable {
         }
 
 
-
-
     }
 
-    public void spawnProjectiles(GameManager gameManager){
+    public void spawnProjectiles(GameManager gameManager) {
         double[] angles = {-25, -15, 0, 15, 25};
         double dx = gameManager.getMainCharacter().getCenterX() - getCenterX();
         double dy = gameManager.getMainCharacter().getCenterY() - getCenterY();
 
-        double len = Math.sqrt(dx*dx + dy*dy);
-        dx /= len; dy /= len;
+        double len = Math.sqrt(dx * dx + dy * dy);
+        dx /= len;
+        dy /= len;
 
-        for(double angle : angles){
+        for (double angle : angles) {
             double radianAngle = Math.toRadians(angle);
             double newDx = dx * Math.cos(radianAngle) - dy * Math.sin(radianAngle);
             double newDy = dx * Math.sin(radianAngle) + dy * Math.cos(radianAngle);
-            gameManager.getProjectiles().add(new Projectile(getCenterX(), getCenterY(), newDx, newDy, 5, baseDamage,true, 20));
+            gameManager.getProjectiles().add(new Projectile(getCenterX(), getCenterY(), newDx, newDy, 5, baseDamage, true, 20));
         }
 
     }
 
-    public void transform(GameManager gameManager){
+    public void transform(GameManager gameManager) {
         isTransformed = true;
         gameManager.spawnPortal(getCenterX(), getCenterY());
+        gameManager.getDialogScreen().showNpcDialog();
         cordX -= 100;
 
     }

@@ -30,7 +30,7 @@ public class LooseItem implements Interactable {
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
-        if((!player.getInventory().inventoryFull()) || item instanceof Weapon){
+        if ((!player.getInventory().inventoryFull()) || item instanceof Weapon) {
             item.onInteraction(player, gameManager);
             gameManager.getLooseItemList().remove(this);
         }
