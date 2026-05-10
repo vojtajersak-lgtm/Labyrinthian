@@ -45,7 +45,7 @@ public class Renderer {
 
         playerSprites = new Image[2][5];
         for (int i = 0; i < 5; i++) {
-            playerSprites[0][i] = new Image(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png"), 50, 50, true, true);
+            playerSprites[0][i] = new Image(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png"), 40, 50, true, true);
             playerSprites[1][i] = new Image(getClass().getResourceAsStream("/textures/entities/player_1_" + i + ".png"), 50, 50, true, true);
 
         }
@@ -145,7 +145,12 @@ public class Renderer {
             //PLAYER RENDERING
             //TODO: add player texture and direction logic
             int weaponIndex = player.getActiveweapon() instanceof UltimateObliterator ? 1 : 0;
-            gc.drawImage(playerSprites[weaponIndex][player.getDirection().index],player.getCordX() - offsetX, player.getCordY() - offsetY);
+            if(player.getRecoveryCooldown() > 0){
+                gc.drawImage(playerSprites[weaponIndex][4],player.getCordX() - offsetX, player.getCordY() - offsetY);
+
+            }else gc.drawImage(playerSprites[weaponIndex][player.getDirection().index],player.getCordX() - offsetX, player.getCordY() - offsetY);
+
+
 
 
             //ENEMY RENDERING
@@ -167,7 +172,6 @@ public class Renderer {
 
             if (boss != null) {
                 if (boss.isTransformed()) {
-                    //TODO: add npc sprite
 
                     gc.drawImage(npc,boss.getCordX() - offsetX, boss.getCordY() - offsetY);
                 } else {

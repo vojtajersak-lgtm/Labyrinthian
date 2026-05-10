@@ -9,7 +9,7 @@
     -fx-background-color: rgba(20, 20, 19, 0.7);
 }
 
-/* ===================== BUTTONS ===================== */
+/*  BUTTONS  */
 .button {
     -fx-background-color: rgba(36, 23, 3, 0.5);
     -fx-text-fill: white;
@@ -18,7 +18,6 @@
     -fx-cursor: hand;
     -fx-pref-width: 250px;
     -fx-pref-height: 45px;
-    -fx-focus-traversable: false;
 }
 
 .button:hover {
@@ -57,7 +56,7 @@
     -fx-text-fill: #ffcc00;
 }
 
-/* ===================== TITLE ===================== */
+/*  TITLE  */
 .titleText {
     -fx-font-family: "Star Crush";
     -fx-font-size: 70px;
@@ -66,12 +65,12 @@
     -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
 }
 
-/* ===================== DIALOG OVERLAY ===================== */
+/*  DIALOG OVERLAY  */
 .dialogOverlay {
     -fx-background-color: rgba(0, 0, 0, 0.65);
 }
 
-/* ===================== DIALOG BOX ===================== */
+/*  DIALOG BOX  */
 .dialogBox {
     -fx-background-color: linear-gradient(
             from 0% 0% to 0% 100%,
@@ -86,7 +85,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 20, 0.4, 0, 4);
 }
 
-/* ===================== DIALOG TEXT ===================== */
+/*  DIALOG TEXT  */
 .dialogTitle {
     -fx-font-family: "Star Crush";
     -fx-font-size: 26px;
@@ -99,8 +98,8 @@
     -fx-font-family: "Star Crush";
     -fx-font-size: 14px;
     -fx-text-fill: rgba(230, 200, 150, 1);
-    -fx-text-alignment: left;
-    -fx-alignment: center-left;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 }
 
 .dialogStats {
@@ -117,4 +116,55 @@
     -fx-text-fill: rgba(255, 160, 60, 1);
     -fx-alignment: center;
     -fx-text-alignment: center;
+}
+
+/*  END SCREEN  */
+.endScreenTitle {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 70px;
+    -fx-text-fill: rgba(99, 7, 19, 1);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-effect: dropshadow(one-pass-box, rgb(54, 2, 8), 3, 1.0, 0, 0);
+}
+
+.endScreenTitle.won {
+    -fx-text-fill: rgba(212, 138, 25, 1);
+    -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
+}
+
+.endScreenStats {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 22px;
+    -fx-text-fill: rgba(99, 7, 19, 1);
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.endScreenStats.won {
+    -fx-text-fill: rgba(212, 138, 25, 1);
+    -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
+}
+
+.endScreenMessage {
+    -fx-font-family: "Star Crush";
+    -fx-font-size: 20px;
+    -fx-text-fill: rgba(212, 138, 25, 1);
+    -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#gameWonRoot {
+    -fx-background-image: url("../textures/HUD/game_won.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
+
+#gameOverRoot {
+    -fx-background-image: url("../textures/HUD/game_over.png");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
 }

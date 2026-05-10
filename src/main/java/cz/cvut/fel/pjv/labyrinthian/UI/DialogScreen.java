@@ -105,7 +105,7 @@ public class DialogScreen {
     public void onUpgradeDamage() {
         dialogRoot.setVisible(false);
         gameManager.getMainCharacter().getActiveweapon().setDamage(
-                (int) (gameManager.getMainCharacter().getActiveweapon().getDamage() * 1.5)
+                (int) (gameManager.getMainCharacter().getActiveweapon().getDamage() * 2)
         );
         gameManager.getMainCharacter().setDeafaultValues(gameManager.getMainCharacter().getActiveweapon().getDamage(), 2);
 

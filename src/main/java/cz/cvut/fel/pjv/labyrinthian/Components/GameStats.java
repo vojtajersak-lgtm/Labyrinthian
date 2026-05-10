@@ -1,7 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Components;
 
 public class GameStats {
-    int levelsCompleted;
+    private int levelsCompleted;
     private int currentLevel;
     private int totalScore;
     private long levelStartTime;
@@ -57,6 +57,16 @@ public class GameStats {
 
     public long getCurrentLevelTime() {
         return (System.currentTimeMillis() - levelStartTime) / 1000;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "Levels Completed: " + levelsCompleted +
+                "\n\nTotal Score: " + totalScore +
+                "\n\nAverage Level Time: "  + averageLevelTime;
+
+
     }
 
     public void addKillScore(boolean isBoss, boolean isTransformed) {

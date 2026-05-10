@@ -183,22 +183,28 @@ public class GameManager {
         Set keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed = inputManager.getLastPressed();
 
-        if (keyCodeSet.contains(KeyCode.W)) {
-            mainCharacter.move(0, -7 * speedMultiplier, map);
-            mainCharacter.setDirection(Directions.NORTH);
+        if(mainCharacter.getRecoveryCooldown() > 0){
+            mainCharacter.tickCooldown();
+        }else{
+            if (keyCodeSet.contains(KeyCode.W)) {
+                mainCharacter.move(0, -7 * speedMultiplier, map);
+                mainCharacter.setDirection(Directions.NORTH);
+            }
+            if (keyCodeSet.contains(KeyCode.S)) {
+                mainCharacter.move(0, 7 * speedMultiplier, map);
+                mainCharacter.setDirection(Directions.SOUTH);
+            }
+            if (keyCodeSet.contains(KeyCode.A)) {
+                mainCharacter.move(-7 * speedMultiplier, 0, map);
+                mainCharacter.setDirection(Directions.EAST);
+            }
+            if (keyCodeSet.contains(KeyCode.D)) {
+                mainCharacter.move(7 * speedMultiplier, 0, map);
+                mainCharacter.setDirection(Directions.WEST);
+            }
         }
-        if (keyCodeSet.contains(KeyCode.S)) {
-            mainCharacter.move(0, 7 * speedMultiplier, map);
-            mainCharacter.setDirection(Directions.SOUTH);
-        }
-        if (keyCodeSet.contains(KeyCode.A)) {
-            mainCharacter.move(-7 * speedMultiplier, 0, map);
-            mainCharacter.setDirection(Directions.EAST);
-        }
-        if (keyCodeSet.contains(KeyCode.D)) {
-            mainCharacter.move(7 * speedMultiplier, 0, map);
-            mainCharacter.setDirection(Directions.WEST);
-        }
+
+
 
         if (lastPressed != null) {
             switch (lastPressed) {
@@ -326,19 +332,14 @@ public class GameManager {
     }
 
     public void nextLevel() {
-        if (gamestats.getCurrentLevel() == 5) {
-            currentState = GameState.WON;
-            return;
-        }
 
-        gamestats.setCurrentLevel(gamestats.getCurrentLevel() + 1);
-        gamestats.setLevelsCompleted(gamestats.getLevelsCompleted() + 1);
+
         blindingStewActive = false;
         yarnBallActive = false;
         mainCharacter.setLifeStealActive(false);
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
-        enemyList = worldBuilder.buildEnemies(5, map, 2);
+        enemyList = worldBuilder.buildEnemies(5, map, gamestats.getCurrentLevel());
         boss = worldBuilder.spawnBoss(map, 2);
         clayPots = worldBuilder.buildClaypots(5, map);
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
@@ -359,6 +360,13 @@ public class GameManager {
         gamestats.completeLevelScore();
         gamestats.resetLevel();
 
+        if (gamestats.getLevelsCompleted() == 5) {
+            currentState = GameState.WON;
+            return;
+        }
+
+        LOG.debug("new level started, level: {}", gamestats.getCurrentLevel());
+
 
     }
 
@@ -368,8 +376,12 @@ public class GameManager {
         this.gamestats = new GameStats();
         this.timerService = new GameTimerService(gamestats);
         this.timerService.start();
+        this.inputManager.getLastCode().clear();
+        this.inputManager.getJustPressed().clear();
+        this.inputManager.getJustReleased().clear();
 
         this.mainCharacter = new Player(64, 64, 32, 32, 80);
+        mainCharacter.setDirection(Directions.WEST);
         this.map = worldBuilder.buildMap(72);
         this.escapePortal = null;
         this.enemyList = worldBuilder.buildEnemies(5, map, 1);

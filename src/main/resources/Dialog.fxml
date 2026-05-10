@@ -42,14 +42,12 @@
                 </HBox>
             </VBox>
 
-            <!-- === NPC DIALOG (type 4) === -->
             <VBox fx:id="npcContent" visible="false" managed="false" alignment="CENTER" spacing="10.0">
                 <Label styleClass="dialogBody"
                        text="Thank you for saving me. You may pass through the portal."
                        wrapText="true" maxWidth="340.0" textAlignment="CENTER" />
             </VBox>
 
-            <!-- === CONTINUE BUTTON (type 1 + 4) === -->
             <Button fx:id="continueButton" styleClass="button,dialogButtonPrimary"
                     mnemonicParsing="false" text="Continue"
                     onAction="#onContinue" visible="false" managed="false" />

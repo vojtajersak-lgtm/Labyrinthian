@@ -7,5 +7,6 @@ public enum GameState {
     DIALOGUE,
     GAME_OVER,
     WON,
-    LEVEL_COMPLETE
+    LEVEL_COMPLETE,
+    SHOWING_END
 }

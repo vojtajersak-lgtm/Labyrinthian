@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
 import cz.cvut.fel.pjv.labyrinthian.UI.DialogScreen;
+import cz.cvut.fel.pjv.labyrinthian.UI.EndScreen;
 import cz.cvut.fel.pjv.labyrinthian.UI.MainMenuScreen;
 import cz.cvut.fel.pjv.labyrinthian.UI.PauseMenuScreen;
 import javafx.animation.AnimationTimer;
@@ -39,6 +40,12 @@ public class GameApplication extends Application {
         // Game scene
         StackPane gameRoot = new StackPane();
         gameRoot.getChildren().add(canvas);
+
+        FXMLLoader endLoader = new FXMLLoader(getClass().getResource("/GameOver.fxml"));
+        Parent endloaderRoot = endLoader.load();
+        Scene endScene = new Scene(endloaderRoot, 1024, 576);
+        EndScreen endScreen  = endLoader.getController();
+
 
         FXMLLoader pauseLoader = new FXMLLoader(getClass().getResource("/PauseMenu.fxml"));
         Parent pauseMenuRoot = pauseLoader.load();
@@ -85,11 +92,19 @@ public class GameApplication extends Application {
                         //dialogue
                     }
                     case GAME_OVER -> {
-                        //draw game over screen, show score, exit to menu button, stop timer?
+                        endScreen.showGameOver(gameManager.getGamestats());
+                        stage.setScene(endScene);
+                        gameManager.setCurrentState(GameState.SHOWING_END);
                     }
                     case WON -> {
-                        //show win scree, show score, offer continuing into endless mode or return into main menu
+                        endScreen.showWin(gameManager.getGamestats());
+                        stage.setScene(endScene);
+                        gameManager.setCurrentState(GameState.SHOWING_END);
                     }
+                    case SHOWING_END -> {
+                    }
+
+
                 }
 
 
@@ -109,6 +124,7 @@ public class GameApplication extends Application {
         Scene menuScene = new Scene(menuRoot, 1024, 576);
 
 
+
         MainMenuScreen menuScreen = loader.getController();
         menuScreen.setStage(stage);
         menuScreen.setGameScene(gameScene);
@@ -121,6 +137,14 @@ public class GameApplication extends Application {
         pauseScreen.setMenuScene(menuScene);
         pauseScreen.setTimer(timer);
         pauseScreen.setGameManager(gameManager);
+
+
+        endScreen.setStage(stage);
+        endScreen.setMenuScene(menuScene);
+        endScreen.setTimer(timer);
+        endScreen.setGameManager(gameManager);
+        endScreen.setGameScene(gameScene);
+
 
         DialogScreen dialogScreen = dialogLoader.getController();
         dialogScreen.setGameManager(gameManager);

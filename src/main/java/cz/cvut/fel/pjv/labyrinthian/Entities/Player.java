@@ -16,12 +16,14 @@ public class Player extends Entity {
     private Weapon activeweapon;
     private double[] deafaultValues;
     private boolean lifeStealActive = false;
+    private int recoveryCooldown;
 
     public Player(double cordX, double cordY, double height, double width, double attackRange) {
         super(cordX, cordY, height, width, 6, attackRange);
         this.inventory = new Inventory();
         this.activeweapon = new Sword();
         this.deafaultValues = new double[]{maxHealth, 1.0, activeweapon.getDamage(), attackRange};
+        this.recoveryCooldown = 0;
 
     }
 
@@ -47,6 +49,14 @@ public class Player extends Entity {
 
     public void setDeafaultValues(double value, int index) {
         this.deafaultValues[index] = value;
+    }
+
+    public int getRecoveryCooldown() {
+        return recoveryCooldown;
+    }
+
+    public void setRecoveryCooldown(int recoveryCooldown) {
+        this.recoveryCooldown = recoveryCooldown;
     }
 
     @Override
@@ -103,6 +113,10 @@ public class Player extends Entity {
         Pots.removeAll(toRemovePots);
 
 
+    }
+
+    public void tickCooldown(){
+        recoveryCooldown--;
     }
 
 }

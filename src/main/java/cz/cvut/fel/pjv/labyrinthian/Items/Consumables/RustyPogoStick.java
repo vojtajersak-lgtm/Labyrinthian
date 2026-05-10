@@ -26,6 +26,7 @@ public class RustyPogoStick extends Consumable {
             player.setCordX(tileXBehind * 64);
             player.setCordY(tileYBehind * 64);
             player.takeDamage(2, gameManager);
+            player.setRecoveryCooldown(60);
 
         }
     }
