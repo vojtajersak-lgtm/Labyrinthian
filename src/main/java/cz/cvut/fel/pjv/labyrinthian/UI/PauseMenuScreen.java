@@ -44,6 +44,7 @@ public class PauseMenuScreen {
 
     @FXML
     public void onSaveGame() {
+        gameManager.getSaveManager().saveGame(gameManager);
         //save game
     }
 

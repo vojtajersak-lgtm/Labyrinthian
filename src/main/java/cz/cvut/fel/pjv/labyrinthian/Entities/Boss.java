@@ -13,11 +13,11 @@ public class Boss extends Enemy implements Interactable {
     private boolean aoeActive = false;
     private double aoeRadius;
     private double aoeMaxRadius;
-    private Color aoeColor;
+    private transient Color aoeColor;
     private int aoeFlashTimer;
     private boolean aoeExploded = false;
 
-    public Boss(double cordX, double cordY, double height, double width, int maxHealth, int baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
+    public Boss(double cordX, double cordY, double height, double width, double maxHealth, double baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
         super(cordX, cordY, height, width, maxHealth, baseDamage, attackSpeed, attackRange);
         this.isTransformed = false;
         this.projectileCountdown = 60;

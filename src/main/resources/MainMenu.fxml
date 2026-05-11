@@ -12,7 +12,7 @@
             <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game" >
                <VBox.margin><Insets bottom="10.0" /></VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Load Game" />
+            <Button mnemonicParsing="false" onAction="#onLoadGame" text="Load Game"  />
             <Button mnemonicParsing="false" text="Settings">
                <VBox.margin><Insets top="5.0" /></VBox.margin>
             </Button>

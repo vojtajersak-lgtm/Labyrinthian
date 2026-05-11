@@ -53,6 +53,10 @@ public class Enemy extends Entity {
     public void attack(Entity target) {
     }
 
+    public EnemyState getState() {
+        return state;
+    }
+
     public void takeTurn(Player player, Map map, GameManager gameManager, int chaseTreshold) {
 
 
@@ -120,7 +124,9 @@ public class Enemy extends Entity {
             }
             case ATTACKING -> {
                 attackCooldown--;
-                if (distanceToPlayer > attackRange || !hasLoS) {
+                LOG.debug("attack range {}, distance to player: {}, Los: {}", attackRange, distanceToPlayer, hasLoS);
+
+                if (distanceToPlayer * 64 > attackRange || !hasLoS) {
                     LOG.debug("Player out of attack range or LoS lost, switching to CHASING");
                     state = EnemyState.CHASING;
                 } else {

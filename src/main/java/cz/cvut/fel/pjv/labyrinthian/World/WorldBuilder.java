@@ -94,11 +94,13 @@ public class WorldBuilder {
     }
 
     public List<Enemy> buildEnemies(int count, Map map, double scale) {
+        double healthScale = 4 * Math.pow(1.5, scale);
+
         LOG.info("Spawning {} enemies", count);
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int[] enemyCords = getRandomPosition(map, enemyList);
-            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48, 48, 6 * scale, 2 * scale, 3, 80);
+            Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48, 48, healthScale,  scale, 3, 80);
             LOG.debug("Enemy {} spawned at ({}, {})", i + 1, enemyCords[0], enemyCords[1]);
             enemyList.add(enemy);
         }
@@ -106,7 +108,8 @@ public class WorldBuilder {
     }
 
     public Boss spawnBoss(Map map, double scale) {
-        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 20, 3, 2, 0, false);
+        double healthScale = 4 * Math.pow(1.5, scale);
+        Boss boss = new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 4 * healthScale, scale * 2, 2, 0, false);
         return boss;
     }
 

@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.labyrinthian.Core;
 import cz.cvut.fel.pjv.labyrinthian.Components.GameStats;
 import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Entities.*;
+import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.BlindingStew;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.YarnBall;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
@@ -45,11 +46,13 @@ public class GameManager {
     private boolean hasObliterator = false;
     private List<double[]> yarnBallTrail;
     private double speedMultiplier = 1.0;
+    private SaveManager saveManager;
 
     public GameManager(InputManager inputManager) {
         LOG.info("GameManager initialized");
-        gamestats = new GameStats();
-        timerService = new GameTimerService(gamestats);
+        this.saveManager = new SaveManager();
+        this.gamestats = new GameStats();
+        this.timerService = new GameTimerService(gamestats);
         this.mainCharacter = new Player(64, 64, 50, 50, 80);
         this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
@@ -61,6 +64,14 @@ public class GameManager {
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
         this.currentState = GameState.MAIN_MENU;
+    }
+
+    public SaveManager getSaveManager() {
+        return saveManager;
+    }
+
+    public WorldBuilder getWorldBuilder() {
+        return worldBuilder;
     }
 
     public GameStats getGamestats() {
@@ -220,6 +231,7 @@ public class GameManager {
                 case Q -> {
                     Item activeItem = mainCharacter.getInventory().getActiveItem();
                     if (activeItem != null) activeItem.use(mainCharacter, this);
+                    if(activeItem instanceof BlindingStew) dialogScreen.showItemDialog(activeItem);
 
                 }
                 case I -> {
@@ -334,13 +346,17 @@ public class GameManager {
     public void nextLevel() {
 
 
+        gamestats.completeLevelScore();
+        gamestats.resetLevel();
+        double scaling = gamestats.getCurrentLevel();
+
         blindingStewActive = false;
         yarnBallActive = false;
         mainCharacter.setLifeStealActive(false);
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
-        enemyList = worldBuilder.buildEnemies(5, map, gamestats.getCurrentLevel());
-        boss = worldBuilder.spawnBoss(map, 2);
+        enemyList = worldBuilder.buildEnemies(5, map, scaling);
+        boss = worldBuilder.spawnBoss(map, scaling);
         clayPots = worldBuilder.buildClaypots(5, map);
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
         mainCharacter.setCordX(64);
@@ -348,6 +364,11 @@ public class GameManager {
         mainCharacter.setMaxHealth(mainCharacter.getDeafaultValues()[0]);
         speedMultiplier = mainCharacter.getDeafaultValues()[1];
         boss.setTransformed(false);
+
+        this.projectiles.clear();
+        this.looseItemList.clear();
+        this.yarnBallTrail.clear();
+
 
         if (mainCharacter.getActiveweapon() instanceof Sword) {
             mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
@@ -357,8 +378,7 @@ public class GameManager {
 
         escapePortal = null;
         currentState = GameState.RUNNING;
-        gamestats.completeLevelScore();
-        gamestats.resetLevel();
+
 
         if (gamestats.getLevelsCompleted() == 5) {
             currentState = GameState.WON;
@@ -391,6 +411,9 @@ public class GameManager {
         this.projectiles.clear();
         this.looseItemList.clear();
         this.yarnBallTrail.clear();
+        for (int i = 0; i < i; i++) {
+            mainCharacter.getInventory().getInventorySlots()[i] = null;
+        }
 
 
         this.mapMode = false;
