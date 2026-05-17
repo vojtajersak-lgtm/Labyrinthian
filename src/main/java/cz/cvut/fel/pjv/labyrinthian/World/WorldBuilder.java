@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.World;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Boss;
 import cz.cvut.fel.pjv.labyrinthian.Entities.ClayPot;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Enemy;
@@ -100,6 +101,7 @@ public class WorldBuilder {
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int[] enemyCords = getRandomPosition(map, enemyList);
+
             Enemy enemy = new Enemy(enemyCords[0] * 64, enemyCords[1] * 64, 48, 48, healthScale,  scale, 3, 80);
             LOG.debug("Enemy {} spawned at ({}, {})", i + 1, enemyCords[0], enemyCords[1]);
             enemyList.add(enemy);
@@ -198,7 +200,8 @@ public class WorldBuilder {
             int xPos = random.nextInt(0, map.getWidth());
             int yPos = random.nextInt(0, map.getHeight());
             for (Entity e : entities) {
-                if (e.getCordX() == xPos && e.getCordY() == yPos) {
+                if (Utils.distance(xPos * 64, yPos * 64, e.getCordX(),e.getCordY()) < 1000 || Utils.distance(xPos * 64, yPos * 64, map.getMapSize()*32, map.getMapSize() *32) < 2000 ||
+                Utils.distance(xPos * 64, yPos * 64, 64, 64) < 500) {
                     isOccupied = true;
                     break;
                 }

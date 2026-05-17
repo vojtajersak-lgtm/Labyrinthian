@@ -22,6 +22,7 @@ public class GameApplication extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(GameApplication.class);
     private final Canvas canvas = new Canvas(1024, 576);
+    private final Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
 
 
     @Override
@@ -40,10 +41,12 @@ public class GameApplication extends Application {
         // Game scene
         StackPane gameRoot = new StackPane();
         gameRoot.getChildren().add(canvas);
+        canvas.widthProperty().bind(gameRoot.widthProperty());
+        canvas.heightProperty().bind(gameRoot.heightProperty());
 
         FXMLLoader endLoader = new FXMLLoader(getClass().getResource("/GameOver.fxml"));
-        Parent endloaderRoot = endLoader.load();
-        Scene endScene = new Scene(endloaderRoot, 1024, 576);
+        Parent endLoaderRoot = endLoader.load();
+        Scene endScene = new Scene(endLoaderRoot);
         EndScreen endScreen  = endLoader.getController();
 
 
@@ -57,7 +60,7 @@ public class GameApplication extends Application {
         dialogMenuRoot.setVisible(false);
         gameRoot.getChildren().add(dialogMenuRoot);
 
-        Scene gameScene = new Scene(gameRoot, 1024, 576);
+        Scene gameScene = new Scene(gameRoot);
         gameScene.setOnKeyPressed(e -> {
             inputManager.setLastCode(e.getCode());
             inputManager.setLastPressed(e.getCode());
@@ -121,7 +124,7 @@ public class GameApplication extends Application {
         // Menu scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         Parent menuRoot = loader.load();
-        Scene menuScene = new Scene(menuRoot, 1024, 576);
+        Scene menuScene = new Scene(menuRoot);
 
 
 

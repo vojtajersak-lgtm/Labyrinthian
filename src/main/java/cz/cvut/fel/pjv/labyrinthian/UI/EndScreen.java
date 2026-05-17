@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.labyrinthian.UI;
 
 import cz.cvut.fel.pjv.labyrinthian.Components.GameStats;
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import javafx.animation.AnimationTimer;
@@ -97,13 +98,13 @@ public class EndScreen {
 
     @FXML
     public void onReturnToMenu() {
-        stage.setScene(menuScene);
+        Utils.switchScene(stage,menuScene);
         gameManager.setCurrentState(GameState.MAIN_MENU);
     }
 
     @FXML
     public void onEndlessMode(){
-        stage.setScene(gameScene);
+        Utils.switchScene(stage,gameScene);
         gameManager.setCurrentState(GameState.RUNNING);
         timer.start();
     }

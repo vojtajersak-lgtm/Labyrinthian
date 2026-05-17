@@ -11,8 +11,11 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cz.cvut.fel.pjv.labyrinthian.UI.EndScreen">
    <children>
-      <VBox alignment="CENTER" layoutX="262.0" layoutY="100.0"
-            prefWidth="500.0" spacing="24.0">
+      <VBox alignment="CENTER"
+            AnchorPane.topAnchor="180.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            spacing="24.0">
          <children>
 
 

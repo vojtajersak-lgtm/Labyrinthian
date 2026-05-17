@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.UI;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import javafx.animation.AnimationTimer;
@@ -45,17 +46,13 @@ public class PauseMenuScreen {
     @FXML
     public void onSaveGame() {
         gameManager.getSaveManager().saveGame(gameManager);
-        //save game
     }
 
-    @FXML
-    public void onSettings() {
-        //open settings
-    }
 
     @FXML
     public void onMainMenu() {
-        stage.setScene(menuScene);
+        Utils.switchScene(stage,menuScene);
+
         timer.stop();
         gameManager.setCurrentState(GameState.MAIN_MENU);
         pauseMenuRoot.setVisible(false);

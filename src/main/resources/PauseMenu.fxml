@@ -10,7 +10,6 @@
             <children>
                 <Button mnemonicParsing="false" onAction="#onResumeGame" text="Resume Game" />
                 <Button mnemonicParsing="false" onAction="#onSaveGame" text="Save Game" />
-                <Button mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                 <Button mnemonicParsing="false"  onAction="#onMainMenu" text="Quit to main menu" />
             </children>
         </VBox>

@@ -88,7 +88,7 @@ public class SaveManager {
         }
     }
 
-    public void loadGame(GameManager gm) {
+    public boolean loadGame(GameManager gm) {
         LOG.info("Loading game from {}", SAVE_FILE_PATH);
 
         try (FileReader reader = new FileReader(SAVE_FILE_PATH)) {
@@ -96,7 +96,7 @@ public class SaveManager {
 
             if (data == null) {
                 LOG.error("SaveData object after loading is null!");
-                return;
+                return false;
             }
 
             gm.startNewGame();
@@ -173,6 +173,8 @@ public class SaveManager {
 
         } catch (IOException e) {
             LOG.error("Error in game load process, save file may not exist. {}", e.getMessage());
+            return false;
         }
+        return true;
     }
 }

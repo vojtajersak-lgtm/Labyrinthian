@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.UI;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Core.GameState;
 import javafx.animation.AnimationTimer;
@@ -40,10 +41,12 @@ public class MainMenuScreen {
 
     @FXML
     public void onLoadGame(){
-        gameManager.getSaveManager().loadGame(gameManager);
-        stage.setScene(gameScene);
-        gameManager.setCurrentState(GameState.RUNNING);
-        timer.start();
+        if(gameManager.getSaveManager().loadGame(gameManager)){
+            Utils.switchScene(stage,gameScene);
+            gameManager.setCurrentState(GameState.RUNNING);
+            timer.start();
+        }
+
     }
 
     @FXML

@@ -8,6 +8,9 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Sword;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.UltimateObliterator;
 import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,11 @@ public class Player extends Entity {
     @Override
     public void onDeath(GameManager gameManager) {
         gameManager.setCurrentState(GameState.GAME_OVER);
+        try {
+            Files.deleteIfExists(Path.of("savegame.json"));
+        } catch (IOException e) {
+            LOG.warn("Could not delete save file: {}", e.getMessage());
+        }
 
     }
 

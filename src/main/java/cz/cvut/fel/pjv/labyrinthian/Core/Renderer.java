@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class Renderer {
     private final Image portal;
     private final Image projectile;
     private List<double[]> yarnBallTrail;
+     private final Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
 
     public Renderer(List<double[]> yarnBallTrail) {
         for (int i = 0; i < pathTiles.length; i++) {
@@ -82,7 +84,15 @@ public class Renderer {
 
     }
 
-    public void render(GraphicsContext gc, long currentLevelTime, int totalScore, Map map, Player player, EscapePortal escapePortal, List<Enemy> enemyList, Boss boss, List<Projectile> projectiles, List<ClayPot> Pots, List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive) {
+    public void render(GraphicsContext gc, long currentLevelTime, int totalScore, Map map, Player player, EscapePortal escapePortal
+            , List<Enemy> enemyList, Boss boss, List<Projectile> projectiles, List<ClayPot> Pots,
+                       List<LooseItem> looseItems, boolean mapMode, boolean blindingStewActive) {
+
+        double scaleX = gc.getCanvas().getWidth() / 1024.0;
+        double scaleY = gc.getCanvas().getHeight() / 576.0;
+        gc.save();
+        gc.scale(scaleX, scaleY);
+        gc.setImageSmoothing(false);
         double offsetX = player.getCordX() - 512;
         double offsetY = player.getCordY() - 288;
 
@@ -211,7 +221,7 @@ public class Renderer {
                 }
 
             }
-            //BOSS PROJECTIL ERENDERING
+            //BOSS PROJECTILE RENDERING
             for (Projectile p : projectiles) {
                 gc.drawImage(projectile, p.getCordX() - offsetX, p.getCordY() - offsetY, p.getSize(), p.getSize());
             }
@@ -238,7 +248,7 @@ public class Renderer {
                 gc.strokeLine(yarnBallTrail.get(i)[0] - offsetX, yarnBallTrail.get(i)[1] - offsetY,
                         yarnBallTrail.get(i + 1)[0] - offsetX, yarnBallTrail.get(i + 1)[1] - offsetY);
             }
-            //BLINDNESSEFFECT
+            //BLINDNESS EFFECT
             if (blindingStewActive) {
                 double playerScreenX = player.getCordX() - offsetX;
                 double playerScreenY = player.getCordY() - offsetY;
@@ -260,10 +270,12 @@ public class Renderer {
             renderHUD(gc, player);
 
 
-            gc.setFill(Color.WHITE);
-            gc.fillText("Time: " + currentLevelTime + "s", 1024 - 50, 576 - 40);
-            gc.fillText("Score: " + totalScore, 1024 - 75, 576 - 20);
+            gc.setFill(Color.rgb(255, 255, 255));
+            gc.setFont(Font.font("Star Crush", 16));
+            gc.fillText("Time: " + currentLevelTime + "s", 617 , 576 - 80);
+            gc.fillText("Score: " + totalScore, 345, 576 - 80);
         }
+        gc.restore();
 
     }
 

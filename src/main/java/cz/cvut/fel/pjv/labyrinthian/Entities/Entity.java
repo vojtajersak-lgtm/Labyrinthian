@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Entity extends GameObject {
     // Logger for entity health and movement events
-    private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Entity.class);
     protected double maxHealth;
     protected double currHealth;
     protected Directions direction;

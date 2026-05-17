@@ -77,7 +77,7 @@ public class GameStats {
 
     public void completeLevelScore() {
         long levelTime = getCurrentLevelTime();
-        totalScore += (int) (Math.max(0, 60 - levelTime) * 10);
+        totalScore += (int) (Math.max(0, 150 - levelTime) * 10);
         averageLevelTime = (averageLevelTime * levelsCompleted + levelTime) / (levelsCompleted + 1);
         levelsCompleted++;
     }
