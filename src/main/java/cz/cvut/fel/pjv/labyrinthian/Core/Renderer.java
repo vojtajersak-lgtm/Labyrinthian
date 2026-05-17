@@ -22,6 +22,7 @@ public class Renderer {
     private final Image[][] itemSprites;
     private final Image[] bossSprites = new Image[2];
     private final Image[][] playerSprites;
+    private final Image[] enemySprites = new Image[2];
     private final Image npc;
     private final Image heartFull;
     private final Image heartHalf;
@@ -31,7 +32,6 @@ public class Renderer {
     private final Image hedgeTile;
     private final Image arenaTile;
     private final Image clayPot;
-    private final Image enemy;
     private final Image portal;
     private final Image projectile;
     private List<double[]> yarnBallTrail;
@@ -62,6 +62,12 @@ public class Renderer {
             bossSprites[i] = new Image(getClass().getResourceAsStream("/textures/entities/boss" + (i + 1) + ".png"));
         }
 
+        this.enemySprites[0] = new Image(getClass().getResourceAsStream("/textures/entities/enemy0.png"));
+        this.enemySprites[1] = new Image(getClass().getResourceAsStream("/textures/entities/enemy1.png"));
+
+
+
+
         this.npc = new Image(getClass().getResourceAsStream("/textures/entities/boss3.png"), 50, 50, true, true);
         this.heartFull = new Image(getClass().getResourceAsStream("/textures/HUD/heart_full.png"));
         this.heartHalf = new Image(getClass().getResourceAsStream("/textures/HUD/heart_half.png"));
@@ -69,7 +75,6 @@ public class Renderer {
         this.slotEmpty = new Image(getClass().getResourceAsStream("/textures/HUD/slot_empty.png"));
         this.slotActive = new Image(getClass().getResourceAsStream("/textures/HUD/slot_empty_active.png"));
         this.clayPot = new Image(getClass().getResourceAsStream("/textures/entities/claypot.png"));
-        this.enemy = new Image(getClass().getResourceAsStream("/textures/entities/enemy.png"));
         this.portal = new Image(getClass().getResourceAsStream("/textures/entities/portal.png"));
         this.projectile = new Image(getClass().getResourceAsStream("/textures/entities/projectile.png"));
         this.yarnBallTrail = yarnBallTrail;
@@ -156,8 +161,9 @@ public class Renderer {
             //ENEMY RENDERING
             gc.setFill(Color.RED);
             for (Enemy e : enemyList) {
+                int attacking = e.getState() == EnemyState.ATTACKING ? 1 : 0;
                 // sprite
-                gc.drawImage(enemy, e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
+                gc.drawImage(enemySprites[attacking], e.getCordX() - offsetX, e.getCordY() - offsetY, 64, 64);
 
                 // healthbar background (grey)
                 gc.setFill(Color.DARKGRAY);

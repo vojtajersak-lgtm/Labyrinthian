@@ -32,6 +32,7 @@ public class YarnBall extends Consumable {
             gameManager.getYarnBallTrail().clear();
             gameManager.setYarnBallActive(true);
             gameManager.getYarnBallTrail().add(new double[]{player.getCordX(), player.getCordY()});
+
         }
     }
 

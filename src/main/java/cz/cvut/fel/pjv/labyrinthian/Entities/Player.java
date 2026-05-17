@@ -31,6 +31,10 @@ public class Player extends Entity {
         this.lifeStealActive = lifeStealActive;
     }
 
+    public boolean isLifeStealActive() {
+        return lifeStealActive;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }

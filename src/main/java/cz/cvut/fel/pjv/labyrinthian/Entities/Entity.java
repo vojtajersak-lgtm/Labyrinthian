@@ -33,6 +33,10 @@ public abstract class Entity extends GameObject {
         return currHealth;
     }
 
+    public void setCurrHealth(double currHealth) {
+        this.currHealth = currHealth;
+    }
+
     public double getMaxHealth() {
         return maxHealth;
     }

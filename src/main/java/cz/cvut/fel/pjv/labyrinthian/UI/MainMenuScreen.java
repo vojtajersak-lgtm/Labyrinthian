@@ -39,6 +39,14 @@ public class MainMenuScreen {
     }
 
     @FXML
+    public void onLoadGame(){
+        gameManager.getSaveManager().loadGame(gameManager);
+        stage.setScene(gameScene);
+        gameManager.setCurrentState(GameState.RUNNING);
+        timer.start();
+    }
+
+    @FXML
     public void onExit() {
         stage.close();
     }

@@ -5,8 +5,8 @@ import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 
 public abstract class Item implements Interactable {
-    private final String name;
-    private final String description;
+    protected String name;
+    protected String description;
 
     public Item(String name, String description) {
         this.name = name;
@@ -28,10 +28,10 @@ public abstract class Item implements Interactable {
 
     @Override
     public String toString() {
-        return "Item{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
+
+
 
     public abstract int getSpriteIndex();
 

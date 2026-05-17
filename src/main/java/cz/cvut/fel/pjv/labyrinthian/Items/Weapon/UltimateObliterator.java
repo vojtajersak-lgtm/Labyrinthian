@@ -26,5 +26,4 @@ public class UltimateObliterator extends Weapon {
     public int getSpriteIndex() {
         return 7;
     }
-
 }

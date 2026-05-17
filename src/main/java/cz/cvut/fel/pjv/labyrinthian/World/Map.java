@@ -45,5 +45,38 @@ public class Map {
     public boolean isInboundsByIndex(int cordX, int cordY) {
         return cordX >= 0 && cordX < map[0].length && cordY >= 0 && cordY < map.length;
     }
+
+    public int[][] exportMap(){
+        int[][] intMap = new int[mapSize][mapSize];
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                switch (map[j][i].getTile()){
+                    case PATH -> intMap[j][i] = 1;
+                    case HEDGE -> intMap[j][i] = 2;
+                    case ARENA_WALL -> intMap[j][i] = 3;
+
+                }
+
+            }
+
+        }
+        return  intMap;
+    }
+
+    public void loadMap(int[][] mapMatrix){
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                switch (mapMatrix[j][i]){
+                    case 1 -> setTileByIndex(j, i, TileType.PATH);
+                    case 2 -> setTileByIndex(j, i, TileType.HEDGE);
+                    case 3 -> setTileByIndex(j, i, TileType.ARENA_WALL);
+                    default -> setTileByIndex(j, i, TileType.PATH);
+
+                }
+
+            }
+
+        }
+    }
 }
  
