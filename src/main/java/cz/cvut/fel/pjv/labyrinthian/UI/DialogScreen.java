@@ -9,6 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for all dialogue  pop-ups in the game (item description, player upgrade, npc dialogue...)
+ * shows/hdies the appropriate dialogue windows
+ */
 public class DialogScreen {
 
     @FXML
@@ -35,7 +39,10 @@ public class DialogScreen {
         this.gameManager = gameManager;
     }
 
-
+    /**
+     * Shows item name, description and lists item effects.
+     * @param item Item that is described
+     */
     public void showItemDialog(Item item) {
         hideAll();
         itemName.setText(item.getName());
@@ -46,6 +53,11 @@ public class DialogScreen {
         gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
+    /**
+     * Lists name, description and effects of the Ultimate obliterator
+     * Asks player to confirm to equip the weapon
+     * @param item the Ultimate obliterator
+     */
     public void showObliteratorDialog(Item item) {
         hideAll();
         itemName.setText(item.getName());
@@ -56,6 +68,9 @@ public class DialogScreen {
         gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
+    /**
+     * Presents upgrade options to player upon killing standard enemy - extra heart/ more damage.
+     */
     public void showUpgradeDialog() {
         hideAll();
         setVisible(upgradeContent, true);
@@ -63,6 +78,9 @@ public class DialogScreen {
         gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
+    /**
+     * Npc thanks player after being transformed
+     */
     public void showNpcDialog() {
         hideAll();
         setVisible(npcContent, true);
@@ -72,14 +90,18 @@ public class DialogScreen {
     }
 
 
-
-
+    /**
+     * closes dialogue window
+     */
     @FXML
     public void onContinue() {
         dialogRoot.setVisible(false);
         gameManager.setCurrentState(GameState.RUNNING);
     }
 
+    /**
+     * Confirmation to equip the ultimate obliterator - equips it as the active weapon
+     */
     @FXML
     public void onEquip() {
         dialogRoot.setVisible(false);
@@ -88,12 +110,18 @@ public class DialogScreen {
         gameManager.setCurrentState(GameState.RUNNING);
     }
 
+    /**
+     * If player decides not to equip the ultimate obliterator, the weapon remains on the ground.
+     */
     @FXML
     public void onNevermind() {
         dialogRoot.setVisible(false);
         gameManager.setCurrentState(GameState.RUNNING);
     }
 
+    /**
+     * Adds 1 heart to maximum health, heals player to full health
+     */
     @FXML
     public void onUpgradeHealth() {
         dialogRoot.setVisible(false);
@@ -103,6 +131,9 @@ public class DialogScreen {
         gameManager.setCurrentState(GameState.RUNNING);
     }
 
+    /**
+     * adds (n^2)/10 damage to players damage. (n is current level number)
+     */
     @FXML
     public void onUpgradeDamage() {
         dialogRoot.setVisible(false);

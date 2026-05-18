@@ -9,6 +9,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Controller for the pause menu, allows player to resume or save game or return ot the main menu.
+ */
 public class PauseMenuScreen {
     private Stage stage;
     private Scene menuScene;

@@ -8,6 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Controller for the main menu, allows player to start a new game or to load and start a saved game
+ * or to exit the application.
+ */
 public class MainMenuScreen {
     private Stage stage;
     private Scene gameScene;

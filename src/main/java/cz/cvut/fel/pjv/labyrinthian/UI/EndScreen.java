@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Label;
 
+/**
+ * Controller that shows the post game screen after winning/ dying
+ */
 public class EndScreen {
 
     @FXML
@@ -68,14 +71,6 @@ public class EndScreen {
     }
 
 
-    public void setStats(GameStats statistics) {
-
-        stats.setText(statistics.toString());
-        timer.stop();
-    }
-
-
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -102,6 +97,10 @@ public class EndScreen {
         gameManager.setCurrentState(GameState.MAIN_MENU);
     }
 
+    /**
+     * switches game to endless mode - player continues to play through levels until they eventually die (or get bored).
+     * Thanks to procedural generation of levels, player can theoretically continue on indefinitely
+     */
     @FXML
     public void onEndlessMode(){
         Utils.switchScene(stage,gameScene);

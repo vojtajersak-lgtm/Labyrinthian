@@ -22,7 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Central game manager - owns all game states updates entities,
+ * input, world generation, saving and the UI dialog system.
+ * <p>
+ * Called once per frame by the {@code AnimationTimer} in {@code GameApplication}.
+ * The current {@link GameState} determines which logic runs each frame.
+ * </p>
+ */
 public class GameManager {
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
@@ -39,164 +46,85 @@ public class GameManager {
     private List<Projectile> projectiles;
     private List<ClayPot> clayPots;
     private List<LooseItem> looseItemList;
+    /** Item waiting for player confirmation in the UltimateObliterator dialog. */
     private LooseItem pendingPickup;
     private boolean mapMode = false;
     private boolean yarnBallActive = false;
     private boolean blindingStewActive = false;
+    /** True when the UltimateObliterator is equipped — locks player health to 1. */
     private boolean hasObliterator = false;
     private List<double[]> yarnBallTrail;
     private double speedMultiplier = 1.0;
     private SaveManager saveManager;
 
+    /**
+     * The game starts in {@link GameState#MAIN_MENU} until the player starts a new game.
+     *
+     * @param inputManager the shared input manager
+     */
     public GameManager(InputManager inputManager) {
         LOG.info("GameManager initialized");
-        this.saveManager = new SaveManager();
         this.gamestats = new GameStats();
+        this.saveManager = new SaveManager();
         this.timerService = new GameTimerService(gamestats);
-        this.mainCharacter = new Player(64, 64, 50, 50, 80);
-        this.map = worldBuilder.buildMap(72);
         this.inputManager = inputManager;
-        this.escapePortal = null;
-        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
-        this.boss = worldBuilder.spawnBoss(map, 1);
+        this.currentState = GameState.MAIN_MENU;
         this.projectiles = new ArrayList<Projectile>();
-        this.clayPots = worldBuilder.buildClaypots(5, map);
         this.looseItemList = new ArrayList<LooseItem>();
         this.yarnBallTrail = new ArrayList<double[]>();
-        this.currentState = GameState.MAIN_MENU;
+
+
+
     }
 
-    public SaveManager getSaveManager() {
-        return saveManager;
-    }
+    public SaveManager getSaveManager() { return saveManager; }
+    public WorldBuilder getWorldBuilder() { return worldBuilder; }
+    public GameStats getGamestats() { return gamestats; }
+    public DialogScreen getDialogScreen() { return dialogScreen; }
+    public void setDialogScreen(DialogScreen dialogScreen) { this.dialogScreen = dialogScreen; }
+    public LooseItem getPendingPickup() { return pendingPickup; }
+    public void setPendingPickup(LooseItem pendingPickup) { this.pendingPickup = pendingPickup; }
+    public GameTimerService getTimerService() { return timerService; }
+    public Player getMainCharacter() { return mainCharacter; }
+    public Boss getBoss() { return boss; }
+    public void setBoss(Boss boss) { this.boss = boss; }
+    public Map getMap() { return map; }
+    public EscapePortal getEscapePortal() { return escapePortal; }
+    public List<Enemy> getEnemyList() { return enemyList; }
+    public List<ClayPot> getClayPots() { return clayPots; }
+    public List<LooseItem> getLooseItemList() { return looseItemList; }
+    public boolean isHasObliterator() { return hasObliterator; }
+    public void setHasObliterator(boolean hasObliterator) { this.hasObliterator = hasObliterator; }
+    public GameState getCurrentState() { return currentState; }
+    public void setCurrentState(GameState currentState) { this.currentState = currentState; }
+    public double getSpeedMultiplier() { return speedMultiplier; }
+    public void setSpeedMultiplier(double speedMultiplier) { this.speedMultiplier = speedMultiplier; }
+    public List<Projectile> getProjectiles() { return projectiles; }
+    public List<double[]> getYarnBallTrail() { return yarnBallTrail; }
+    public boolean isMapMode() { return mapMode; }
+    public boolean isYarnBallActive() { return yarnBallActive; }
+    public void setYarnBallActive(boolean yarnBallActive) { this.yarnBallActive = yarnBallActive; }
+    public boolean isBlindingStewActive() { return blindingStewActive; }
+    public void setBlindingStewActive(boolean blindingStewActive) { this.blindingStewActive = blindingStewActive; }
 
-    public WorldBuilder getWorldBuilder() {
-        return worldBuilder;
-    }
-
-    public GameStats getGamestats() {
-        return gamestats;
-    }
-
-    public DialogScreen getDialogScreen() {
-        return dialogScreen;
-    }
-
-    public void setDialogScreen(DialogScreen dialogScreen) {
-        this.dialogScreen = dialogScreen;
-    }
-
-    public LooseItem getPendingPickup() {
-        return pendingPickup;
-    }
-
-    public void setPendingPickup(LooseItem pendingPickup) {
-        this.pendingPickup = pendingPickup;
-    }
-
-    public GameTimerService getTimerService() {
-        return timerService;
-    }
-
-    public Player getMainCharacter() {
-        return mainCharacter;
-    }
-
-    public Boss getBoss() {
-        return boss;
-    }
-
-    public void setBoss(Boss boss) {
-        this.boss = boss;
-    }
-
-    public Map getMap() {
-        return map;
-    }
-
-    public EscapePortal getEscapePortal() {
-        return escapePortal;
-    }
-
-    public List<Enemy> getEnemyList() {
-        return enemyList;
-    }
-
-    public List<ClayPot> getClayPots() {
-        return clayPots;
-    }
-
-    public List<LooseItem> getLooseItemList() {
-        return looseItemList;
-    }
-
-    public boolean isHasObliterator() {
-        return hasObliterator;
-    }
-
-    public void setHasObliterator(boolean hasObliterator) {
-        this.hasObliterator = hasObliterator;
-    }
-
-    public GameState getCurrentState() {
-        return currentState;
-    }
-
-    public void setCurrentState(GameState currentState) {
-        this.currentState = currentState;
-    }
-
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
-    }
-
-    public void setSpeedMultiplier(double speedMultiplier) {
-        this.speedMultiplier = speedMultiplier;
-    }
-
-    public List<Projectile> getProjectiles() {
-        return projectiles;
-    }
-
-    public void setProjectiles(List<Projectile> projectiles) {
-        this.projectiles = projectiles;
-    }
-
-    public List<double[]> getYarnBallTrail() {
-        return yarnBallTrail;
-    }
-
-    public void setYarnBallTrail(List<double[]> yarnBallTrail) {
-        this.yarnBallTrail = yarnBallTrail;
-    }
-
-    public boolean isMapMode() {
-        return mapMode;
-    }
-
-    public boolean isYarnBallActive() {
-        return yarnBallActive;
-    }
-
-    public void setYarnBallActive(boolean yarnBallActive) {
-        this.yarnBallActive = yarnBallActive;
-    }
-
-    public boolean isBlindingStewActive() {
-        return blindingStewActive;
-    }
-
-    public void setBlindingStewActive(boolean blindingStewActive) {
-        this.blindingStewActive = blindingStewActive;
-    }
-
+    /**
+     * Main game update loop — processes player input, updates all entities and handles game logic.
+     * Called once per frame by the AnimationTimer.
+     * <p>
+     * Movement uses a held-key set (WASD) for smooth diagonal movement.
+     * Single-press actions (attack, item use, interact) use lastPressed/justPressed.
+     * </p>
+     */
     public void update() {
+        //TODO remove debug keys
         Set keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed = inputManager.getLastPressed();
 
-        if(mainCharacter.getRecoveryCooldown() > 0){
+        // Blocks movement during the "player splatted on the ground" animation after using the POGO stick
+        if (mainCharacter.getRecoveryCooldown() > 0) {
             mainCharacter.tickCooldown();
-        }else{
+        } else {
+            // Smooth WASD movement - multiple keys can be held simultaneously for diagonal movement
             if (keyCodeSet.contains(KeyCode.W)) {
                 mainCharacter.move(0, -7 * speedMultiplier, map);
                 mainCharacter.setDirection(Directions.NORTH);
@@ -215,8 +143,7 @@ public class GameManager {
             }
         }
 
-
-
+        // Single-press actions - processed once per key press
         if (lastPressed != null) {
             switch (lastPressed) {
                 case M -> {
@@ -224,31 +151,36 @@ public class GameManager {
                     LOG.debug("Map mode toggled: {}", mapMode);
                 }
                 case SPACE -> {
+                    // justPressed ensures attack fires only on first press, prevents spamming by holding space
                     if (inputManager.getJustPressed().contains(KeyCode.SPACE))
                         mainCharacter.attack(enemyList, boss, clayPots, this);
                     LOG.debug("Player attacked in direction: {}", mainCharacter.getDirection());
                 }
                 case Q -> {
+                    // Use active item; show dialog for BlindingStew to inform player of selected effect
                     Item activeItem = mainCharacter.getInventory().getActiveItem();
                     if (activeItem != null) activeItem.use(mainCharacter, this);
-                    if(activeItem instanceof BlindingStew) dialogScreen.showItemDialog(activeItem);
-
+                    if (activeItem instanceof BlindingStew) dialogScreen.showItemDialog(activeItem);
                 }
                 case I -> {
+                    // Debug: print inventory contents to console
                     for (Item i : mainCharacter.getInventory().getInventorySlots()) {
                         System.out.println("" + i);
                     }
                 }
                 case E -> {
+                    // Find nearest loose item within pickup range
                     LooseItem toPickUp = null;
                     for (LooseItem l : looseItemList) {
-                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), l.getCordX(), l.getCordY()) < 50) {
+                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
+                                l.getCordX(), l.getCordY()) < 50) {
                             toPickUp = l;
                             break;
                         }
                     }
                     if (toPickUp != null) {
                         if (toPickUp.getItem() instanceof UltimateObliterator) {
+                            // UltimateObliterator requires confirmation dialog before equipping
                             pendingPickup = toPickUp;
                             dialogScreen.showObliteratorDialog(toPickUp.getItem());
                         } else {
@@ -256,62 +188,60 @@ public class GameManager {
                             dialogScreen.showItemDialog(toPickUp.getItem());
                         }
                     }
+                    // Interact with escape portal if nearby
                     if (escapePortal != null) {
-                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), escapePortal.getCordX(), escapePortal.getCordY()) <= 120) {
+                        if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
+                                escapePortal.getCordX(), escapePortal.getCordY()) <= 120) {
                             escapePortal.onInteraction(mainCharacter, this);
                         }
                     }
-
-
                 }
-                case F -> {
-                    mainCharacter.getInventory().removeFromInventory();
-                }
+                case F -> mainCharacter.getInventory().removeFromInventory(); // deletes active item
                 case O -> {
+                    // Debug: add health
                     mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
                     mainCharacter.heal(mainCharacter.getMaxHealth(), this);
                 }
-                case ESCAPE -> {
-                    currentState = GameState.PAUSED;
-
-                }
-
+                case ESCAPE -> currentState = GameState.PAUSED;
+                // Select active inventory slot
                 case DIGIT1 -> mainCharacter.getInventory().setActiveIndex(0);
                 case DIGIT2 -> mainCharacter.getInventory().setActiveIndex(1);
                 case DIGIT3 -> mainCharacter.getInventory().setActiveIndex(2);
                 case DIGIT4 -> mainCharacter.getInventory().setActiveIndex(3);
                 case DIGIT5 -> mainCharacter.getInventory().setActiveIndex(4);
-
-
-                default -> {
-                }
+                default -> {}
             }
             inputManager.setLastPressed(null);
         }
 
+        // UltimateObliterator passive effect — locks max health to 1 every frame
         if (hasObliterator) {
             mainCharacter.setMaxHealth(1);
             mainCharacter.setDeafaultValues(1, 0);
         }
 
-
+        // Update all enemies
         for (Enemy e : enemyList) {
             e.takeTurn(mainCharacter, map, this, 5);
         }
+
+        // Update boss and projectiles
         List<Projectile> toRemove = new ArrayList<>();
         if (boss != null) {
             boss.takeTurn(mainCharacter, map, this, 5);
-
             for (Projectile p : projectiles) {
                 p.update(this);
                 if (!p.isActive()) toRemove.add(p);
             }
-            projectiles.removeAll(toRemove);
-        } else projectiles.removeAll(toRemove);
+        }
+        // Remove inactive projectiles outside the loop to avoid ConcurrentModificationException
+        projectiles.removeAll(toRemove);
 
+        // Yarn ball trail logic — add new point every 32px of movement
         if (yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
-            if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(), yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
+            if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
+                    yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
                 yarnBallTrail.add(new double[]{mainCharacter.getCordX(), mainCharacter.getCordY()});
                 ((Consumable) mainCharacter.getInventory().getActiveItem()).decreaseUses();
                 if (active instanceof Consumable && ((Consumable) active).usedUp()) {
@@ -320,44 +250,71 @@ public class GameManager {
             } else if (active instanceof Consumable && ((Consumable) active).usedUp()
                     || !(mainCharacter.getInventory().getActiveItem() instanceof YarnBall)) {
                 yarnBallActive = false;
-
             }
         }
 
-
+        // Clear single-frame input sets
         inputManager.getJustReleased().clear();
         inputManager.getJustPressed().clear();
     }
 
+    /**
+     * Spawns a loose item at the given pixel coordinates.
+     * Called by clay pots on death.
+     *
+     * @param item  the item to spawn
+     * @param cordX x coordinate in pixels
+     * @param cordY y coordinate in pixels
+     */
     public void spawnItem(Item item, double cordX, double cordY) {
         LooseItem looseItem = new LooseItem(item, cordX, cordY);
         looseItemList.add(looseItem);
     }
 
+    /**
+     * Spawns the escape portal at the given pixel coordinates.
+     * Called by the boss on death or transformation.
+     *
+     * @param cordX x coordinate in pixels
+     * @param cordY y coordinate in pixels
+     */
     public void spawnPortal(double cordX, double cordY) {
         this.escapePortal = worldBuilder.buildPortal(cordX, cordY);
     }
 
+    /**
+     * Removes the boss from the game and clears all active projectiles.
+     * Called after the boss dies from player attacks.
+     */
     public void removeBoss() {
         boss = null;
         projectiles.clear();
     }
 
+    /**
+     * Advances the game to the next level.
+     * Updates statistics, regenerates the map and all entities, resets player position
+     * and upgradeable stats to their baseline values.
+     * Transitions to {@link GameState#WON} after 5 completed levels.
+     */
     public void nextLevel() {
-
-
         gamestats.completeLevelScore();
         gamestats.resetLevel();
         double scaling = gamestats.getCurrentLevel();
 
+        // Reset active status effects
         blindingStewActive = false;
         yarnBallActive = false;
         mainCharacter.setLifeStealActive(false);
+
+        // Regenerate world
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
         enemyList = worldBuilder.buildEnemies(5, map, scaling);
         boss = worldBuilder.spawnBoss(map, scaling);
         clayPots = worldBuilder.buildClaypots(5, map);
+
+        // Reset player position and upgradeable stats to level baseline
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
         mainCharacter.setCordX(64);
         mainCharacter.setCordY(64);
@@ -369,7 +326,7 @@ public class GameManager {
         this.looseItemList.clear();
         this.yarnBallTrail.clear();
 
-
+        // Reset weapon damage if it was upgraded with blinding stew
         if (mainCharacter.getActiveweapon() instanceof Sword) {
             mainCharacter.getActiveweapon().setDamage(mainCharacter.getDeafaultValues()[2]);
             mainCharacter.getActiveweapon().setRange(mainCharacter.getDeafaultValues()[3]);
@@ -379,23 +336,31 @@ public class GameManager {
         escapePortal = null;
         currentState = GameState.RUNNING;
 
-
+        // Check win condition after 5 completed levels
         if (gamestats.getLevelsCompleted() == 5) {
             currentState = GameState.WON;
             return;
         }
 
         LOG.debug("new level started, level: {}", gamestats.getCurrentLevel());
-
-
     }
 
+    /**
+     * Initializes the game manager and generates the first level.
+     * Resets all game state for a fresh playthrough.
+     * Called when the player starts a new game from the main menu.
+     * Clears input state, generates the world and all entities and resets all flags.
+     */
     public void startNewGame() {
         LOG.info("Resetting game for a new playthrough");
 
         this.gamestats = new GameStats();
-        this.timerService = new GameTimerService(gamestats);
-        this.timerService.start();
+        this.projectiles = new ArrayList<Projectile>();
+        this.looseItemList = new ArrayList<LooseItem>();
+        this.yarnBallTrail = new ArrayList<double[]>();
+
+
+        // Clear any held keys from the previous session
         this.inputManager.getLastCode().clear();
         this.inputManager.getJustPressed().clear();
         this.inputManager.getJustReleased().clear();
@@ -415,7 +380,6 @@ public class GameManager {
             mainCharacter.getInventory().getInventorySlots()[i] = null;
         }
 
-
         this.mapMode = false;
         this.yarnBallActive = false;
         this.blindingStewActive = false;
@@ -425,6 +389,4 @@ public class GameManager {
 
         this.currentState = GameState.RUNNING;
     }
-
-
 }

@@ -24,7 +24,14 @@ public class GameApplication extends Application {
     private final Canvas canvas = new Canvas(1024, 576);
     private final Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
 
-
+    /**
+     * Starts the application
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
@@ -38,7 +45,7 @@ public class GameApplication extends Application {
         GameManager gameManager = new GameManager(inputManager);
         gameManager.getTimerService().start();
 
-        // Game scene
+        // ============ Loads all scenes ==========
         StackPane gameRoot = new StackPane();
         gameRoot.getChildren().add(canvas);
         canvas.widthProperty().bind(gameRoot.widthProperty());
@@ -81,6 +88,9 @@ public class GameApplication extends Application {
             public void handle(long now) {
                 if (now - lastUpdate < 13_333_333) return;
                 lastUpdate = now;
+
+                // ====== Game state switch =======
+
                 switch (gameManager.getCurrentState()) {
 
                     case RUNNING -> gameManager.update();
@@ -110,7 +120,7 @@ public class GameApplication extends Application {
 
                 }
 
-
+                // Renders the whole game
                 renderer.render(gc, gameManager.getGamestats().getCurrentLevelTime(),
                         gameManager.getGamestats().getTotalScore(), gameManager.getMap(),
                         gameManager.getMainCharacter(), gameManager.getEscapePortal(),
@@ -127,7 +137,7 @@ public class GameApplication extends Application {
         Scene menuScene = new Scene(menuRoot);
 
 
-
+        // ======= initializes all scenes anc controllers
         MainMenuScreen menuScreen = loader.getController();
         menuScreen.setStage(stage);
         menuScreen.setGameScene(gameScene);
