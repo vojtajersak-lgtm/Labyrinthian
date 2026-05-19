@@ -10,38 +10,42 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import javafx.scene.control.Label;
 
-/**
- * Controller that shows the post game screen after winning/ dying
- */
+// Přidej tyto importy:
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 public class EndScreen {
 
-    @FXML
-    private Label stats;
-
-    @FXML
-    private Label title;
-
+    @FXML private Label stats;
+    @FXML private Label title;
     @FXML private Button continueButton;
-
     @FXML private AnchorPane root;
-
     @FXML private Label messageText;
 
-
+    @FXML private Button returnButton;
 
     private Stage stage;
-
     private Scene menuScene;
-
     private Scene gameScene;
-
     private AnimationTimer timer;
-
     private GameManager gameManager;
 
+    @FXML
+    public void initialize() {
+        returnButton.addEventFilter(KeyEvent.ANY, event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                event.consume();
+            }
+        });
+
+        continueButton.addEventFilter(KeyEvent.ANY, event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                event.consume();
+            }
+        });
+    }
 
     public void showGameOver(GameStats statistics) {
         root.setId("gameOverRoot");

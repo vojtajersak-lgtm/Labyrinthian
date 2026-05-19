@@ -11,6 +11,7 @@
 
 /*  BUTTONS  */
 .button {
+    -fx-focus-traversable: false;
     -fx-background-color: rgba(36, 23, 3, 0.5);
     -fx-text-fill: white;
     -fx-font-size: 24px;
@@ -25,6 +26,7 @@
 }
 
 .dialogButtonPrimary {
+    -fx-focus-traversable: false;
     -fx-pref-width: 160px;
     -fx-pref-height: 40px;
     -fx-font-size: 16px;
@@ -36,11 +38,13 @@
 }
 
 .dialogButtonPrimary:hover {
+    -fx-focus-traversable: false;
     -fx-background-color: rgba(180, 110, 20, 0.9);
     -fx-text-fill: #ffcc00;
 }
 
 .dialogButtonSecondary {
+    -fx-focus-traversable: false;
     -fx-pref-width: 140px;
     -fx-pref-height: 40px;
     -fx-font-size: 16px;
@@ -52,6 +56,7 @@
 }
 
 .dialogButtonSecondary:hover {
+    -fx-focus-traversable: false;
     -fx-background-color: rgba(80, 50, 10, 0.9);
     -fx-text-fill: #ffcc00;
 }
@@ -120,6 +125,7 @@
 
 /*  END SCREEN  */
 .endScreenTitle {
+    -fx-focus-traversable: false;
     -fx-font-family: "Star Crush";
     -fx-font-size: 70px;
     -fx-text-fill: rgba(99, 7, 19, 1);
@@ -129,11 +135,13 @@
 }
 
 .endScreenTitle.won {
+    -fx-focus-traversable: false;
     -fx-text-fill: rgba(212, 138, 25, 1);
     -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
 }
 
 .endScreenStats {
+    -fx-focus-traversable: false;
     -fx-font-family: "Star Crush";
     -fx-font-size: 22px;
     -fx-text-fill: rgba(99, 7, 19, 1);
@@ -142,17 +150,37 @@
 }
 
 .endScreenStats.won {
+    -fx-focus-traversable: false;
     -fx-text-fill: rgba(212, 138, 25, 1);
     -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
 }
 
 .endScreenMessage {
+    -fx-focus-traversable: false;
     -fx-font-family: "Star Crush";
     -fx-font-size: 20px;
     -fx-text-fill: rgba(212, 138, 25, 1);
     -fx-effect: dropshadow(one-pass-box, black, 3, 1.0, 0, 0);
     -fx-text-alignment: center;
     -fx-alignment: center;
+}
+.overScreenButton {
+    -fx-focus-traversable: false;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 16px;
+    -fx-background-color: rgba(8, 7, 26, 0.85);
+    -fx-text-fill: rgba(99, 7, 19, 1);
+    -fx-border-color: rgba(21, 19, 71, 0.7);
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.overScreenButton:hover {
+    -fx-focus-traversable: false;
+    -fx-background-color: rgba(8, 7, 26, 0.9);
+    -fx-text-fill: rgba(54, 2, 8, 1);
 }
 
 #gameWonRoot {
@@ -163,6 +191,7 @@
 }
 
 #gameOverRoot {
+    -fx-focus-traversable: false;
     -fx-background-image: url("../textures/HUD/game_over.png");
     -fx-background-size: cover;
     -fx-background-position: center center;

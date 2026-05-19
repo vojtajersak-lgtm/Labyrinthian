@@ -361,6 +361,7 @@ public class Renderer {
 
     /** Renders the yarn ball trail as a series of red line segments. */
     private void renderYarnTrail(GraphicsContext gc, double offsetX, double offsetY) {
+
         gc.setStroke(Color.RED);
         gc.setLineWidth(3);
         for (int i = 0; i < yarnBallTrail.size() - 1; i++) {

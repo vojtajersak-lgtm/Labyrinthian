@@ -22,7 +22,7 @@ public class Inventory {
         this.inventorySize = 5;
         this.inventorySlots = new Item[5];
         this.activeIndex = 0;
-        //TODO: remove test items
+        //Selection of most important items, can be uncoded to test them out
         /*inventorySlots[0] = new YarnBall();
         inventorySlots[1] = new RustyPogoStick();
         inventorySlots[2] = new CO2Laser();

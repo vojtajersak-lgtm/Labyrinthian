@@ -286,15 +286,22 @@ public class WorldBuilder {
             int xPos = random.nextInt(0, map.getWidth());
             int yPos = random.nextInt(0, map.getHeight());
 
-            for (Entity e : entities) {
-                // Checks if too close to another entity, the boss arena, or player spawn
-                if (Utils.distance(xPos * 64, yPos * 64, e.getCordX(), e.getCordY()) < 1000
-                        || Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < 2000
-                        || Utils.distance(xPos * 64, yPos * 64, 64, 64) < 500) {
-                    isOccupied = true;
-                    break;
+            //checks if too close to player spawn or inside boss arena
+            if (Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < 2000
+                    || Utils.distance(xPos * 64, yPos * 64, 64, 64) < 500) {
+                isOccupied = true;
+
+            }
+            if(!isOccupied){
+                for (Entity e : entities) {
+                    // Checks if too close to another entity
+                    if(Utils.distance(xPos * 64, yPos * 64, e.getCordX(), e.getCordY()) < 1000){
+                        isOccupied = true;
+                        break;
+                    }
                 }
             }
+
 
             if (map.getTileByIndex(xPos, yPos).isWalkable() && !isOccupied) {
                 positionXY[0] = xPos;

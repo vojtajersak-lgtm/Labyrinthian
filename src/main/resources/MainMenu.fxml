@@ -25,7 +25,7 @@
             AnchorPane.rightAnchor="0.0"
             spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onStartGame" text="Start Game">
+            <Button mnemonicParsing="false" onAction="#onStartGame" text="Start New Game">
                <VBox.margin><Insets bottom="5.0" /></VBox.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#onLoadGame" text="Load Game" />

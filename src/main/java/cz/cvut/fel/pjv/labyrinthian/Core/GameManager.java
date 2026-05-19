@@ -34,7 +34,7 @@ public class GameManager {
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
     private GameStats gamestats;
-    private GameTimerService timerService;
+    private final GameTimerService timerService;
     private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
@@ -146,10 +146,13 @@ public class GameManager {
         // Single-press actions - processed once per key press
         if (lastPressed != null) {
             switch (lastPressed) {
+                /* //Debug: shows a map of the whole maze, can be uncommented if lost during testing :)
                 case M -> {
                     mapMode = !mapMode;
                     LOG.debug("Map mode toggled: {}", mapMode);
                 }
+                */
+
                 case SPACE -> {
                     // justPressed ensures attack fires only on first press, prevents spamming by holding space
                     if (inputManager.getJustPressed().contains(KeyCode.SPACE))
@@ -162,12 +165,12 @@ public class GameManager {
                     if (activeItem != null) activeItem.use(mainCharacter, this);
                     if (activeItem instanceof BlindingStew) dialogScreen.showItemDialog(activeItem);
                 }
-                case I -> {
-                    // Debug: print inventory contents to console
+                // Debug: print inventory contents to console - disabled during gameplay
+                /*case I -> {
                     for (Item i : mainCharacter.getInventory().getInventorySlots()) {
                         System.out.println("" + i);
                     }
-                }
+                }*/
                 case E -> {
                     // Find nearest loose item within pickup range
                     LooseItem toPickUp = null;
@@ -197,11 +200,11 @@ public class GameManager {
                     }
                 }
                 case F -> mainCharacter.getInventory().removeFromInventory(); // deletes active item
-                case O -> {
-                    // Debug: add health
+                // Debug: add health, can be uncoding for testing purposes
+                /*case O -> {
                     mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
                     mainCharacter.heal(mainCharacter.getMaxHealth(), this);
-                }
+                }*/
                 case ESCAPE -> currentState = GameState.PAUSED;
                 // Select active inventory slot
                 case DIGIT1 -> mainCharacter.getInventory().setActiveIndex(0);
@@ -357,8 +360,7 @@ public class GameManager {
         this.gamestats = new GameStats();
         this.projectiles = new ArrayList<Projectile>();
         this.looseItemList = new ArrayList<LooseItem>();
-        this.yarnBallTrail = new ArrayList<double[]>();
-
+        yarnBallTrail.clear();
 
         // Clear any held keys from the previous session
         this.inputManager.getLastCode().clear();
