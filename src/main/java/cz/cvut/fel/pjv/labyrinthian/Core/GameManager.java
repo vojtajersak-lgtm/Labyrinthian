@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -40,14 +39,14 @@ public class GameManager {
     private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
-    private InputManager inputManager;
-    private WorldBuilder worldBuilder = new WorldBuilder();
+    private final InputManager inputManager;
+    private final WorldBuilder worldBuilder = new WorldBuilder();
     private EscapePortal escapePortal;
     private List<Enemy> enemyList;
     private Boss boss;
-    private List<Projectile> projectiles;
+    private final List<Projectile> projectiles;
     private List<ClayPot> clayPots;
-    private List<LooseItem> looseItemList;
+    private final List<LooseItem> looseItemList;
     /** Item waiting for player confirmation in the UltimateObliterator dialog. */
     private LooseItem pendingPickup;
     private boolean mapMode = false;
@@ -55,9 +54,9 @@ public class GameManager {
     private boolean blindingStewActive = false;
     /** True when the UltimateObliterator is equipped — locks player health to 1. */
     private boolean hasObliterator = false;
-    private List<double[]> yarnBallTrail;
+    private final List<double[]> yarnBallTrail;
     private double speedMultiplier = 1.0;
-    private SaveManager saveManager;
+    private final SaveManager saveManager;
 
     /**
      * The game starts in {@link GameState#MAIN_MENU} until the player starts a new game.
@@ -71,9 +70,9 @@ public class GameManager {
         this.timerService = new GameTimerService(gamestats);
         this.inputManager = inputManager;
         this.currentState = GameState.MAIN_MENU;
-        this.projectiles = new ArrayList<Projectile>();
-        this.looseItemList = new ArrayList<LooseItem>();
-        this.yarnBallTrail = new ArrayList<double[]>();
+        this.projectiles = new ArrayList<>();
+        this.looseItemList = new ArrayList<>();
+        this.yarnBallTrail = new ArrayList<>();
 
 
 
@@ -118,7 +117,7 @@ public class GameManager {
      * </p>
      */
     public void update() {
-        Set keyCodeSet = inputManager.getLastCode();
+        Set<KeyCode> keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed = inputManager.getLastPressed();
 
         // Blocks movement during the "player splatted on the ground" animation after using the POGO stick
@@ -179,19 +178,19 @@ public class GameManager {
                     LooseItem toPickUp = null;
                     for (LooseItem l : looseItemList) {
                         if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
-                                l.getCordX(), l.getCordY()) < 50) {
+                                l.cordX(), l.cordY()) < 50) {
                             toPickUp = l;
                             break;
                         }
                     }
                     if (toPickUp != null) {
-                        if (toPickUp.getItem() instanceof UltimateObliterator) {
+                        if (toPickUp.item() instanceof UltimateObliterator) {
                             // UltimateObliterator requires confirmation dialog before equipping
                             pendingPickup = toPickUp;
-                            dialogScreen.showObliteratorDialog(toPickUp.getItem());
+                            dialogScreen.showObliteratorDialog(toPickUp.item());
                         } else {
                             toPickUp.onInteraction(mainCharacter, this);
-                            dialogScreen.showItemDialog(toPickUp.getItem());
+                            dialogScreen.showItemDialog(toPickUp.item());
                         }
                     }
                     // Interact with escape portal if nearby

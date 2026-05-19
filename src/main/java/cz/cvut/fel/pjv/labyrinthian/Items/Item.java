@@ -22,7 +22,7 @@ public abstract class Item implements Interactable {
     public String getDescription() { return description; }
 
     /**
-     * Default pickup behaviour — adds this item to the player's inventory.
+     * Default pickup behavior - adds this item to the player's inventory.
      * Weapons override this to equip directly instead.
      */
     @Override

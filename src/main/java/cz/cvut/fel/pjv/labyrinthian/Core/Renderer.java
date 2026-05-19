@@ -16,6 +16,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Handles all rendering for the game - map, entities, HUD and effects.
@@ -87,15 +88,15 @@ public class Renderer {
     private void loadEntityTextures() {
         playerSprites = new Image[2][5];
         for (int i = 0; i < 5; i++) {
-            playerSprites[0][i] = new Image(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png"), 40, 50, true, true);
-            playerSprites[1][i] = new Image(getClass().getResourceAsStream("/textures/entities/player_1_" + i + ".png"), 50, 50, true, true);
+            playerSprites[0][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png")), 40, 50, true, true);
+            playerSprites[1][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_1_" + i + ".png")), 50, 50, true, true);
         }
         for (int i = 0; i < bossSprites.length; i++) {
             bossSprites[i] = loadImage("/textures/entities/boss" + (i + 1) + ".png");
         }
         enemySprites[0] = loadImage("/textures/entities/enemy0.png");
         enemySprites[1] = loadImage("/textures/entities/enemy1.png");
-        npc        = new Image(getClass().getResourceAsStream("/textures/entities/boss3.png"), 50, 50, true, true);
+        npc        = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/boss3.png")), 50, 50, true, true);
         clayPot    = loadImage("/textures/entities/claypot.png");
         portal     = loadImage("/textures/entities/portal.png");
         projectile = loadImage("/textures/entities/projectile.png");
@@ -128,7 +129,7 @@ public class Renderer {
      * @return loaded Image
      */
     private Image loadImage(String path) {
-        return new Image(getClass().getResourceAsStream(path));
+        return new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
     }
 
 
@@ -215,7 +216,7 @@ public class Renderer {
         if (looseItems != null) {
             gc.setFill(Color.PURPLE);
             for (LooseItem l : looseItems)
-                gc.fillOval((l.getCordX() / TILE_SIZE) * tileSize, (l.getCordY() / TILE_SIZE) * tileSize, tileSize / 2.0, tileSize / 2.0);
+                gc.fillOval((l.cordX() / TILE_SIZE) * tileSize, (l.cordY() / TILE_SIZE) * tileSize, tileSize / 2.0, tileSize / 2.0);
         }
 
         // Portal dot
@@ -350,7 +351,7 @@ public class Renderer {
     private void renderLooseItems(GraphicsContext gc, List<LooseItem> looseItems, double offsetX, double offsetY) {
         if (looseItems == null) return;
         for (LooseItem l : looseItems)
-            gc.drawImage(itemSprites[l.getItem().getSpriteIndex()][0], l.getCordX() - offsetX, l.getCordY() - offsetY);
+            gc.drawImage(itemSprites[l.item().getSpriteIndex()][0], l.cordX() - offsetX, l.cordY() - offsetY);
     }
 
     /** Renders the escape portal if it exists. */
@@ -423,7 +424,7 @@ public class Renderer {
 
         for (int i = 0; i < player.getMaxHealth() / 2; i++) {
             double heartX = 10 + (i % maxPerRow) * (heartSize + gap);
-            double heartY = 10 + (i / maxPerRow) * 15;
+            double heartY = 10 + ((double) i / maxPerRow) * 15;
             if (player.getCurrHealth() >= (i + 1) * 2) gc.drawImage(heartFull, heartX, heartY);
             else if (player.getCurrHealth() == i * 2 + 1) gc.drawImage(heartHalf, heartX, heartY);
             else gc.drawImage(heartEmpty, heartX, heartY);

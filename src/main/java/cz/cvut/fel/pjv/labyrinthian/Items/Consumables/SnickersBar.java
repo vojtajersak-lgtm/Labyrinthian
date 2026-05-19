@@ -1,6 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Items.Consumables;
 
-import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
+
 import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
 import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
 
@@ -32,7 +32,6 @@ public class SnickersBar extends Consumable {
     /**
      * attempts to transform the boss into a friendly npc
      * 10% chance to transform, item consumed regardless of success
-     * @param gameManager
      */
     public void attempTransofrmation(GameManager gameManager){
         int transformChance = (int) (Math.random() * 100);

@@ -19,10 +19,10 @@ import java.util.List;
  * Manages inventory, active weapon, attack logic and damage recovery.
  */
 public class Player extends Entity {
-    private Inventory inventory;
+    private final Inventory inventory;
     private Weapon activeweapon;
     /** Default stat values for resetting upgrades between levels: [maxHp, speedMult, damage, range]. */
-    private double[] deafaultValues;
+    private final double[] deafaultValues;
     /** Life steal flag - player heals for their attack damage on hit when true. Set by BlindingStew. */
     private boolean lifeStealActive = false;
     /** Frames remaining before player gets up after splatting on the ground after hurting himself trying to do cool trick on an old POGO stick... */

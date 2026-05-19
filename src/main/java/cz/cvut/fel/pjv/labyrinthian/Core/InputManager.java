@@ -19,9 +19,9 @@ public class InputManager {
     /** Keys fired only on the very first press (not while held). Cleared every frame. */
     Set<KeyCode> justPressed = new HashSet<>();
     /** All keys currently held down. */
-    private Set<KeyCode> lastCode = new HashSet<>();
+    private final Set<KeyCode> lastCode = new HashSet<>();
     /** Keys released this frame. Cleared at the start of each key press event. */
-    private Set<KeyCode> justReleased = new HashSet<>();
+    private final Set<KeyCode> justReleased = new HashSet<>();
     /** The last single key press (for switch-based one-off actions). */
     private KeyCode LastPressed;
 

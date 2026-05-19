@@ -9,20 +9,7 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Weapon.Weapon;
  * Wrapper for an item that has been dropped on the ground.
  * Stores the item's world position and handles pickup interaction.
  */
-public class LooseItem implements Interactable {
-    private Item item;
-    private double cordX, cordY;
-
-
-    public LooseItem(Item item, double cordX, double cordY) {
-        this.item = item;
-        this.cordX = cordX;
-        this.cordY = cordY;
-    }
-
-    public Item getItem() { return item; }
-    public double getCordX() { return cordX; }
-    public double getCordY() { return cordY; }
+public record LooseItem(Item item, double cordX, double cordY) implements Interactable {
 
     /**
      * Picks up this item if the player's inventory has space (or if it's a weapon).

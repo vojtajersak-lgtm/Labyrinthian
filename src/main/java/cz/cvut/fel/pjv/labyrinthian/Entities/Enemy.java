@@ -53,9 +53,7 @@ public class Enemy extends Entity {
         gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
-    public double getBaseDamage() { return baseDamage; }
-    public int getAttackSpeed() { return attackSpeed; }
-    public void attack(Entity target) {}
+
     public EnemyState getState() { return state; }
 
     /**

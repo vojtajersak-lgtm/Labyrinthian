@@ -31,8 +31,6 @@ public abstract class Entity extends GameObject {
     public void setCurrHealth(double currHealth) { this.currHealth = currHealth; }
     public double getMaxHealth() { return maxHealth; }
     public void setMaxHealth(double maxHealth) { this.maxHealth = maxHealth; }
-    public double getAttackRange() { return attackRange; }
-    public void setAttackRange(double attackRange) { this.attackRange = attackRange; }
 
     /**
      * Reduces current health by the given damage amount, clamped to 0.
@@ -71,7 +69,7 @@ public abstract class Entity extends GameObject {
 
     /**
      * Called when the entity's health reaches 0.
-     * Subclasses define death behaviour (drop items, trigger game over, etc.).
+     * Subclasses define death behavior (drop items, trigger game over, etc.).
      *
      * @param gameManager the game manager for applying death effects
      */

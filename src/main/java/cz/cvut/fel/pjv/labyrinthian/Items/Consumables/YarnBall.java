@@ -20,8 +20,7 @@ public class YarnBall extends Consumable {
         isActive = false;
     }
 
-    public boolean isActive() { return isActive; }
-    public void activate() { isActive = true; }
+
 
     /**
      * Toggles the yarn ball trail on or off.

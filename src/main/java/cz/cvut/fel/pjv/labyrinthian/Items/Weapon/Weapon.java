@@ -11,7 +11,7 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Item;
  */
 public abstract class Weapon extends Item {
     private double damage;
-    private int attackSpeed;
+    private final int attackSpeed;
     private double range;
 
 

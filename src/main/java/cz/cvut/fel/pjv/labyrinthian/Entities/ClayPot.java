@@ -13,8 +13,8 @@ public class ClayPot extends Entity {
     private final Item item;
 
 
-    public ClayPot(double cordX, double cordY, double width, double height, Item item) {
-        super(cordX, cordY, width, height, 1, 0);
+    public ClayPot(double cordX, double cordY,double height, double width,  Item item) {
+        super(cordX, cordY,height, width,  1, 0);
         this.item = item;
     }
 
