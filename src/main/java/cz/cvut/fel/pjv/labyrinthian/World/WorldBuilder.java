@@ -173,7 +173,7 @@ public class WorldBuilder {
      */
     public Boss spawnBoss(Map map, double scale) {
         double healthScale = 4 * Math.pow(1.5, scale);
-        return new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 4 * healthScale, scale * 2, 2, 0, false);
+        return new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 4 * healthScale, scale * 2, 2, 0);
     }
 
     /**

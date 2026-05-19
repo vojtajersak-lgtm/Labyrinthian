@@ -9,7 +9,6 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
  * The trail is stored as a list of pixel coordinates in {@code GameManager}.
  */
 public class YarnBall extends Consumable {
-    private boolean isActive;
 
     public YarnBall() {
         super("Yarn Ball", """
@@ -17,11 +16,8 @@ public class YarnBall extends Consumable {
                 
                 -on use starts drawing line tracking players movement
                 -second use deactivates""", 240);
-        isActive = false;
     }
 
-    public boolean isActive() { return isActive; }
-    public void activate() { isActive = true; }
 
     /**
      * Toggles the yarn ball trail on or off.

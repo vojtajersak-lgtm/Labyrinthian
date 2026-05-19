@@ -10,14 +10,14 @@ import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
  */
 public class Projectile extends GameObject {
     /** Normalized horizontal direction component. */
-    private double dirX;
+    private final double dirX;
     /** Normalized vertical direction component. */
-    private double dirY;
-    private double speed;
+    private final double dirY;
+    private final double speed;
     private double damage;
     private boolean isActive;
     /** Size of the projectile hitbox in pixels. */
-    private double size;
+    private final double size;
 
 
     public Projectile(double cordX, double cordY, double dirX, double dirY,
@@ -35,7 +35,6 @@ public class Projectile extends GameObject {
     public double getDamage() { return damage; }
     public void setDamage(double damage) { this.damage = damage; }
     public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
 
     /**
      * Moves the projectile by one frame - moves it along its direction vector

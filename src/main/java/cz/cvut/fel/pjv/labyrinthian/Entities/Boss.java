@@ -34,7 +34,7 @@ public class Boss extends Enemy implements Interactable{
     private boolean aoeExploded = false;
 
     public Boss(double cordX, double cordY, double height, double width, double maxHealth,
-                double baseDamage, int attackSpeed, double attackRange, boolean isTransformed) {
+                double baseDamage, int attackSpeed, double attackRange) {
         super(cordX, cordY, height, width, maxHealth, baseDamage, attackSpeed, attackRange);
         this.isTransformed = false;
         this.projectileCountdown = 60;

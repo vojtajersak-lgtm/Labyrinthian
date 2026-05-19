@@ -18,4 +18,11 @@ module cz.cvut.fel.pjv.labyrinthian {
     exports cz.cvut.fel.pjv.labyrinthian.UI;
     exports cz.cvut.fel.pjv.labyrinthian.Core;
     exports cz.cvut.fel.pjv.labyrinthian.Entities;
+    exports cz.cvut.fel.pjv.labyrinthian.World;
+    exports cz.cvut.fel.pjv.labyrinthian.Components;
+    exports cz.cvut.fel.pjv.labyrinthian.Items;
+    exports cz.cvut.fel.pjv.labyrinthian.Items.Weapon;
+    exports cz.cvut.fel.pjv.labyrinthian.Items.Consumables;
+}
+}
 }

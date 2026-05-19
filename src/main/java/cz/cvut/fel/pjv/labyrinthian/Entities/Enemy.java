@@ -53,9 +53,7 @@ public class Enemy extends Entity {
         gameManager.setCurrentState(GameState.DIALOGUE);
     }
 
-    public double getBaseDamage() { return baseDamage; }
-    public int getAttackSpeed() { return attackSpeed; }
-    public void attack(Entity target) {}
+
     public EnemyState getState() { return state; }
 
     /**
@@ -192,7 +190,9 @@ public class Enemy extends Entity {
      * @return tile coordinates of the next step, or null if unreachable
      */
     private int[] seekTarget(double dx, double dy, Map map) {
-        /** map of tiles where each tile holds coordinates of its "parent" tile i.e. tile from which the algorithm stepped onto the current tile */
+        /**
+         *  map of tiles where each tile holds coordinates of its "parent" tile i.e. tile from which the algorithm stepped onto the current tile
+         */
         int[][][] parent = new int[map.getWidth()][map.getHeight()][2];
         PriorityQueue<int[]> tilesToCheck = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
         int[] enemyStart = {(int) this.cordX / 64, (int) this.cordY / 64};

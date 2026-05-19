@@ -36,7 +36,7 @@ public class GameManager {
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
     private GameStats gamestats;
-    private GameTimerService timerService;
+    private final GameTimerService timerService;
     private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
@@ -174,8 +174,7 @@ public class GameManager {
                 }*/
                 case E -> {
                     // Find nearest loose item within pickup range
-                    //If Snickers item is held, and pressed near the boss, transformation is attempted and item is used up
-                    //Pressing near NPC shows dialogue
+                    //If Snicers item is held, and pressed near the boss, transformation is attempted and item is used uo
                     LooseItem toPickUp = null;
                     for (LooseItem l : looseItemList) {
                         if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
@@ -201,15 +200,11 @@ public class GameManager {
                             escapePortal.onInteraction(mainCharacter, this);
                         }
                     }
-                    if(boss != null && boss.isTransformed() && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 200){
-                        boss.onInteraction(mainCharacter,this);
-                    }
                     if(boss != null && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 120){
                         if(mainCharacter.getInventory().getActiveItem() instanceof SnickersBar){
                             ((SnickersBar) mainCharacter.getInventory().getActiveItem()).attempTransofrmation(this);
                         }
                     }
-
 
                 }
                 case F -> mainCharacter.getInventory().removeFromInventory(); // deletes active item
@@ -369,13 +364,12 @@ public class GameManager {
      */
     public void startNewGame() {
         LOG.info("Resetting game for a new playthrough");
+
         this.gamestats = new GameStats();
-        this.timerService.cancel();
-        this.timerService = new GameTimerService(gamestats);
-        this.timerService.start();
         yarnBallTrail.clear();
         projectiles.clear();
-
+        //TODO UNCODE!!!!
+        //looseItemList.clear();
 
         // Clear any held keys from the previous session
         this.inputManager.getLastCode().clear();
