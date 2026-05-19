@@ -45,7 +45,7 @@ public class GameApplication extends Application {
         GameManager gameManager = new GameManager(inputManager);
         gameManager.getTimerService().start();
 
-        // ============ Loads all scenes ==========
+        // Scene loading
         StackPane gameRoot = new StackPane();
         gameRoot.getChildren().add(canvas);
         canvas.widthProperty().bind(gameRoot.widthProperty());
@@ -89,7 +89,7 @@ public class GameApplication extends Application {
                 if (now - lastUpdate < 13_333_333) return;
                 lastUpdate = now;
 
-                // ====== Game state switch =======
+                //  Game state machine
 
                 switch (gameManager.getCurrentState()) {
 
@@ -137,7 +137,7 @@ public class GameApplication extends Application {
         Scene menuScene = new Scene(menuRoot);
 
 
-        // ======= initializes all scenes anc controllers
+        // initializes all scenes and controllers
         MainMenuScreen menuScreen = loader.getController();
         menuScreen.setStage(stage);
         menuScreen.setGameScene(gameScene);

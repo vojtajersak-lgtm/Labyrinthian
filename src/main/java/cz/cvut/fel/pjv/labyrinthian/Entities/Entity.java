@@ -43,9 +43,9 @@ public abstract class Entity extends GameObject {
      */
     public void takeDamage(double damage, GameManager gameManager) {
         currHealth = Math.max(currHealth - damage, 0);
-        LOG.info("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), damage, currHealth, maxHealth);
+        LOG.debug("{} took {} damage, health: {}/{}", this.getClass().getSimpleName(), damage, currHealth, maxHealth);
         if (currHealth == 0) {
-            LOG.info("{} died", this.getClass().getSimpleName());
+            LOG.debug("{} died", this.getClass().getSimpleName());
             onDeath(gameManager);
         }
     }
@@ -60,7 +60,7 @@ public abstract class Entity extends GameObject {
     public void heal(double health, GameManager gameManager) {
         if (!gameManager.isHasObliterator()) {
             currHealth = Math.min((currHealth + health), maxHealth);
-            LOG.info("{} healed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
+            LOG.debug("{} healed {} health, health: {}/{}", this.getClass().getSimpleName(), health, currHealth, maxHealth);
         }
     }
 

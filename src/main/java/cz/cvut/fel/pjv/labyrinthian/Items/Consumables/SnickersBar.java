@@ -19,25 +19,28 @@ public class SnickersBar extends Consumable {
     }
 
     /**
-     * Heals the player by 4 HP. If the boss is nearby, attempts to transform it.
-     * Transformation is not guaranteed - 10% chance to trigger.
+     * Heals the player by 4 HP.
      */
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
-        if (gameManager.getBoss() != null) {
-            if (Utils.distance(player.getCordX(), player.getCordY(),
-                    gameManager.getBoss().getCenterX(), gameManager.getBoss().getCenterY()) < 120) {
-                int transformChance = (int) (Math.random() * 100);
-                if (transformChance <= 10) {
-                    gameManager.getBoss().transform(gameManager);
-                    decreaseUses();
-                }
-            }
-        }
         if (!player.fullHealth()) {
             player.heal(4, gameManager);
             decreaseUses();
         }
+    }
+
+    /**
+     * attempts to transform the boss into a friendly npc
+     * 10% chance to transform, item consumed regardless of success
+     * @param gameManager
+     */
+    public void attempTransofrmation(GameManager gameManager){
+        int transformChance = (int) (Math.random() * 100);
+        if (transformChance <= 100) {
+            gameManager.getBoss().transform(gameManager);
+            gameManager.getGamestats().addKillScore(true, true);
+        }
+        gameManager.getMainCharacter().getInventory().removeFromInventory();
     }
 
     @Override

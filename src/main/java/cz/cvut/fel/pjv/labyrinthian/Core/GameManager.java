@@ -5,6 +5,7 @@ import cz.cvut.fel.pjv.labyrinthian.Components.Utils;
 import cz.cvut.fel.pjv.labyrinthian.Entities.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.BlindingStew;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.Consumable;
+import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.SnickersBar;
 import cz.cvut.fel.pjv.labyrinthian.Items.Consumables.YarnBall;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +36,7 @@ public class GameManager {
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
     private GameStats gamestats;
-    private final GameTimerService timerService;
+    private GameTimerService timerService;
     private DialogScreen dialogScreen;
     private Player mainCharacter;
     private Map map;
@@ -116,7 +118,6 @@ public class GameManager {
      * </p>
      */
     public void update() {
-        //TODO remove debug keys
         Set keyCodeSet = inputManager.getLastCode();
         KeyCode lastPressed = inputManager.getLastPressed();
 
@@ -173,6 +174,8 @@ public class GameManager {
                 }*/
                 case E -> {
                     // Find nearest loose item within pickup range
+                    //If Snickers item is held, and pressed near the boss, transformation is attempted and item is used up
+                    //Pressing near NPC shows dialogue
                     LooseItem toPickUp = null;
                     for (LooseItem l : looseItemList) {
                         if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
@@ -198,9 +201,19 @@ public class GameManager {
                             escapePortal.onInteraction(mainCharacter, this);
                         }
                     }
+                    if(boss != null && boss.isTransformed() && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 200){
+                        boss.onInteraction(mainCharacter,this);
+                    }
+                    if(boss != null && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 120){
+                        if(mainCharacter.getInventory().getActiveItem() instanceof SnickersBar){
+                            ((SnickersBar) mainCharacter.getInventory().getActiveItem()).attempTransofrmation(this);
+                        }
+                    }
+
+
                 }
                 case F -> mainCharacter.getInventory().removeFromInventory(); // deletes active item
-                // Debug: add health, can be uncoding for testing purposes
+                // Debug: add health, can be uncoded for testing purposes
                 /*case O -> {
                     mainCharacter.setMaxHealth(mainCharacter.getMaxHealth() + 10);
                     mainCharacter.heal(mainCharacter.getMaxHealth(), this);
@@ -345,7 +358,7 @@ public class GameManager {
             return;
         }
 
-        LOG.debug("new level started, level: {}", gamestats.getCurrentLevel());
+        LOG.info("new level started, level: {}", gamestats.getCurrentLevel());
     }
 
     /**
@@ -356,11 +369,13 @@ public class GameManager {
      */
     public void startNewGame() {
         LOG.info("Resetting game for a new playthrough");
-
         this.gamestats = new GameStats();
-        this.projectiles = new ArrayList<Projectile>();
-        this.looseItemList = new ArrayList<LooseItem>();
+        this.timerService.cancel();
+        this.timerService = new GameTimerService(gamestats);
+        this.timerService.start();
         yarnBallTrail.clear();
+        projectiles.clear();
+
 
         // Clear any held keys from the previous session
         this.inputManager.getLastCode().clear();
@@ -378,9 +393,7 @@ public class GameManager {
         this.projectiles.clear();
         this.looseItemList.clear();
         this.yarnBallTrail.clear();
-        for (int i = 0; i < i; i++) {
-            mainCharacter.getInventory().getInventorySlots()[i] = null;
-        }
+        //Arrays.fill(mainCharacter.getInventory().getInventorySlots(), null);
 
         this.mapMode = false;
         this.yarnBallActive = false;
@@ -388,6 +401,7 @@ public class GameManager {
         this.hasObliterator = false;
         mainCharacter.setLifeStealActive(false);
         this.speedMultiplier = 1.0;
+
 
         this.currentState = GameState.RUNNING;
     }

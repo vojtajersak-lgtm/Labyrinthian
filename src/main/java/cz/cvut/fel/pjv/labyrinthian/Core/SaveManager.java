@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class SaveManager {
     private static final Logger LOG = LoggerFactory.getLogger(SaveManager.class);
-    private static final String SAVE_FILE_PATH = "savegame.json";
+    private static final String SAVE_FILE_PATH = "LabyrinthianSave.json";
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

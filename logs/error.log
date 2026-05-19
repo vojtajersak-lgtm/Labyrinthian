@@ -10,5 +10,7 @@
 2026-05-17 18:35:08.626 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
 2026-05-17 21:04:20.371 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
 2026-05-17 21:04:21.481 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
+2026-05-17 21:04:20.371 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
+2026-05-17 21:04:21.481 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
 2026-05-19 11:34:05.365 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)
 2026-05-19 11:34:05.922 [JavaFX Application Thread] ERROR c.c.f.p.l.Core.SaveManager - Error in game load process, save file may not exist. savegame.json (The system cannot find the file specified)

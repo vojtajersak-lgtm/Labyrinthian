@@ -44,7 +44,7 @@ public class Inventory {
             i++;
         }
         inventorySlots[i] = item;
-        System.out.println("Added: " + item + ", inventory size: " + getSlotsFull());
+        LOG.debug("Added {}, inventory size: {}", item,getSlotsFull());
     }
 
 
@@ -63,7 +63,7 @@ public class Inventory {
     public void setActiveIndex(int index) {
         if (index < inventorySlots.length) {
             activeIndex = index;
-            LOG.info("Active slot set to {}: {}", index + 1, getActiveItem());
+            LOG.debug("Active slot set to {}: {}", index + 1, getActiveItem());
         }
     }
 

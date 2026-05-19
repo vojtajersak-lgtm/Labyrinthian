@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  *   <li>Otherwise -> uses standard Enemy chase/melee AI</li>
  * </ul>
  */
-public class Boss extends Enemy {
+public class Boss extends Enemy implements Interactable{
     private boolean isTransformed;
     /** Frames until the boss can fire projectiles again. */
     private int projectileCountdown;
@@ -60,7 +60,7 @@ public class Boss extends Enemy {
      */
     @Override
     public void onDeath(GameManager gameManager) {
-        gameManager.getGamestats().addKillScore(true, isTransformed);
+        gameManager.getGamestats().addKillScore(true, false);
         gameManager.spawnPortal(getCenterX(), getCenterY());
         cordX -= 120;
     }
@@ -85,7 +85,6 @@ public class Boss extends Enemy {
 
         spriteChangeTimer--;
         double distanceToPlayer = Utils.distance(player.getCordX(), player.getCordY(), getCenterX(), getCenterY());
-        LOG.debug("distance to player:{}", distanceToPlayer);
 
         if (aoeActive) {
             updateAoe(player, distanceToPlayer, gameManager);
@@ -100,7 +99,6 @@ public class Boss extends Enemy {
                     projectileCountdown--;
                 } else {
                     boolean hasLoS = hasLineOfSight(player, map);
-                    LOG.debug("hasLos is {}", hasLoS);
                     if (hasLoS && gameManager.getProjectiles().isEmpty()) {
                         spawnProjectiles(gameManager);
                         spriteChangeTimer = 40;
@@ -180,7 +178,11 @@ public class Boss extends Enemy {
     public void transform(GameManager gameManager) {
         isTransformed = true;
         gameManager.spawnPortal(getCenterX(), getCenterY());
-        gameManager.getDialogScreen().showNpcDialog();
         cordX -= 100;
+    }
+
+    @Override
+    public void onInteraction(Player player, GameManager gameManager) {
+        gameManager.getDialogScreen().showNpcDialog();
     }
 }
