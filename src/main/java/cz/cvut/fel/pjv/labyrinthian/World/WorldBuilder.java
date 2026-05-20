@@ -287,7 +287,7 @@ public class WorldBuilder {
             int yPos = random.nextInt(0, map.getHeight());
 
             //checks if too close to player spawn or inside boss arena
-            if (Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < 2000
+            if (Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < 700
                     || Utils.distance(xPos * 64, yPos * 64, 64, 64) < 500) {
                 isOccupied = true;
 

@@ -121,6 +121,9 @@ public class Player extends Entity {
                     attackY + attackH > boss.getCordY()) ||
                     Utils.distance(cordX, cordY, boss.getCordX(), boss.getCordY()) <= attackRange) {
                 boss.takeDamage(this.activeweapon.getDamage(), gameManager);
+                if (lifeStealActive && !(activeweapon instanceof UltimateObliterator)) {
+                    heal(activeweapon.getDamage(), gameManager);
+                }
                 if (boss.isDead()) {
                     gameManager.removeBoss();
                 }

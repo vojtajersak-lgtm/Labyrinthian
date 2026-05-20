@@ -146,7 +146,7 @@ public class GameManager {
         // Single-press actions - processed once per key press
         if (lastPressed != null) {
             switch (lastPressed) {
-                /* //Debug: shows a map of the whole maze, can be uncommented if lost during testing :)
+               /*  //Debug: shows a map of the whole maze, can be uncommented if lost during testing :)
                 case M -> {
                     mapMode = !mapMode;
                     LOG.debug("Map mode toggled: {}", mapMode);
@@ -326,7 +326,7 @@ public class GameManager {
         // Regenerate world
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
-        enemyList = worldBuilder.buildEnemies(5, map, scaling);
+        enemyList = worldBuilder.buildEnemies(10, map, scaling);
         boss = worldBuilder.spawnBoss(map, scaling);
         clayPots = worldBuilder.buildClaypots(5, map);
 
@@ -386,14 +386,13 @@ public class GameManager {
         mainCharacter.setDirection(Directions.WEST);
         this.map = worldBuilder.buildMap(72);
         this.escapePortal = null;
-        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
+        this.enemyList = worldBuilder.buildEnemies(10, map, 1);
         this.boss = worldBuilder.spawnBoss(map, 1);
         this.clayPots = worldBuilder.buildClaypots(5, map);
 
         this.projectiles.clear();
         this.looseItemList.clear();
         this.yarnBallTrail.clear();
-        //Arrays.fill(mainCharacter.getInventory().getInventorySlots(), null);
 
         this.mapMode = false;
         this.yarnBallActive = false;
