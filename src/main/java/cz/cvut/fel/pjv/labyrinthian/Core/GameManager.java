@@ -326,7 +326,7 @@ public class GameManager {
         // Regenerate world
         yarnBallTrail.clear();
         map = worldBuilder.buildMap(72);
-        enemyList = worldBuilder.buildEnemies(10, map, scaling);
+        enemyList = worldBuilder.buildEnemies(5, map, scaling);
         boss = worldBuilder.spawnBoss(map, scaling);
         clayPots = worldBuilder.buildClaypots(5, map);
 
@@ -386,7 +386,7 @@ public class GameManager {
         mainCharacter.setDirection(Directions.WEST);
         this.map = worldBuilder.buildMap(72);
         this.escapePortal = null;
-        this.enemyList = worldBuilder.buildEnemies(10, map, 1);
+        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
         this.boss = worldBuilder.spawnBoss(map, 1);
         this.clayPots = worldBuilder.buildClaypots(5, map);
 
