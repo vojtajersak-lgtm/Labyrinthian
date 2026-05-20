@@ -11,8 +11,8 @@ import cz.cvut.fel.pjv.labyrinthian.World.TileType;
  */
 public class CO2Shears extends Consumable {
     public CO2Shears() {
-        super("CO2 Shears", "Super hardened boron shears of American production, hardened with a CO2 laser. " +
-                "Makes a sizable hole in a hedge.\n\n-permanentaly changes hedgewall into path", 1);
+        super("CO2 Sharpened Shears", "Super hardened boron shears of American production, hardened with a CO2 laser. " +
+                "Makes a sizable hole in a hedge.\n\n-permanentaly changes hedgewall into path\n-1 Use", 1);
     }
 
     /**

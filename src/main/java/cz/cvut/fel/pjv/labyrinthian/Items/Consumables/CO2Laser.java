@@ -12,7 +12,7 @@ import cz.cvut.fel.pjv.labyrinthian.World.TileType;
 public class CO2Laser extends Consumable {
     public CO2Laser() {
         super("CO2 Laser", "CO2 laser of Soviet production, excellent at making permanent holes in hedges.\n" +
-                "\n-permanentaly changes hedgewall into path", 3);
+                "\n-permanentaly changes hedgewall into path\n-3 uses", 3);
     }
 
     /**

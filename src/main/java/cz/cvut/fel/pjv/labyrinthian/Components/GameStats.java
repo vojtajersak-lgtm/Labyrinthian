@@ -66,7 +66,7 @@ public class GameStats {
     public void completeLevelScore() {
         long levelTime = getCurrentLevelTime();
         // Bonus decreases the longer the level takes; no bonus after 150 seconds
-        totalScore += (int) (Math.max(0, 150 - levelTime) * 10);
+        totalScore += (int) (Math.max(0, 150 - levelTime) * 50);
         averageLevelTime = (averageLevelTime * levelsCompleted + levelTime) / (levelsCompleted + 1);
         levelsCompleted++;
     }

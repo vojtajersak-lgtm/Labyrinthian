@@ -177,12 +177,12 @@ public class Boss extends Enemy implements Interactable{
      */
     public void transform(GameManager gameManager) {
         isTransformed = true;
-        gameManager.spawnPortal(getCenterX(), getCenterY());
-        cordX -= 100;
     }
 
     @Override
     public void onInteraction(Player player, GameManager gameManager) {
+
         gameManager.getDialogScreen().showNpcDialog();
+        gameManager.spawnPortal(cordX + 100, cordY);
     }
 }

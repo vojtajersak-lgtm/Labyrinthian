@@ -16,7 +16,7 @@ public class YarnBall extends Consumable {
                 A ball of red yarn, could be used to keep directions in a confusing maze.
                 
                 -on use starts drawing line tracking players movement
-                -second use deactivates""", 240);
+                -second use deactivates""", 350);
         isActive = false;
     }
 

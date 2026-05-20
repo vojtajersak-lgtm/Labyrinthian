@@ -35,7 +35,7 @@ public class SnickersBar extends Consumable {
      */
     public void attempTransofrmation(GameManager gameManager){
         int transformChance = (int) (Math.random() * 100);
-        if (transformChance <= 100) {
+        if (transformChance <= 10) {
             gameManager.getBoss().transform(gameManager);
             gameManager.getGamestats().addKillScore(true, true);
         }
