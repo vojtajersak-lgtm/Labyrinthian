@@ -233,6 +233,7 @@ public class GameManager {
         if (hasObliterator) {
             mainCharacter.setMaxHealth(1);
             mainCharacter.setDeafaultValues(1, 0);
+            mainCharacter.setCurrHealth(1);
         }
 
         // Update all enemies

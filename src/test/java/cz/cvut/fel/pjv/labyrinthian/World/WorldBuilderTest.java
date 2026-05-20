@@ -34,14 +34,14 @@ public class WorldBuilderTest {
     }
 
     @Test
-    void testEdgesAreHedge(){
+    void testEdgesAreArenaWall(){
         WorldBuilder worldBuilder = new WorldBuilder();
         Map map = worldBuilder.buildMap(30);
         for (int i = 0; i < 30; i++) {
-            assertEquals(TileType.HEDGE,map.getTileByIndex(0,i).getTile());
-            assertEquals(TileType.HEDGE,map.getTileByIndex(29,i).getTile());
-            assertEquals(TileType.HEDGE, map.getTileByIndex(i, 0).getTile());
-            assertEquals(TileType.HEDGE, map.getTileByIndex(i, 29).getTile());
+            assertEquals(TileType.ARENA_WALL,map.getTileByIndex(0,i).getTile());
+            assertEquals(TileType.ARENA_WALL,map.getTileByIndex(29,i).getTile());
+            assertEquals(TileType.ARENA_WALL, map.getTileByIndex(i, 0).getTile());
+            assertEquals(TileType.ARENA_WALL, map.getTileByIndex(i, 29).getTile());
         }
 
     }

@@ -140,8 +140,14 @@ public class SaveManager {
 
             // Restore active weapon
             switch (data.playerActiveWeapon) {
-                case "Ultimate Obliterator" -> gm.getMainCharacter().setActiveweapon(new UltimateObliterator());
-                case "Sword" -> gm.getMainCharacter().setActiveweapon(new Sword());
+                case "Ultimate Obliterator" -> {
+                    gm.getMainCharacter().setActiveweapon(new UltimateObliterator());
+                    gm.setHasObliterator(true);
+                }
+                case "Sword" -> {
+                    gm.getMainCharacter().setActiveweapon(new Sword());
+                    gm.setHasObliterator(false);
+                }
                 default -> throw new IllegalStateException("Unexpected weapon: " + data.playerActiveWeapon);
             }
 
@@ -174,7 +180,6 @@ public class SaveManager {
             // Restore active flags
             gm.setYarnBallActive(data.yarnBallActive);
             gm.setBlindingStewActive(data.blindingStewActive);
-            gm.setHasObliterator(data.hasObliterator);
             gm.setSpeedMultiplier(data.speedMultiplier);
 
             // Restore entities

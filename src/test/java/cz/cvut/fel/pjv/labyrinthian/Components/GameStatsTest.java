@@ -27,7 +27,7 @@ public class GameStatsTest {
     @Test
     void testCompleteLevelScore_noBonus() {
         GameStats stats = new GameStats();
-        stats.setLevelStartTime(System.currentTimeMillis() - 70000);
+        stats.setLevelStartTime(System.currentTimeMillis() - 160000);
         stats.setTotalScore(100);
         stats.completeLevelScore();
         assertEquals(100, stats.getTotalScore());

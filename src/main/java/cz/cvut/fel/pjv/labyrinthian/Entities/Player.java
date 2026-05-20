@@ -66,8 +66,9 @@ public class Player extends Entity {
     @Override
     public void onDeath(GameManager gameManager) {
         gameManager.setCurrentState(GameState.GAME_OVER);
+        LOG.info("deleting savefile");
         try {
-            Files.deleteIfExists(Path.of("savegame.json"));
+            Files.deleteIfExists(Path.of("LabyrinthianSave.json"));
         } catch (IOException e) {
             LOG.warn("Could not delete save file: {}", e.getMessage());
         }
