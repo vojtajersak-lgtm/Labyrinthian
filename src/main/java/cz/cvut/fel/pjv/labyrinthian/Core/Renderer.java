@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.labyrinthian.Core;
 
+import cz.cvut.fel.pjv.labyrinthian.Components.Inventory;
 import cz.cvut.fel.pjv.labyrinthian.Entities.*;
 import cz.cvut.fel.pjv.labyrinthian.Items.Item;
 import cz.cvut.fel.pjv.labyrinthian.Items.LooseItem;
@@ -23,6 +24,41 @@ import java.util.Objects;
  * Uses JavaFX GraphicsContext to draw onto the game canvas.
  */
 public class Renderer {
+
+    private static final int HUD_FONT_SIZE = 16;
+    private static final int BOSS_SPRITE_SIZE = 196;
+    private static final int CLAYPOT_DRAW_WIDTH = 49;
+    private static final int CLAYPOT_DRAW_HEIGHT = 51;
+    private static final int HEDGE_DRAW_SIZE = 72;
+    private static final int ARENA_WALL_DRAW_WIDTH = 70;
+    private static final int ARENA_WALL_DRAW_HEIGHT = 72;
+    private static final double HEART_SIZE = 36;
+    private static final double HEART_GAP = 10;
+    private static final double SLOT_SIZE = 64;
+    private static final double ACTIVE_SLOT_SIZE = 72;
+    private static final double SLOT_GAP = 4;
+    private static final double INVENTORY_START_X = 344;
+    private static final double SLOT_Y = 502;
+    private static final double WEAPON_SLOT_X = 260;
+    private static final double CAMERA_OFFSET_X = 512;
+    private static final double CAMERA_OFFSET_Y = 288;
+    private static final double BOSS_HEALTH_BAR_OFFSET_Y = 25;
+    private static final double BOSS_HEALTH_BAR_HEIGHT = 10;
+    private static final double ENEMY_HEALTH_BAR_OFFSET_Y = 8;
+    private static final double ENEMY_HEALTH_BAR_HEIGHT = 5;
+    private static final double ACTIVE_SLOT_EXPAND = 4;
+    private static final double BLINDING_VISION_RADIUS = 200.0;
+    private static final double SCORE_TEXT_X = 345;
+    private static final double TIME_TEXT_X = 617;
+    private static final double STATS_TEXT_Y_OFFSET = 80;
+    private static final int PLAYER_SPRITE_DIRECTIONS = 5;
+    private static final int PLAYER_SPRITE_WIDTH_0 = 40;
+    private static final int PLAYER_SPRITE_HEIGHT_0 = 50;
+    private static final int PLAYER_SPRITE_SIZE_1 = 50;
+    private static final int NPC_SPRITE_SIZE = 50;
+    private static final int YARN_TRAIL_WIDTH = 3;
+    private static final int AOE_STROKE_WIDTH = 3;
+
 
     // Screen and tile constants
     private static final int SCREEN_WIDTH = 1024;
@@ -65,7 +101,7 @@ public class Renderer {
      */
     public Renderer(List<double[]> yarnBallTrail) {
         this.yarnBallTrail = yarnBallTrail;
-        this.hudFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 16);
+        this.hudFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), HUD_FONT_SIZE);
 
         loadMapTextures();
         loadEntityTextures();
@@ -86,17 +122,17 @@ public class Renderer {
 
     /** Loads all entity textures (player, enemy, boss, claypot, portal, projectile). */
     private void loadEntityTextures() {
-        playerSprites = new Image[2][5];
-        for (int i = 0; i < 5; i++) {
-            playerSprites[0][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png")), 40, 50, true, true);
-            playerSprites[1][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_1_" + i + ".png")), 50, 50, true, true);
+        playerSprites = new Image[2][PLAYER_SPRITE_DIRECTIONS];
+        for (int i = 0; i < PLAYER_SPRITE_DIRECTIONS; i++) {
+            playerSprites[0][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_0_" + i + ".png")), PLAYER_SPRITE_WIDTH_0, PLAYER_SPRITE_HEIGHT_0, true, true);
+            playerSprites[1][i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/player_1_" + i + ".png")), PLAYER_SPRITE_SIZE_1, PLAYER_SPRITE_SIZE_1, true, true);
         }
         for (int i = 0; i < bossSprites.length; i++) {
             bossSprites[i] = loadImage("/textures/entities/boss" + (i + 1) + ".png");
         }
         enemySprites[0] = loadImage("/textures/entities/enemy0.png");
         enemySprites[1] = loadImage("/textures/entities/enemy1.png");
-        npc        = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/boss3.png")), 50, 50, true, true);
+        npc        = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/textures/entities/boss3.png")), NPC_SPRITE_SIZE, NPC_SPRITE_SIZE, true, true);
         clayPot    = loadImage("/textures/entities/claypot.png");
         portal     = loadImage("/textures/entities/portal.png");
         projectile = loadImage("/textures/entities/projectile.png");
@@ -164,8 +200,8 @@ public class Renderer {
         gc.setImageSmoothing(false);
 
         // Camera offset - center on player, clamped to map bounds
-        double offsetX = Math.clamp(player.getCordX() - 512, 0, map.getWidth() * TILE_SIZE - SCREEN_WIDTH);
-        double offsetY = Math.clamp(player.getCordY() - 288, 0, map.getHeight() * TILE_SIZE - SCREEN_HEIGHT);
+        double offsetX = Math.clamp(player.getCordX() - CAMERA_OFFSET_X, 0, map.getWidth() * TILE_SIZE - SCREEN_WIDTH);
+        double offsetY = Math.clamp(player.getCordY() - CAMERA_OFFSET_Y, 0, map.getHeight() * TILE_SIZE - SCREEN_HEIGHT);
         //only for debug purposes, disabled during actual gameplay
         // I wanted to delete it beforehand in, but it has proven to be too useful
         if (mapMode) {
@@ -237,9 +273,9 @@ public class Renderer {
                 if (map.getTileByIndex(j, i).isWalkable()) {
                     gc.drawImage(pathTiles[map.getTileByIndex(j, i).getTextureIndex()], x, y, TILE_SIZE, TILE_SIZE);
                 } else if (map.getTileByIndex(j, i).getTile() == TileType.HEDGE) {
-                    gc.drawImage(hedgeTile, x - TILE_OVERDRAW, y - TILE_OVERDRAW, 72, 72);
+                    gc.drawImage(hedgeTile, x - TILE_OVERDRAW, y - TILE_OVERDRAW, HEDGE_DRAW_SIZE, HEDGE_DRAW_SIZE);
                 } else {
-                    gc.drawImage(arenaTile, x - TILE_OVERDRAW, y - TILE_OVERDRAW, 70, 72);
+                    gc.drawImage(arenaTile, x - TILE_OVERDRAW, y - TILE_OVERDRAW, ARENA_WALL_DRAW_WIDTH, ARENA_WALL_DRAW_HEIGHT);
                 }
             }
         }
@@ -282,7 +318,7 @@ public class Renderer {
         for (Enemy e : enemyList) {
             int attacking = e.getState() == EnemyState.ATTACKING ? 1 : 0;
             gc.drawImage(enemySprites[attacking], e.getCordX() - offsetX, e.getCordY() - offsetY, TILE_SIZE, TILE_SIZE);
-            renderHealthBar(gc, e.getCordX() - offsetX, e.getCordY() - offsetY - 8, TILE_SIZE, 5, e.getCurrHealth(), e.getMaxHealth());
+            renderHealthBar(gc, e.getCordX() - offsetX, e.getCordY() - offsetY - ENEMY_HEALTH_BAR_OFFSET_Y, TILE_SIZE, ENEMY_HEALTH_BAR_HEIGHT, e.getCurrHealth(), e.getMaxHealth());
         }
     }
 
@@ -307,15 +343,15 @@ public class Renderer {
                 gc.fillOval(cx, cy, diameter, diameter);
             } else {
                 gc.setStroke(boss.getAoeColor());
-                gc.setLineWidth(3);
+                gc.setLineWidth(AOE_STROKE_WIDTH);
                 gc.strokeOval(cx, cy, diameter, diameter);
             }
         }
 
         // Boss sprite
         int attackMode = boss.getSpriteChangeTimer() > 0 ? 1 : 0;
-        gc.drawImage(bossSprites[attackMode], boss.getCordX() - offsetX, boss.getCordY() - offsetY, 196, 196);
-        renderHealthBar(gc, boss.getCordX() - offsetX, boss.getCordY() - offsetY - 25, 196, 10, boss.getCurrHealth(), boss.getMaxHealth());
+        gc.drawImage(bossSprites[attackMode], boss.getCordX() - offsetX, boss.getCordY() - offsetY, BOSS_SPRITE_SIZE, BOSS_SPRITE_SIZE);
+        renderHealthBar(gc, boss.getCordX() - offsetX, boss.getCordY() - offsetY - BOSS_HEALTH_BAR_OFFSET_Y, BOSS_SPRITE_SIZE, BOSS_HEALTH_BAR_HEIGHT, boss.getCurrHealth(), boss.getMaxHealth());
     }
 
     /**
@@ -344,7 +380,7 @@ public class Renderer {
     /** Renders all clay pots. */
     private void renderClayPots(GraphicsContext gc, List<ClayPot> pots, double offsetX, double offsetY) {
         for (ClayPot c : pots)
-            gc.drawImage(clayPot, c.getCordX() - offsetX, c.getCordY() - offsetY, 49, 51);
+            gc.drawImage(clayPot, c.getCordX() - offsetX, c.getCordY() - offsetY, CLAYPOT_DRAW_WIDTH, CLAYPOT_DRAW_HEIGHT);
     }
 
     /** Renders all loose items lying on the ground. */
@@ -364,7 +400,7 @@ public class Renderer {
     private void renderYarnTrail(GraphicsContext gc, double offsetX, double offsetY) {
 
         gc.setStroke(Color.RED);
-        gc.setLineWidth(3);
+        gc.setLineWidth(YARN_TRAIL_WIDTH);
         for (int i = 0; i < yarnBallTrail.size() - 1; i++) {
             gc.strokeLine(
                     yarnBallTrail.get(i)[0] - offsetX, yarnBallTrail.get(i)[1] - offsetY,
@@ -390,7 +426,7 @@ public class Renderer {
                 0, 0,
                 playerScreenX / SCREEN_WIDTH,
                 playerScreenY / SCREEN_HEIGHT,
-                200.0 / Math.min(SCREEN_WIDTH, SCREEN_HEIGHT),
+                BLINDING_VISION_RADIUS / Math.min(SCREEN_WIDTH, SCREEN_HEIGHT),
                 true,
                 CycleMethod.NO_CYCLE,
                 new Stop(0, Color.TRANSPARENT),
@@ -418,8 +454,8 @@ public class Renderer {
      * Supports full, half and empty hearts, wrapping to multiple rows if needed.
      */
     private void renderHearts(GraphicsContext gc, Player player) {
-        double heartSize = 36;
-        double gap = 10;
+        double heartSize = HEART_SIZE;
+        double gap = HEART_GAP;
         int maxPerRow = (int) ((SCREEN_WIDTH - 10) / (heartSize + gap));
 
         for (int i = 0; i < player.getMaxHealth() / 2; i++) {
@@ -437,8 +473,8 @@ public class Renderer {
      * Active slot is drawn larger (72x72 vs 64x64) with yellow border.
      */
     private void renderInventory(GraphicsContext gc, Player player) {
-        final double slotSize = 64, activeSize = 72, gap = 4;
-        final double startX = 344, slotY = 502, weaponX = 260;
+        final double slotSize = SLOT_SIZE, activeSize = ACTIVE_SLOT_SIZE, gap = SLOT_GAP;
+        final double startX = INVENTORY_START_X, slotY = SLOT_Y, weaponX = WEAPON_SLOT_X;
 
         // Weapon slot
         Image weaponSlot = player.getActiveweapon() == null
@@ -447,22 +483,22 @@ public class Renderer {
         gc.drawImage(weaponSlot, weaponX, slotY);
 
         // 5 inventory slots
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < PLAYER_SPRITE_DIRECTIONS; i++) {
             double slotX = startX + i * (slotSize + gap);
             Item item = player.getInventory().getInventorySlots()[i];
             boolean isActive = (i == player.getInventory().getActiveIndex());
 
             if (item == null) {
                 gc.drawImage(isActive ? slotActive : slotEmpty,
-                        isActive ? slotX - 4 : slotX,
-                        isActive ? slotY - 4 : slotY,
+                        isActive ? slotX - ACTIVE_SLOT_EXPAND : slotX,
+                        isActive ? slotY - ACTIVE_SLOT_EXPAND : slotY,
                         isActive ? activeSize : slotSize,
                         isActive ? activeSize : slotSize);
             } else {
                 int variant = isActive ? 2 : 1;
                 gc.drawImage(itemSprites[item.getSpriteIndex()][variant],
-                        isActive ? slotX - 4 : slotX,
-                        isActive ? slotY - 4 : slotY,
+                        isActive ? slotX - ACTIVE_SLOT_EXPAND : slotX,
+                        isActive ? slotY - ACTIVE_SLOT_EXPAND : slotY,
                         isActive ? activeSize : slotSize,
                         isActive ? activeSize : slotSize);
             }
@@ -473,7 +509,7 @@ public class Renderer {
     private void renderStats(GraphicsContext gc, long currentLevelTime, int totalScore) {
         gc.setFill(Color.WHITE);
         gc.setFont(hudFont);
-        gc.fillText("Time: " + currentLevelTime + "s", 617, SCREEN_HEIGHT - 80);
-        gc.fillText("Score: " + totalScore, 345, SCREEN_HEIGHT - 80);
+        gc.fillText("Time: " + currentLevelTime + "s", TIME_TEXT_X, SCREEN_HEIGHT - STATS_TEXT_Y_OFFSET);
+        gc.fillText("Score: " + totalScore, SCORE_TEXT_X, SCREEN_HEIGHT - STATS_TEXT_Y_OFFSET);
     }
 }

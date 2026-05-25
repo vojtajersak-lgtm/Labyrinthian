@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
  * Empty slots are represented by null. Items are placed in the first available slot.
  */
 public class Inventory {
+
+    public static final int INVENTORY_SIZE = 5;
+
     private static final Logger LOG = LoggerFactory.getLogger(Inventory.class);
     private final Item[] inventorySlots;
     private final int inventorySize;
@@ -19,8 +22,8 @@ public class Inventory {
      * Creates an inventory with 5 empty slots and sets the active index to 0.
      */
     public Inventory() {
-        this.inventorySize = 5;
-        this.inventorySlots = new Item[5];
+        this.inventorySize = INVENTORY_SIZE;
+        this.inventorySlots = new Item[INVENTORY_SIZE];
         this.activeIndex = 0;
         //Selection of most important items, can be uncoded to test them out
         /*inventorySlots[0] = new YarnBall();
@@ -90,7 +93,7 @@ public class Inventory {
      */
     public int getSlotsFull() {
         int count = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (!(inventorySlots[i] == null)) count++;
         }
         return count;

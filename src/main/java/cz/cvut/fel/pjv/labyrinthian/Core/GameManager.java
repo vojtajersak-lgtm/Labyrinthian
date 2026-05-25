@@ -32,6 +32,26 @@ import java.util.Set;
  * </p>
  */
 public class GameManager {
+
+    public static final int ENEMY_COUNT = 5;
+    public static final int CLAYPOT_COUNT = 5;
+    public static final int WIN_LEVEL_COUNT = 5;
+    public static final int PLAYER_INITIAL_HEALTH = 6;
+    public static final int PLAYER_ATTACK_RANGE = 80;
+    public static final int PICKUP_RANGE = 50;
+    public static final int PORTAL_INTERACT_RANGE = 120;
+    public static final int NPC_INTERACT_RANGE = 200;
+    public static final int SNICKERS_USE_RANGE = 120;
+    public static final int YARN_BALL_TRAIL_INTERVAL = 32;
+    public static final double DEFAULT_SPEED_MULTIPLIER = 1.0;
+
+    public static final int TILE_SIZE = 64;
+    public static final int PLAYER_SIZE = 32;
+    public static final int DEFAULT_MAP = 72;
+    public static final double PIXEL_STEP = 7;
+
+
+
     private static final Logger LOG = LoggerFactory.getLogger(GameManager.class);
     private GameState currentState;
     private GameStats gamestats;
@@ -126,19 +146,19 @@ public class GameManager {
         } else {
             // Smooth WASD movement - multiple keys can be held simultaneously for diagonal movement
             if (keyCodeSet.contains(KeyCode.W)) {
-                mainCharacter.move(0, -7 * speedMultiplier, map);
+                mainCharacter.move(0, -PIXEL_STEP * speedMultiplier, map);
                 mainCharacter.setDirection(Directions.NORTH);
             }
             if (keyCodeSet.contains(KeyCode.S)) {
-                mainCharacter.move(0, 7 * speedMultiplier, map);
+                mainCharacter.move(0, PIXEL_STEP * speedMultiplier, map);
                 mainCharacter.setDirection(Directions.SOUTH);
             }
             if (keyCodeSet.contains(KeyCode.A)) {
-                mainCharacter.move(-7 * speedMultiplier, 0, map);
+                mainCharacter.move(-PIXEL_STEP * speedMultiplier, 0, map);
                 mainCharacter.setDirection(Directions.EAST);
             }
             if (keyCodeSet.contains(KeyCode.D)) {
-                mainCharacter.move(7 * speedMultiplier, 0, map);
+                mainCharacter.move(PIXEL_STEP * speedMultiplier, 0, map);
                 mainCharacter.setDirection(Directions.WEST);
             }
         }
@@ -178,7 +198,7 @@ public class GameManager {
                     LooseItem toPickUp = null;
                     for (LooseItem l : looseItemList) {
                         if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
-                                l.cordX(), l.cordY()) < 50) {
+                                l.cordX(), l.cordY()) < PICKUP_RANGE) {
                             toPickUp = l;
                             break;
                         }
@@ -196,14 +216,14 @@ public class GameManager {
                     // Interact with escape portal if nearby
                     if (escapePortal != null) {
                         if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
-                                escapePortal.getCordX(), escapePortal.getCordY()) <= 120) {
+                                escapePortal.getCordX(), escapePortal.getCordY()) <= PORTAL_INTERACT_RANGE) {
                             escapePortal.onInteraction(mainCharacter, this);
                         }
                     }
-                    if(boss != null && boss.isTransformed() && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 200){
+                    if(boss != null && boss.isTransformed() && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= NPC_INTERACT_RANGE){
                         boss.onInteraction(mainCharacter,this);
                     }
-                    if(boss != null && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= 120){
+                    if(boss != null && Utils.distance(mainCharacter.getCenterX(), mainCharacter.getCenterY(), boss.getCenterX(), boss.getCenterY()) <= SNICKERS_USE_RANGE){
                         if(mainCharacter.getInventory().getActiveItem() instanceof SnickersBar){
                             ((SnickersBar) mainCharacter.getInventory().getActiveItem()).attempTransofrmation(this);
                         }
@@ -257,7 +277,7 @@ public class GameManager {
         if (yarnBallActive) {
             Item active = mainCharacter.getInventory().getActiveItem();
             if (Utils.distance(mainCharacter.getCordX(), mainCharacter.getCordY(),
-                    yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= 32) {
+                    yarnBallTrail.getLast()[0], yarnBallTrail.getLast()[1]) >= YARN_BALL_TRAIL_INTERVAL) {
                 yarnBallTrail.add(new double[]{mainCharacter.getCordX(), mainCharacter.getCordY()});
                 ((Consumable) mainCharacter.getInventory().getActiveItem()).decreaseUses();
                 if (active instanceof Consumable && ((Consumable) active).usedUp()) {
@@ -325,15 +345,15 @@ public class GameManager {
 
         // Regenerate world
         yarnBallTrail.clear();
-        map = worldBuilder.buildMap(72);
-        enemyList = worldBuilder.buildEnemies(5, map, scaling);
+        map = worldBuilder.buildMap(DEFAULT_MAP);
+        enemyList = worldBuilder.buildEnemies(ENEMY_COUNT, map, scaling);
         boss = worldBuilder.spawnBoss(map, scaling);
-        clayPots = worldBuilder.buildClaypots(5, map);
+        clayPots = worldBuilder.buildClaypots(CLAYPOT_COUNT, map);
 
         // Reset player position and upgradeable stats to level baseline
         mainCharacter.heal(mainCharacter.getMaxHealth(), this);
-        mainCharacter.setCordX(64);
-        mainCharacter.setCordY(64);
+        mainCharacter.setCordX(TILE_SIZE);
+        mainCharacter.setCordY(TILE_SIZE);
         mainCharacter.setMaxHealth(mainCharacter.getDeafaultValues()[0]);
         speedMultiplier = mainCharacter.getDeafaultValues()[1];
         boss.setTransformed(false);
@@ -353,7 +373,7 @@ public class GameManager {
         currentState = GameState.RUNNING;
 
         // Check win condition after 5 completed levels
-        if (gamestats.getLevelsCompleted() == 5) {
+        if (gamestats.getLevelsCompleted() == WIN_LEVEL_COUNT) {
             currentState = GameState.WON;
             return;
         }
@@ -382,13 +402,13 @@ public class GameManager {
         this.inputManager.getJustPressed().clear();
         this.inputManager.getJustReleased().clear();
 
-        this.mainCharacter = new Player(64, 64, 32, 32, 80);
+        this.mainCharacter = new Player(TILE_SIZE, TILE_SIZE, PLAYER_SIZE, PLAYER_SIZE, PLAYER_ATTACK_RANGE);
         mainCharacter.setDirection(Directions.WEST);
-        this.map = worldBuilder.buildMap(72);
+        this.map = worldBuilder.buildMap(DEFAULT_MAP);
         this.escapePortal = null;
-        this.enemyList = worldBuilder.buildEnemies(5, map, 1);
+        this.enemyList = worldBuilder.buildEnemies(ENEMY_COUNT, map, 1);
         this.boss = worldBuilder.spawnBoss(map, 1);
-        this.clayPots = worldBuilder.buildClaypots(5, map);
+        this.clayPots = worldBuilder.buildClaypots(CLAYPOT_COUNT, map);
 
         this.projectiles.clear();
         this.looseItemList.clear();
@@ -399,7 +419,7 @@ public class GameManager {
         this.blindingStewActive = false;
         this.hasObliterator = false;
         mainCharacter.setLifeStealActive(false);
-        this.speedMultiplier = 1.0;
+        this.speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
 
 
         this.currentState = GameState.RUNNING;

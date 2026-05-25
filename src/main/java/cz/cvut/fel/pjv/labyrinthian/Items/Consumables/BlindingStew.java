@@ -17,6 +17,12 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
  * </ul>
  */
 public class BlindingStew extends Consumable {
+
+    private static final int EFFECT_COUNT = 4;
+    private static final int HEARTS_ADDED = 6;
+    private static final double DAMAGE_MULTIPLIER = 2;
+    private static final double SPEED_MULTIPLIER = 2.0;
+
     public BlindingStew() {
         super("Blinding Stew", """
                 Applies a random positive effect and shortens vision:\s
@@ -37,17 +43,17 @@ public class BlindingStew extends Consumable {
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
         gameManager.setBlindingStewActive(true);
-        int effect = (int) (Math.random() * 4);
+        int effect = (int) (Math.random() * EFFECT_COUNT);
         name = "Effect:";
         switch (effect) {
             case 0 -> {
-                gameManager.getMainCharacter().setMaxHealth(player.getMaxHealth() + 6);
+                gameManager.getMainCharacter().setMaxHealth(player.getMaxHealth() + HEARTS_ADDED);
                 gameManager.getMainCharacter().heal(player.getMaxHealth(), gameManager);
                 description = "You gained 3 hearts!";
             }
             case 1 -> {
                 gameManager.getMainCharacter().getActiveweapon().setDamage(
-                        gameManager.getMainCharacter().getActiveweapon().getDamage() * 2);
+                        gameManager.getMainCharacter().getActiveweapon().getDamage() * DAMAGE_MULTIPLIER);
                 description = "Damage doubled";
             }
             case 2 -> {
@@ -56,7 +62,7 @@ public class BlindingStew extends Consumable {
                 description = "Life steal activated";
             }
             case 3 -> {
-                gameManager.setSpeedMultiplier(2.0);
+                gameManager.setSpeedMultiplier(SPEED_MULTIPLIER);
                 description = "Movement speed doubled";
             }
         }

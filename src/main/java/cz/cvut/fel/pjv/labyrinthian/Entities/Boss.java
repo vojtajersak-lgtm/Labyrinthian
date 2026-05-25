@@ -18,6 +18,23 @@ import javafx.scene.paint.Color;
  * </ul>
  */
 public class Boss extends Enemy implements Interactable{
+
+    private static final int INITIAL_PROJECTILE_COUNTDOWN = 60;
+    private static final double AOE_MAX_RADIUS = 320;
+    private static final double AOE_TRIGGER_DISTANCE = 150;
+    private static final double AOE_EXPAND_SPEED = 3;
+    private static final double AOE_JUMP_START_OFFSET = 80;
+    private static final double AOE_JUMP_END_OFFSET = 40;
+    private static final double AOE_JUMP_STEP = 5;
+    private static final int AOE_FLASH_DURATION = 40;
+    private static final int SPRITE_CHANGE_DURATION = 40;
+    private static final int BOSS_CHASE_THRESHOLD = 10;
+    private static final double ON_DEATH_SPRITE_OFFSET = 120;
+    private static final double ON_INTERACT_PORTAL_OFFSET = 100;
+    private static final double PROJECTILE_SPEED = 5;
+    private static final double PROJECTILE_SIZE = 20;
+    private static final double[] PROJECTILE_SPREAD_ANGLES = {-25, -15, 0, 15, 25};
+
     private boolean isTransformed;
     /** Frames until the boss can fire projectiles again. */
     private int projectileCountdown;
@@ -37,8 +54,8 @@ public class Boss extends Enemy implements Interactable{
                 double baseDamage, int attackSpeed, double attackRange) {
         super(cordX, cordY, height, width, maxHealth, baseDamage, attackSpeed, attackRange);
         this.isTransformed = false;
-        this.projectileCountdown = 60;
-        this.aoeMaxRadius = 320;
+        this.projectileCountdown = INITIAL_PROJECTILE_COUNTDOWN;
+        this.aoeMaxRadius = AOE_MAX_RADIUS;
         this.spriteChangeTimer = 0;
         this.aoeRadius = 0;
         this.aoeColor = Color.GRAY;
@@ -62,7 +79,7 @@ public class Boss extends Enemy implements Interactable{
     public void onDeath(GameManager gameManager) {
         gameManager.getGamestats().addKillScore(true, false);
         gameManager.spawnPortal(getCenterX(), getCenterY());
-        cordX -= 120;
+        cordX -= ON_DEATH_SPRITE_OFFSET;
     }
 
 
@@ -89,19 +106,19 @@ public class Boss extends Enemy implements Interactable{
         if (aoeActive) {
             updateAoe(player, distanceToPlayer, gameManager);
         } else {
-            if (distanceToPlayer <= 150) {
+            if (distanceToPlayer <= AOE_TRIGGER_DISTANCE) {
                 // Player too close — trigger AOE
                 aoeActive = true;
             } else {
                 // Chase and potentially fire projectiles
-                super.takeTurn(player, map, gameManager, 10);
+                super.takeTurn(player, map, gameManager, BOSS_CHASE_THRESHOLD);
                 if (projectileCountdown > 0) {
                     projectileCountdown--;
                 } else {
                     boolean hasLoS = hasLineOfSight(player, map);
                     if (hasLoS && gameManager.getProjectiles().isEmpty()) {
                         spawnProjectiles(gameManager);
-                        spriteChangeTimer = 40;
+                        spriteChangeTimer = SPRITE_CHANGE_DURATION;
                         projectileCountdown = 0;
                     }
                 }
@@ -118,18 +135,18 @@ public class Boss extends Enemy implements Interactable{
      */
     private void updateAoe(Player player, double distanceToPlayer, GameManager gameManager) {
         if (aoeRadius < aoeMaxRadius) {
-            aoeRadius += 3;
+            aoeRadius += AOE_EXPAND_SPEED;
             // Boss "jumps" before AOE explosion, AOE explodes upon landing, gives visual clue to player
-            if (aoeRadius >= aoeMaxRadius - 80 && aoeRadius <= aoeMaxRadius - 40) cordY -= 5;
-            if (aoeRadius >= aoeMaxRadius - 40) cordY += 5;
+            if (aoeRadius >= aoeMaxRadius - AOE_JUMP_START_OFFSET && aoeRadius <= aoeMaxRadius - AOE_JUMP_END_OFFSET) cordY -= AOE_JUMP_STEP;
+            if (aoeRadius >= aoeMaxRadius - AOE_JUMP_END_OFFSET) cordY += AOE_JUMP_STEP;
         }
 
         // Trigger explosion once the ring reaches max radius
         if (aoeRadius >= aoeMaxRadius && aoeFlashTimer == 0 && !aoeExploded) {
             aoeColor = Color.DARKRED;
             aoeExploded = true;
-            aoeFlashTimer = 40;
-            if (distanceToPlayer <= 320) player.takeDamage(baseDamage, gameManager); // damage handled before gameManager needed
+            aoeFlashTimer = AOE_FLASH_DURATION;
+            if (distanceToPlayer <= aoeMaxRadius) player.takeDamage(baseDamage, gameManager); // damage handled before gameManager needed
         }
 
         // Count down flash timer, then reset AOE
@@ -151,7 +168,7 @@ public class Boss extends Enemy implements Interactable{
      * @param gameManager the game manager to add projectiles to
      */
     public void spawnProjectiles(GameManager gameManager) {
-        double[] angles = {-25, -15, 0, 15, 25};
+        double[] angles = PROJECTILE_SPREAD_ANGLES;
         // Compute normalized direction vector toward player
         double dx = gameManager.getMainCharacter().getCenterX() - getCenterX();
         double dy = gameManager.getMainCharacter().getCenterY() - getCenterY();
@@ -165,7 +182,7 @@ public class Boss extends Enemy implements Interactable{
             double newDx = dx * Math.cos(radianAngle) - dy * Math.sin(radianAngle);
             double newDy = dx * Math.sin(radianAngle) + dy * Math.cos(radianAngle);
             gameManager.getProjectiles().add(
-                new Projectile(getCenterX(), getCenterY(), newDx, newDy, 5, baseDamage, true, 20));
+                new Projectile(getCenterX(), getCenterY(), newDx, newDy, PROJECTILE_SPEED, baseDamage, true, PROJECTILE_SIZE));
         }
     }
 
@@ -183,6 +200,6 @@ public class Boss extends Enemy implements Interactable{
     public void onInteraction(Player player, GameManager gameManager) {
 
         gameManager.getDialogScreen().showNpcDialog();
-        gameManager.spawnPortal(cordX + 100, cordY);
+        gameManager.spawnPortal(cordX + ON_INTERACT_PORTAL_OFFSET, cordY);
     }
 }

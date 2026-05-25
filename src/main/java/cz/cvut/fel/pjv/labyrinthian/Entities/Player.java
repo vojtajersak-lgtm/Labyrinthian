@@ -19,6 +19,11 @@ import java.util.List;
  * Manages inventory, active weapon, attack logic and damage recovery.
  */
 public class Player extends Entity {
+
+    private static final double INITIAL_MAX_HEALTH = 6;
+    private static final double CLOSE_HIT_RANGE_FACTOR = 0.75;
+    private static final double CLAYPOT_HIT_RANGE = 60;
+
     private final Inventory inventory;
     private Weapon activeweapon;
     /** Default stat values for resetting upgrades between levels: [maxHp, speedMult, damage, range]. */
@@ -30,7 +35,7 @@ public class Player extends Entity {
 
 
     public Player(double cordX, double cordY, double height, double width, double attackRange) {
-        super(cordX, cordY, height, width, 6, attackRange);
+        super(cordX, cordY, height, width, INITIAL_MAX_HEALTH, attackRange);
         this.inventory = new Inventory();
         this.activeweapon = new Sword();
         this.deafaultValues = new double[]{maxHealth, 1.0, activeweapon.getDamage(), attackRange};
@@ -102,7 +107,7 @@ public class Player extends Entity {
                     attackY < e.getCordY() + e.getHeight() &&
                     attackY + attackH > e.getCordY()) ||
                     //if player is close enough, hit regardless of facing direction
-                    Utils.distance(cordX, cordY, e.getCenterX(), e.getCenterY()) <= attackRange * 3/4) {
+                    Utils.distance(cordX, cordY, e.getCenterX(), e.getCenterY()) <= attackRange * CLOSE_HIT_RANGE_FACTOR) {
                 e.takeDamage(this.activeweapon.getDamage(), gameManager);
                 // Life steal: heal on hit, but not with UltimateObliterator
                 if (lifeStealActive && !(activeweapon instanceof UltimateObliterator)) {
@@ -133,7 +138,7 @@ public class Player extends Entity {
         // Attack clay pots within range
         List<ClayPot> toRemovePots = new ArrayList<>();
         for (ClayPot c : pots) {
-            if (Utils.distance(cordX, cordY, c.getCordX(), c.getCordY()) < 60) {
+            if (Utils.distance(cordX, cordY, c.getCordX(), c.getCordY()) < CLAYPOT_HIT_RANGE) {
                 c.takeDamage(this.activeweapon.getDamage(), gameManager);
                 if (c.isDead()) toRemovePots.add(c);
             }

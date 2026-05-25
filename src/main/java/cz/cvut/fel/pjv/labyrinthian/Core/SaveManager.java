@@ -49,7 +49,7 @@ public class SaveManager {
 
         // Save inventory as item name strings
         List<String> inventoryNames = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
             if (gm.getMainCharacter().getInventory().getInventorySlots()[i] != null) {
                 inventoryNames.add(gm.getMainCharacter().getInventory().getInventorySlots()[i].toString());
             } else {
@@ -154,7 +154,7 @@ public class SaveManager {
             // Restore inventory by item name
             if (data.inventoryItemNames != null) {
                 Inventory inv = gm.getMainCharacter().getInventory();
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
                     switch (data.inventoryItemNames.get(i)) {
                         case "EMPTY" -> {}
                         case "Blinding Stew"   -> inv.getInventorySlots()[i] = new BlindingStew();

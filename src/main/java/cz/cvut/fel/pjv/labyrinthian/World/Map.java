@@ -6,6 +6,7 @@ package cz.cvut.fel.pjv.labyrinthian.World;
  * and supports export/import for the save system.
  */
 public class Map {
+    public static final int TILE_SIZE = 64;
     /** The tile grid — accessed as map[x][y]. */
     private Tile[][] map;
     private int mapSize;
@@ -25,7 +26,7 @@ public class Map {
      * @return the tile at those coordinates
      */
     public Tile getTile(double xcord, double ycord) {
-        return map[(int) (xcord / 64)][(int) (ycord / 64)];
+        return map[(int) (xcord / TILE_SIZE)][(int) (ycord / TILE_SIZE)];
     }
 
     /**
@@ -58,7 +59,7 @@ public class Map {
      * @return true if within bounds
      */
     public boolean isInbounds(double cordX, double cordY) {
-        return cordX >= 0 && cordX < map[0].length * 64 && cordY >= 0 && cordY < map.length * 64;
+        return cordX >= 0 && cordX < map[0].length * TILE_SIZE && cordY >= 0 && cordY < map.length * TILE_SIZE;
     }
 
     /**

@@ -10,6 +10,11 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
  * - "You're not you when you're hungry..."
  */
 public class SnickersBar extends Consumable {
+
+    private static final int HEAL_AMOUNT = 4;
+    private static final int TRANSFORM_CHANCE_PERCENT = 10;
+    private static final int TRANSFORM_ROLL_MAX = 100;
+
     public SnickersBar() {
         super("SN-1C.K.E.R.S", """
                 Highly experimental chocolate bar, said to have life-changing effects on hungry individuals. Contains peanuts.
@@ -24,7 +29,7 @@ public class SnickersBar extends Consumable {
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
         if (!player.fullHealth()) {
-            player.heal(4, gameManager);
+            player.heal(HEAL_AMOUNT, gameManager);
             decreaseUses();
         }
     }
@@ -34,8 +39,8 @@ public class SnickersBar extends Consumable {
      * 10% chance to transform, item consumed regardless of success
      */
     public void attempTransofrmation(GameManager gameManager){
-        int transformChance = (int) (Math.random() * 100);
-        if (transformChance <= 10) {
+        int transformChance = (int) (Math.random() * TRANSFORM_ROLL_MAX);
+        if (transformChance <= TRANSFORM_CHANCE_PERCENT) {
             gameManager.getBoss().transform(gameManager);
             gameManager.getGamestats().addKillScore(true, true);
         }

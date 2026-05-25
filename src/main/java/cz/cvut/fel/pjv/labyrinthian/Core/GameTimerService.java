@@ -9,6 +9,9 @@ import javafx.concurrent.Task;
  * Runs on a separate thread to avoid blocking the JavaFX Application Thread.
  */
 public class GameTimerService extends Service<Long> {
+
+    private static final long UPDATE_INTERVAL_MS = 1000;
+
     private final GameStats gameStats;
 
     /**
@@ -32,7 +35,7 @@ public class GameTimerService extends Service<Long> {
                 while (!isCancelled()) {
                     // updateValue is thread-safe — it posts the value to the Application Thread
                     updateValue(gameStats.getCurrentLevelTime());
-                    Thread.sleep(1000);
+                    Thread.sleep(UPDATE_INTERVAL_MS);
                 }
                 return gameStats.getCurrentLevelTime();
             }

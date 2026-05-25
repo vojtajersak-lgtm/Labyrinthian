@@ -9,6 +9,9 @@ import cz.cvut.fel.pjv.labyrinthian.Entities.Player;
  * The trail is stored as a list of pixel coordinates in {@code GameManager}.
  */
 public class YarnBall extends Consumable {
+
+    private static final int INITIAL_USES = 350;
+
     private boolean isActive;
 
     public YarnBall() {
@@ -16,7 +19,7 @@ public class YarnBall extends Consumable {
                 A ball of red yarn, could be used to keep directions in a confusing maze.
                 
                 -on use starts drawing line tracking players movement
-                -second use deactivates""", 350);
+                -second use deactivates""", INITIAL_USES);
         isActive = false;
     }
 

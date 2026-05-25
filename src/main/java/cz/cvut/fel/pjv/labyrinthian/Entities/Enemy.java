@@ -16,13 +16,24 @@ import java.util.*;
  * State logic: IDLE -> CHASING -> ATTACKING -> RETURN -> IDLE
  */
 public class Enemy extends Entity {
+
+    private static final int CHASE_TIMER_FRAMES = 120;
+    private static final int EXTENDED_CHASE_THRESHOLD = 15;
+    private static final int MAX_CHASE_DISTANCE_TILES = 40;
+    private static final double ATTACK_ENGAGE_DISTANCE = 80;
+    private static final int ATTACK_COOLDOWN_MULTIPLIER = 30;
+    private static final double MOVE_STEP_SIZE = 3;
+    private static final int ASTAR_MAX_STEPS = 400;
+    private static final int ASTAR_INITIAL_SCORE = 99999;
+    private static final int TILE_CENTER_OFFSET = 32;
+
     protected static final Logger LOG = LoggerFactory.getLogger(Enemy.class);
     protected double baseDamage;
     protected int attackSpeed;
     protected EnemyState state = EnemyState.IDLE;
     protected double startX, startY;
     /** Frames remaining before the enemy gives up the chase after losing LoS (~2 seconds at 60fps). */
-    protected int chaseTimer = 120;
+    protected int chaseTimer = CHASE_TIMER_FRAMES;
     protected int attackCooldown;
     /** Last known player position, used to keep chasing after losing line-of-sight,
      * for example if player tried to hide behind corner. */
@@ -37,7 +48,7 @@ public class Enemy extends Entity {
         this.attackSpeed = attackSpeed;
         this.startX = cordX;
         this.startY = cordY;
-        this.attackCooldown = 120;
+        this.attackCooldown = CHASE_TIMER_FRAMES;
     }
 
     /**
@@ -80,11 +91,11 @@ public class Enemy extends Entity {
         boolean hasLoS = hasLineOfSight(player, map);
 
         // Already chasing enemies have a longer detection range
-        int effectiveChaseThreshold = state == EnemyState.CHASING ? 15 : chaseThreshold;
+        int effectiveChaseThreshold = state == EnemyState.CHASING ? EXTENDED_CHASE_THRESHOLD : chaseThreshold;
 
         switch (state) {
             case IDLE -> {
-                attackCooldown = attackSpeed * 30;
+                attackCooldown = attackSpeed * ATTACK_COOLDOWN_MULTIPLIER;
                 EnemyState prev = state;
                 state = (distanceToPlayer <= effectiveChaseThreshold) && hasLoS ? EnemyState.CHASING : EnemyState.IDLE;
                 if (distanceToOrigin > 1) state = EnemyState.RETURN;
@@ -92,20 +103,20 @@ public class Enemy extends Entity {
             }
 
             case CHASING -> {
-                attackCooldown = attackSpeed * 30;
+                attackCooldown = attackSpeed * ATTACK_COOLDOWN_MULTIPLIER;
                 // Give up if enemy wandered too far from spawn, stops player from leading the enemy around the map
-                if (distanceToOrigin >= 40) {
+                if (distanceToOrigin >= MAX_CHASE_DISTANCE_TILES) {
                     LOG.debug("Enemy exceeded max chase distance, returning to origin");
                     state = EnemyState.RETURN;
                 }
                 // Switch to attack when close enough
-                if (Utils.distance(player.getCordX(), player.getCordY(), cordX, cordY) < 80) {
+                if (Utils.distance(player.getCordX(), player.getCordY(), cordX, cordY) < ATTACK_ENGAGE_DISTANCE) {
                     LOG.debug("Enemy in attack range, switching to ATTACKING");
                     state = EnemyState.ATTACKING;
                 }
 
                 if (hasLoS) {
-                    chaseTimer = 120;
+                    chaseTimer = CHASE_TIMER_FRAMES;
                     lastKnownX = player.getCordX();
                     lastKnownY = player.getCordY();
                     if (!moveTo(player.getCordX(), player.getCordY(), map)) {
@@ -125,7 +136,7 @@ public class Enemy extends Entity {
 
             case RETURN -> {
                 // can't re-agro before reaching default position
-                attackCooldown = attackSpeed * 30;
+                attackCooldown = attackSpeed * ATTACK_COOLDOWN_MULTIPLIER;
                 if (distanceToOrigin <= 1) {
                     LOG.debug("Enemy reached origin, switching to IDLE");
                     state = EnemyState.IDLE;
@@ -138,13 +149,13 @@ public class Enemy extends Entity {
 
             case ATTACKING -> {
                 attackCooldown--;
-                if (distanceToPlayer * 64 > attackRange || !hasLoS) {
+                if (distanceToPlayer * GameManager.TILE_SIZE > attackRange || !hasLoS) {
                     state = EnemyState.CHASING;
                 } else {
                     if (attackCooldown <= 0) {
                         LOG.debug("Enemy attacked player for {} damage", baseDamage);
                         player.takeDamage(baseDamage, gameManager);
-                        attackCooldown = attackSpeed * 30;
+                        attackCooldown = attackSpeed * ATTACK_COOLDOWN_MULTIPLIER;
                     }
                 }
             }
@@ -163,16 +174,16 @@ public class Enemy extends Entity {
     private boolean moveTo(double dx, double dy, Map map) {
         int[] destTile = seekTarget(dx, dy, map);
         if (destTile == null) {
-            LOG.debug("seekTarget returned null, target unreachable at ({}, {})", (int) (dx / 64), (int) (dy / 64));
+            LOG.debug("seekTarget returned null, target unreachable at ({}, {})", (int) (dx / GameManager.TILE_SIZE), (int) (dy / GameManager.TILE_SIZE));
             return false;
         }
-        double destTileX = (double) destTile[0] * 64 + 32;
-        double destTileY = (double) destTile[1] * 64 + 32;
+        double destTileX = (double) destTile[0] * GameManager.TILE_SIZE + TILE_CENTER_OFFSET;
+        double destTileY = (double) destTile[1] * GameManager.TILE_SIZE + TILE_CENTER_OFFSET;
         double dirX = destTileX - cordX;
         double dirY = destTileY - cordY;
         // Clamp step to 3px or remaining distance to prevent overshoot
-        double stepX = Math.abs(dirX) < 3 ? dirX : Math.signum(dirX) * 3;
-        double stepY = Math.abs(dirY) < 3 ? dirY : Math.signum(dirY) * 3;
+        double stepX = Math.abs(dirX) < MOVE_STEP_SIZE ? dirX : Math.signum(dirX) * MOVE_STEP_SIZE;
+        double stepY = Math.abs(dirY) < MOVE_STEP_SIZE ? dirY : Math.signum(dirY) * MOVE_STEP_SIZE;
         move(stepX, 0, map);
         move(0, stepY, map);
         return true;
@@ -193,21 +204,21 @@ public class Enemy extends Entity {
         /** map of tiles where each tile holds coordinates of its "parent" tile i.e. tile from which the algorithm stepped onto the current tile */
         int[][][] parent = new int[map.getWidth()][map.getHeight()][2];
         PriorityQueue<int[]> tilesToCheck = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
-        int[] enemyStart = {(int) this.cordX / 64, (int) this.cordY / 64};
+        int[] enemyStart = {(int) this.cordX / GameManager.TILE_SIZE, (int) this.cordY / GameManager.TILE_SIZE};
         //all tiles are given a "cost" which is set to a large number at the beginning
         int[][] gScore = new int[map.getWidth()][map.getHeight()];
-        for (int[] row : gScore) Arrays.fill(row, 99999);
+        for (int[] row : gScore) Arrays.fill(row, ASTAR_INITIAL_SCORE);
         //starting position set to 0
         gScore[enemyStart[0]][enemyStart[1]] = 0;
 
-        int[] targetPos = {(int) (dx / 64), (int) (dy / 64)};
+        int[] targetPos = {(int) (dx / GameManager.TILE_SIZE), (int) (dy / GameManager.TILE_SIZE)};
         int steps = 0;
         //add starting tile to queue
         tilesToCheck.add(enemyStart);
         int[] nextStep = null;
         int[] currentStep = new int[]{targetPos[0], targetPos[1]};
         //limited amount of steps to save on computing power
-        while (!tilesToCheck.isEmpty() && steps < 400) {
+        while (!tilesToCheck.isEmpty() && steps < ASTAR_MAX_STEPS) {
             steps++;
             //take tile from the top of the queue - one with the smallest sum of gscore and heuristic(distance to target)
             //this makes the algorithm more efficient by naturally preferring tiles in direction to target
@@ -314,14 +325,14 @@ public class Enemy extends Entity {
     protected boolean bresenham(double sourceX, double sourceY, double targetX, double targetY, Map map) {
         boolean los = true;
         double error = 0;
-        int dx = (int) ((targetX / 64) - (sourceX / 64));
-        int dy = (int) ((targetY / 64) - (sourceY / 64));
-        int currentX = (int) (sourceX / 64);
-        int currentY = (int) (sourceY / 64);
+        int dx = (int) ((targetX / GameManager.TILE_SIZE) - (sourceX / GameManager.TILE_SIZE));
+        int dy = (int) ((targetY / GameManager.TILE_SIZE) - (sourceY / GameManager.TILE_SIZE));
+        int currentX = (int) (sourceX / GameManager.TILE_SIZE);
+        int currentY = (int) (sourceY / GameManager.TILE_SIZE);
 
         if (dx == 0 && dy == 0) return true;
 
-        while (!((currentX == (int) targetX / 64) && (currentY == (int) targetY / 64))) {
+        while (!((currentX == (int) targetX / GameManager.TILE_SIZE) && (currentY == (int) targetY / GameManager.TILE_SIZE))) {
             //checks if current tile is a path, if not, enemy does not have a line of sight.
             if (!map.getTileByIndex(currentX, currentY).isWalkable()) {
                 los = false;

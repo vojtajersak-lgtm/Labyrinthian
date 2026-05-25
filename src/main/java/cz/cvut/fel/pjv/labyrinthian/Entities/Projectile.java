@@ -9,6 +9,9 @@ import cz.cvut.fel.pjv.labyrinthian.Core.GameManager;
  * or when it travels too far from the boss.
  */
 public class Projectile extends GameObject {
+
+    private static final double MAX_TRAVEL_DISTANCE = 1500;
+
     /** Normalized horizontal direction component. */
     private double dirX;
     /** Normalized vertical direction component. */
@@ -56,7 +59,7 @@ public class Projectile extends GameObject {
         if (playerHit || !(isCornerValid(cordX, cordY, gameManager.getMap())) ||
                 (Utils.distance(getCenterX(), getCenterY(),
                         gameManager.getBoss().getCenterX(),
-                        gameManager.getBoss().getCenterY())) >= 1500) {
+                        gameManager.getBoss().getCenterY())) >= MAX_TRAVEL_DISTANCE) {
             isActive = false;
             if (playerHit) {
                 gameManager.getMainCharacter().takeDamage(damage, gameManager);

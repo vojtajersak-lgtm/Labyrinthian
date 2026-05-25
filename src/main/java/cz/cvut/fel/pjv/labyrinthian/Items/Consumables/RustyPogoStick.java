@@ -12,6 +12,11 @@ import cz.cvut.fel.pjv.labyrinthian.World.TileType;
  * triggers "splat" after landing
  */
 public class RustyPogoStick extends Consumable {
+
+    private static final double POGO_DAMAGE = 2;
+    private static final int POGO_RECOVERY_FRAMES = 60;
+    private static final int JUMP_TILE_OFFSET = 2;
+
     public RustyPogoStick() {
         super("Rusty POGO stick", """
                 A handy tool for jumping over pesky hedges. Seems to have rusted over the years - could hurt an unexperienced user...
@@ -26,17 +31,17 @@ public class RustyPogoStick extends Consumable {
      */
     @Override
     public void applyEffect(Player player, GameManager gameManager) {
-        int tileX = (int) (player.getCordX() / 64) + player.getDirection().dx;
-        int tileY = (int) (player.getCordY() / 64) + player.getDirection().dy;
-        int tileXBehind = (int) (player.getCordX() / 64) + 2 * player.getDirection().dx;
-        int tileYBehind = (int) (player.getCordY() / 64) + 2 * player.getDirection().dy;
+        int tileX = (int) (player.getCordX() / GameManager.TILE_SIZE) + player.getDirection().dx;
+        int tileY = (int) (player.getCordY() / GameManager.TILE_SIZE) + player.getDirection().dy;
+        int tileXBehind = (int) (player.getCordX() / GameManager.TILE_SIZE) + JUMP_TILE_OFFSET * player.getDirection().dx;
+        int tileYBehind = (int) (player.getCordY() / GameManager.TILE_SIZE) + JUMP_TILE_OFFSET * player.getDirection().dy;
         // Only jump if there's a hedge directly ahead and open ground behind it
         if (gameManager.getMap().getTileByIndex(tileX, tileY).getTile() == TileType.HEDGE
                 && gameManager.getMap().getTileByIndex(tileXBehind, tileYBehind).getTile() == TileType.PATH) {
-            player.setCordX(tileXBehind * 64);
-            player.setCordY(tileYBehind * 64);
-            player.takeDamage(2, gameManager);
-            player.setRecoveryCooldown(60);
+            player.setCordX(tileXBehind * GameManager.TILE_SIZE);
+            player.setCordY(tileYBehind * GameManager.TILE_SIZE);
+            player.takeDamage(POGO_DAMAGE, gameManager);
+            player.setRecoveryCooldown(POGO_RECOVERY_FRAMES);
         }
     }
 

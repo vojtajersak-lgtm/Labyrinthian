@@ -21,6 +21,19 @@ import java.util.*;
  * The boss arena is a circular clearing carved in the center of the map.
  */
 public class WorldBuilder {
+
+    private static final int MIN_MAP_SIZE = 22;
+    private static final int ARENA_RADIUS = 10;
+    private static final int MAZE_STEP_SIZE = 4;
+    private static final int PATH_TEXTURE_VARIANTS = 4;
+    private static final double HEALTH_SCALE_BASE = 4;
+    private static final double HEALTH_SCALE_FACTOR = 1.5;
+    private static final double BOSS_HEALTH_MULTIPLIER = 4;
+    private static final double MIN_DISTANCE_FROM_CENTER = 700;
+    private static final double MIN_DISTANCE_FROM_SPAWN = 500;
+    private static final double MIN_DISTANCE_BETWEEN_ENTITIES = 1000;
+    private static final int ITEM_WEIGHT_TOTAL = 101;
+
     private static final Logger LOG = LoggerFactory.getLogger(WorldBuilder.class);
 
     /**
@@ -33,7 +46,7 @@ public class WorldBuilder {
      */
     public Map buildMap(int mapSize) {
         LOG.info("Starting map generation, size: {}x{}", mapSize, mapSize);
-        if (mapSize < 22) throw new IllegalArgumentException("Map size must be at least 22");
+        if (mapSize < MIN_MAP_SIZE) throw new IllegalArgumentException("Map size must be at least 22");
 
         // Initialize all tiles as hedge
         Tile[][] tiles = new Tile[mapSize][mapSize];
@@ -114,7 +127,7 @@ public class WorldBuilder {
      * An entrance corridor is opened on the left side.
      */
     private void addBossArena(Tile[][] tiles, int mapSize) {
-        final int radius = 10;
+        final int radius = ARENA_RADIUS;
         final int centerX = mapSize / 2;
         final int centerY = mapSize / 2;
 
@@ -151,7 +164,7 @@ public class WorldBuilder {
      * @return list of spawned enemies
      */
     public List<Enemy> buildEnemies(int count, Map map, double scale) {
-        double healthScale = 4 * Math.pow(1.5, scale);
+        double healthScale = HEALTH_SCALE_BASE * Math.pow(HEALTH_SCALE_FACTOR, scale);
         LOG.info("Spawning {} enemies", count);
         List<Enemy> enemyList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -172,8 +185,8 @@ public class WorldBuilder {
      * @return the spawned boss
      */
     public Boss spawnBoss(Map map, double scale) {
-        double healthScale = 4 * Math.pow(1.5, scale);
-        return new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, 4 * healthScale, scale * 2, 2, 0);
+        double healthScale = HEALTH_SCALE_BASE * Math.pow(HEALTH_SCALE_FACTOR, scale);
+        return new Boss(map.getWidth() * 32, map.getHeight() * 32, 196, 196, BOSS_HEALTH_MULTIPLIER * healthScale, scale * 2, 2, 0);
     }
 
     /**
@@ -247,7 +260,7 @@ public class WorldBuilder {
      */
     private List<int[]> getUnvisitedNeighbors(Tile[][] tiles, int x, int y, boolean[][] visited, int mapSize) {
         List<int[]> neighboursList = new ArrayList<>();
-        int[][] directions = {{-4, 0}, {4, 0}, {0, -4}, {0, 4}};
+        int[][] directions = {{-MAZE_STEP_SIZE, 0}, {MAZE_STEP_SIZE, 0}, {0, -MAZE_STEP_SIZE}, {0, MAZE_STEP_SIZE}};
         for (int[] direction : directions) {
             int newCordX = x + direction[0];
             int newCordY = y + direction[1];
@@ -287,15 +300,15 @@ public class WorldBuilder {
             int yPos = random.nextInt(0, map.getHeight());
 
             //checks if too close to player spawn or inside boss arena
-            if (Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < 700
-                    || Utils.distance(xPos * 64, yPos * 64, 64, 64) < 500) {
+            if (Utils.distance(xPos * 64, yPos * 64, map.getMapSize() * 32, map.getMapSize() * 32) < MIN_DISTANCE_FROM_CENTER
+                    || Utils.distance(xPos * 64, yPos * 64, 64, 64) < MIN_DISTANCE_FROM_SPAWN) {
                 isOccupied = true;
 
             }
             if(!isOccupied){
                 for (Entity e : entities) {
                     // Checks if too close to another entity
-                    if(Utils.distance(xPos * 64, yPos * 64, e.getCordX(), e.getCordY()) < 1000){
+                    if(Utils.distance(xPos * 64, yPos * 64, e.getCordX(), e.getCordY()) < MIN_DISTANCE_BETWEEN_ENTITIES){
                         isOccupied = true;
                         break;
                     }
@@ -355,7 +368,7 @@ public class WorldBuilder {
         Random random = new Random();
 
         // Weighted random selection
-        int randomInt = random.nextInt(1, 101);
+        int randomInt = random.nextInt(1, ITEM_WEIGHT_TOTAL);
         int i = 0;
         while (randomInt > 0) {
             randomInt = randomInt - weights.get(i);

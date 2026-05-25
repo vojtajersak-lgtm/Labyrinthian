@@ -5,6 +5,13 @@ package cz.cvut.fel.pjv.labyrinthian.Components;
  * Used by the HUD, end screen and save system.
  */
 public class GameStats {
+
+    private static final int TIME_BONUS_THRESHOLD_SECONDS = 150;
+    private static final int POINTS_PER_SECOND_SAVED = 50;
+    private static final int ENEMY_KILL_SCORE_MULTIPLIER = 50;
+    private static final int BOSS_KILL_SCORE_MULTIPLIER = 500;
+    private static final int TRANSFORM_SCORE_MULTIPLIER = 1000;
+
     private int levelsCompleted;
     private int currentLevel;
     private int totalScore;
@@ -54,9 +61,9 @@ public class GameStats {
      * @param isTransformed true if the boss was transformed, awards most points
      */
     public void addKillScore(boolean isBoss, boolean isTransformed) {
-        if (isBoss) totalScore += 10 * currentLevel * 500;
-        else if (isTransformed) totalScore += 10 * currentLevel * 1000;
-        else totalScore += 10 * currentLevel * 50;
+        if (isBoss) totalScore += 10 * currentLevel * BOSS_KILL_SCORE_MULTIPLIER;
+        else if (isTransformed) totalScore += 10 * currentLevel * TRANSFORM_SCORE_MULTIPLIER;
+        else totalScore += 10 * currentLevel * ENEMY_KILL_SCORE_MULTIPLIER;
     }
 
     /**
@@ -66,7 +73,7 @@ public class GameStats {
     public void completeLevelScore() {
         long levelTime = getCurrentLevelTime();
         // Bonus decreases the longer the level takes; no bonus after 150 seconds
-        totalScore += (int) (Math.max(0, 150 - levelTime) * 50);
+        totalScore += (int) (Math.max(0, TIME_BONUS_THRESHOLD_SECONDS - levelTime) * POINTS_PER_SECOND_SAVED);
         averageLevelTime = (averageLevelTime * levelsCompleted + levelTime) / (levelsCompleted + 1);
         levelsCompleted++;
     }

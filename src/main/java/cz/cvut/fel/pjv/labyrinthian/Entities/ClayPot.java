@@ -9,6 +9,9 @@ import cz.cvut.fel.pjv.labyrinthian.Items.Item;
  * is technically entity just like enemy and boss but can't move or attack
  */
 public class ClayPot extends Entity {
+
+    private static final int BROKEN_POT_TEXTURE_INDEX = 4;
+
     /** The item dropped when this pot is destroyed. */
     private final Item item;
 
@@ -28,6 +31,6 @@ public class ClayPot extends Entity {
     public void onDeath(GameManager gameManager) {
         gameManager.spawnItem(item, getCenterX(), getCenterY());
         // Texture index 4 = broken pot variant
-        gameManager.getMap().getTile(cordX, cordY).setTextureIndex(4);
+        gameManager.getMap().getTile(cordX, cordY).setTextureIndex(BROKEN_POT_TEXTURE_INDEX);
     }
 }

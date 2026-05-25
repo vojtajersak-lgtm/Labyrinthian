@@ -19,10 +19,16 @@ import org.slf4j.LoggerFactory;
 
 public class GameApplication extends Application {
 
+    private static final int CANVAS_WIDTH = 1024;
+    private static final int CANVAS_HEIGHT = 576;
+    private static final int FONT_SIZE = 14;
+    private static final long FRAME_INTERVAL_NS = 13_333_333;
+
+
 
     private static final Logger LOG = LoggerFactory.getLogger(GameApplication.class);
-    private final Canvas canvas = new Canvas(1024, 576);
-    private final Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
+    private final Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    private final Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), FONT_SIZE);
 
     /**
      * Starts the application
@@ -34,7 +40,7 @@ public class GameApplication extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), 14);
+        Font myFont = Font.loadFont(getClass().getResourceAsStream("/fonts/StarCrush.ttf"), FONT_SIZE);
         // logging setup
         String level = System.getProperty("logLevel", "INFO");
         ch.qos.logback.classic.Logger rootLogger =
@@ -86,7 +92,7 @@ public class GameApplication extends Application {
 
             @Override
             public void handle(long now) {
-                if (now - lastUpdate < 13_333_333) return;
+                if (now - lastUpdate < FRAME_INTERVAL_NS) return;
                 lastUpdate = now;
 
                 //  Game state machine
