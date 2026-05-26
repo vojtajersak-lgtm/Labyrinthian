@@ -25,12 +25,6 @@ public class Inventory {
         this.inventorySize = INVENTORY_SIZE;
         this.inventorySlots = new Item[INVENTORY_SIZE];
         this.activeIndex = 0;
-        //Selection of most important items, can be uncoded to test them out
-        /*inventorySlots[0] = new YarnBall();
-        inventorySlots[1] = new RustyPogoStick();
-        inventorySlots[2] = new CO2Laser();
-        inventorySlots[3] = new BlindingStew();
-        inventorySlots[4] = new SnickersBar();*/
     }
 
     /**

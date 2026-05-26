@@ -9,11 +9,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logLevel>OFF</logLevel>
+        <javafx.version>21.0.2</javafx.version>
     </properties>
 
     <dependencies>
@@ -25,7 +25,17 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>21.0.2</version>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -43,17 +53,8 @@
             <artifactId>logback-classic</artifactId>
             <version>1.5.32</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>21.0.2</version>
-        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -61,13 +62,14 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>cz.cvut.fel.pjv.labyrinthian.Core.GameApplication</mainClass>
+                    <mainClass>cz.cvut.fel.pjv.labyrinthian/cz.cvut.fel.pjv.labyrinthian.Core.GameApplication</mainClass>
                     <options>
                         <option>-DlogLevel=${logLevel}</option>
                     </options>
+                    <jlinkImageName>labyrinthian</jlinkImageName>
+                    <launcher>launcher</launcher>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
